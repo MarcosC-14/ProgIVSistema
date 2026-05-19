@@ -311,7 +311,7 @@ async function eliminarCurso() {
     if (!idCurso) return;
 
     // Aca tiene que aparecer algo que le pregunte al usuario si esta seguro
-    const confirmar = confirm(`¿Estás completamente seguro de que querés eliminar el curso "${nombreCurso}"?`);
+    const confirmar = confirm(`¿Estás seguro de que querés eliminar el curso "${nombreCurso}"?`);
     
     if (!confirmar) return;
 
@@ -332,7 +332,14 @@ async function eliminarCurso() {
         // Refrescamos la tabla
         await cargarCursos(paginaActual);
         //aca tiene que llamar a algo que avise al usuario
-        alert('Curso eliminado correctamente.');
+        const elToast = document.getElementById('miToast');
+        const toastMensaje = document.getElementById("contenidoToast");
+        toastMensaje.innerHTML="<p> Curso Eliminado con exito.</p>"
+        // Lo inicializamos con Bootstrap
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(elToast);
+        
+        // Lo mostramos
+        toastBootstrap.show();
 
     } catch (error) {
         console.error('Error al eliminar curso:', error);
