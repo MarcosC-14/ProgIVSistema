@@ -1,7 +1,5 @@
-// URL base de tu API (ajustala si usás otra ruta en tu backend)
 const URL_API = 'http://localhost:3000/api/cursos';
 
-// Esperamos a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
     cargarCursos();
     configurarEventos();
@@ -15,6 +13,17 @@ async function cargarCursos() {
     const tbody = document.getElementById('tbody');
     const divError = document.getElementById('error');
     
+    tbody.innerHTML = `
+        <tr>
+            <td colspan="7" class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <div class="mt-2 text-muted">Obteniendo cursos desde el servidor...</div>
+            </td>
+        </tr>
+    `;
+
     try {
         // Hacemos la petición GET a nuestro backend
         const respuesta = await fetch(URL_API);
@@ -59,6 +68,7 @@ async function cargarCursos() {
 
     } catch (error) {
         console.error('Error al cargar cursos:', error);
+        tbody.innerHTML = '';
         divError.textContent = 'Hubo un problema al cargar el listado de cursos. Recargue la página.';
         divError.style.display = 'block';
     }
@@ -161,7 +171,6 @@ async function guardarCurso() {
     
     const estado = document.getElementById('modalEstadoCurso').value; 
     
-    console.log("EEEEEEEE OOOOOOOOOOO",estado);
     const datosCurso = {
     nombre: document.getElementById('modalNombre').value,
     descripcion: document.getElementById('modalDescripcion').value,
@@ -283,7 +292,7 @@ async function cargarEstados() {
     const selectEstado = document.getElementById('modalEstadoCurso');
     
     try {
-        // Hacemos el fetch a la ruta de tu API que consulta la tabla cursos_estados
+        // Hacemos el fetch que consulta la tabla cursos_estados
         const respuesta = await fetch('http://localhost:3000/api/estados'); 
 
         if (!respuesta.ok) {

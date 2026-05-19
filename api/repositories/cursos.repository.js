@@ -87,8 +87,6 @@ export default class CursosRepository {
             WHERE e.es_activo = 1 AND c.id_curso = $1`;
             const {rows} = await client.query(query, [id]);
             return rows[0];
-            console.log(query);
-            console.log(rows);
         }catch(error){
             console.error("Fallo traer por id, no se que paso, no estaba",error);
         } finally{
@@ -153,7 +151,6 @@ export default class CursosRepository {
             ];    
 
             const {rows} = await client.query(query, values);
-            console.log(rows);
             return rows[0];
         }catch(error){
             console.error("FAllo la actualizacion, ayda",error);

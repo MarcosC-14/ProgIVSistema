@@ -28,6 +28,10 @@ header div.contenedor img {
 body{
     /*Cuerpo lila*/
     background-color: rgb(196, 215, 255);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
 }
 nav{
     /*Barra de navegacion azul oscuro*/
@@ -106,6 +110,7 @@ main h2{
 main {
     background-color: rgb(212, 218, 255);
     padding: 2rem;
+    flex: 1;
 }
 footer{
     color: rgb(212, 218, 255);

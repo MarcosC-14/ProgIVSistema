@@ -46,7 +46,6 @@ export default class CursosService extends BaseService {
 
     async update(id, data){
         await this.getById(id);
-        console.log(data);
         const datosMap = {
             nombre: data.nombre,
             descripcion: data.descripcion,
