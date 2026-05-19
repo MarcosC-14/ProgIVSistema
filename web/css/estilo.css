@@ -1,0 +1,152 @@
+header {
+    /*header azul*/
+    background-color:#004a87;
+
+}
+/*header color azul titulo y logo */
+header div.contenedor{
+    width:100%;
+    flex-direction: row;
+    justify-content:space-between;
+    display:flex;
+    align-items:center;
+}
+
+/*titulo del header*/
+header h1{
+    color: white;
+    font-size: 2rem;
+    align-items: flex-start;
+    padding-right: 1rem;
+}
+
+header div.contenedor img {
+    height: 70px;
+    width: auto;
+}
+
+body{
+    /*Cuerpo lila*/
+    background-color: rgb(196, 215, 255);
+}
+nav{
+    /*Barra de navegacion azul oscuro*/
+    background-color: #003366;
+    width:100%;
+}
+
+div.contenedor-principal{
+    display: flex;
+    width:100%;
+    min-height: 30px;
+}
+
+
+div.contenedor-principal ul {
+    display: flex;
+    list-style: none;
+    width: 100%;
+    margin: 0; 
+    padding: 0;
+    
+}
+
+div.contenedor-principal ul li {
+    display: flex;
+    flex: 1;
+}
+
+
+div.contenedor-principal a {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    font-weight:  bold;
+    font-family: sans-serif;
+    font-size: 1.2rem;
+    
+    transition: background-color 0.3s;
+}
+
+nav ul{
+    margin:0; 
+    padding:0;
+}
+
+nav ul li a, a:visited, nav ul li a:active, nav ul li a:hover{
+    color:white;
+    text-decoration: none;
+}
+
+div.contenedor-principal a.active {
+    background-color: #003366; /* El color azul que usaste en el hover */
+    color: #ffffff;
+    box-shadow: inset 0 -3px 0 #ffffff; /* La línea blanca inferior para resaltar */
+}
+
+div.contenedor-principal a:hover {
+    /*Color celeste cuando le apoyas el mouse*/
+    background-color: #1971b9; 
+    color: rgb(255, 255, 255);            
+     
+
+}
+main h2{
+    font-size: 2.5rem;
+    color: rgb(255, 255, 255); /* Color del interior de la letra */
+    -webkit-text-stroke: 1.5px #32349c; /* Grosor y color del borde de la letra*/
+    font-family: sans-serif;
+
+    font-weight: bold;
+}
+
+main {
+    background-color: rgb(212, 218, 255);
+    padding: 2rem;
+}
+footer{
+    color: rgb(212, 218, 255);
+    background-color: #003366;
+    justify-content: center;
+    display: flex;
+}
+/*Botones*/
+.btn-botonNormal{
+    background-color: #003366 !important;
+    color: rgb(255, 255, 255) !important;
+    border: #000000 !important; 
+    border-radius: 5%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-botonNormal:hover {
+    background-color: #1971b9 !important;
+    color: white !important;
+}
+
+/*Header de modal*/
+.modal-header{
+    background-color: #003366 !important;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+}
+.modal-header .modal-title{
+    color: rgb(255, 255, 255) !important;
+}
+/*Boton de cerrar ventan del modal*/
+.modal-header .btn-botonCerrar {
+    background-color: #003366 !important;
+    color: rgb(255, 255, 255) !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-header .btn-botonCerrar:hover {
+    background-color: #ff0000 !important;
+}
+
