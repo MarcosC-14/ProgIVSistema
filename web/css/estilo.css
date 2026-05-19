@@ -83,7 +83,7 @@ nav ul li a, a:visited, nav ul li a:active, nav ul li a:hover{
 }
 
 div.contenedor-principal a.active {
-    background-color: #003366; /* El color azul que usaste en el hover */
+    background-color: #003366; /* El color azul del hover */
     color: #ffffff;
     box-shadow: inset 0 -3px 0 #ffffff; /* La línea blanca inferior para resaltar */
 }
@@ -97,8 +97,7 @@ div.contenedor-principal a:hover {
 }
 main h2{
     font-size: 2.5rem;
-    color: rgb(255, 255, 255); /* Color del interior de la letra */
-    -webkit-text-stroke: 1.5px #32349c; /* Grosor y color del borde de la letra*/
+    color: #003366;
     font-family: sans-serif;
 
     font-weight: bold;
@@ -140,7 +139,7 @@ div .btn-botonNormal:hover, div .btn-botonNormal:active, div .btn-botonNormal:vi
 .modal-header .modal-title{
     color: rgb(255, 255, 255) !important;
 }
-/*Boton de cerrar ventan del modal*/
+/*Boton de cerrar ventana del modal*/
 .modal-header .btn-botonCerrar {
     background-color: #003366 !important;
     color: rgb(255, 255, 255) !important;
