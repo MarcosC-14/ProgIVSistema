@@ -11,6 +11,7 @@ export default class CursosController {
             const { filter, limit, offset, order} = req;
             const cursos = await this.service.getAll(filter, limit, offset, order);
             res.status(200).json(cursos);
+            
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Error al obtener los cursos' });

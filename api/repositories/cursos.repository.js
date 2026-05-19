@@ -184,13 +184,12 @@ export default class CursosRepository {
                 SELECT COUNT(*) AS total
                 FROM public.cursos c
                 INNER JOIN public.cursos_estados e ON e.id_curso_estado = c.id_curso_estado
-                WHERE e.es_activo = 1 AND c.id_curso = $1
+                WHERE e.es_activo = 1
             `;
 
             const sqlParams = [];
             let paramIndex = 1;
 
-            // Replicamos la lógica de filtrado exacto que tienes en getAll
             if (filter && Object.keys(filter).length > 0) {
                 Object.entries(filter).forEach(([key, value]) => {
                     if (typeof value === 'string') {
@@ -205,7 +204,6 @@ export default class CursosRepository {
             }
 
             const { rows } = await client.query(sql, sqlParams);
-            // pg devuelve el COUNT como string (BigInt), lo parseamos a número nativo
             return parseInt(rows[0].total, 10); 
             
         } finally {

@@ -25,9 +25,13 @@ export default class CursosService extends BaseService {
         const sqlFilter = this.mapKeysToColumns(filter, CursosService.KEYS_MAP);
         const sqlOrder = this.mapKeysToColumns(order, CursosService.KEYS_MAP);
 
-        const respuestaBD = await this.repository.getAll(sqlFilter, limit, offset, sqlOrder);
+        const [respuestaBD, totalCursos] = await Promise.all([
+            this.repository.getAll(sqlFilter, limit, offset, sqlOrder),
+            this.repository.getCount(sqlFilter)
+        ]);
+
         const respuesta = respuestaBD.map(curso => (new CursoResponseDTO(curso)));
-        return respuesta;
+        return {totalCursos, respuesta};
     }
 
     async getById(id){

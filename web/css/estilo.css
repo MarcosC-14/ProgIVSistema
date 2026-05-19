@@ -33,11 +33,7 @@ body{
     min-height: 100vh;
     margin: 0;
 }
-nav{
-    /*Barra de navegacion azul oscuro*/
-    background-color: #003366;
-    width:100%;
-}
+
 
 div.contenedor-principal{
     display: flex;
@@ -45,8 +41,13 @@ div.contenedor-principal{
     min-height: 30px;
 }
 
+div.contenedor-principal nav{
+    /*Barra de navegacion azul oscuro*/
+    background-color: #003366;
+    width:100%;
+}
 
-div.contenedor-principal ul {
+div.contenedor-principal nav ul {
     display: flex;
     list-style: none;
     width: 100%;
@@ -55,13 +56,13 @@ div.contenedor-principal ul {
     
 }
 
-div.contenedor-principal ul li {
+div.contenedor-principal nav ul li {
     display: flex;
     flex: 1;
 }
 
 
-div.contenedor-principal a {
+div.contenedor-principal nav ul li a {
     display: flex;
     width: 100%;
     justify-content: center;
@@ -75,10 +76,6 @@ div.contenedor-principal a {
     transition: background-color 0.3s;
 }
 
-nav ul{
-    margin:0; 
-    padding:0;
-}
 
 nav ul li a, a:visited, nav ul li a:active, nav ul li a:hover{
     color:white;
@@ -119,18 +116,18 @@ footer{
     display: flex;
 }
 /*Botones*/
-.btn-botonNormal{
-    background-color: #003366 !important;
-    color: rgb(255, 255, 255) !important;
-    border: #000000 !important; 
+div .btn-botonNormal{
+    background-color: #003366;
+    color: rgb(255, 255, 255);
+    border: #000000; 
     border-radius: 5%;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.btn-botonNormal:hover {
-    background-color: #1971b9 !important;
-    color: white !important;
+div .btn-botonNormal:hover, div .btn-botonNormal:active, div .btn-botonNormal:visited, div .btn-botonNormal:link, div .btn-botonNormal:focus-visible    {
+    background-color: #1971b9;
+    color: white;
 }
 
 /*Header de modal*/

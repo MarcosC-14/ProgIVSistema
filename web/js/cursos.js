@@ -1,7 +1,10 @@
 const URL_API = 'http://localhost:3000/api/cursos';
 
+let paginaActual = 1;
+const limitePorPagina = 10;
+
 document.addEventListener('DOMContentLoaded', () => {
-    cargarCursos();
+    cargarCursos(1);
     configurarEventos();
     cargarEstados();
 });
@@ -9,10 +12,16 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * 1. Función para obtener los cursos del Backend y listarlos en la tabla
  */
-async function cargarCursos() {
+async function cargarCursos(paginaReq = 1) {
     const tbody = document.getElementById('tbody');
     const divError = document.getElementById('error');
     
+    // Actualizar página actual
+    paginaActual = paginaReq;
+    
+    // Cálculo del offset
+    const offset = (paginaActual - 1) * limitePorPagina;
+
     tbody.innerHTML = `
         <tr>
             <td colspan="7" class="text-center py-4">
@@ -26,13 +35,14 @@ async function cargarCursos() {
 
     try {
         // Hacemos la petición GET a nuestro backend
-        const respuesta = await fetch(URL_API);
+        const respuesta = await fetch(`${URL_API}?limit=${limitePorPagina}&offset=${offset}`);
         
         if (!respuesta.ok) {
             throw new Error('No se pudo conectar con el servidor');
         }
         
-        const cursos = await respuesta.json();
+        const datos = await respuesta.json();
+        const cursos = datos.respuesta;
         
         // Limpiamos el tbody por si tenía datos viejos
         tbody.innerHTML = '';
@@ -43,9 +53,8 @@ async function cargarCursos() {
             return;
         }
 
-        // Recorremos cada curso y creamos su fila de forma dinámica
+        // Recorremos cada curso y creamos su fila
         cursos.forEach(curso => {
-            // Formateamos la fecha para que se vea linda en nuestra zona horaria
             const fechaFormateada = new Date(curso.fechaInicio).toLocaleDateString('es-AR');
 
             const fila = document.createElement('tr');
@@ -63,8 +72,12 @@ async function cargarCursos() {
             tbody.appendChild(fila);
         });
 
-        // Escuchamos los clics de los botones de editar que acabamos de crear
+        // Asigna eventos a los botones que acabamos de crear
         asignarEventosBotones();
+
+        // Guardamos el total de cursos para la paginación
+        const totalCursos = datos.totalCursos || 0;
+        mostrarControlesPaginacion(totalCursos);
 
     } catch (error) {
         console.error('Error al cargar cursos:', error);
@@ -72,6 +85,49 @@ async function cargarCursos() {
         divError.textContent = 'Hubo un problema al cargar el listado de cursos. Recargue la página.';
         divError.style.display = 'block';
     }
+}
+
+/**
+ * Función para mostrar los botones de paginación
+ */
+function mostrarControlesPaginacion(totalCursos) {
+    const contenedor = document.getElementById("paginacion-contenedor");
+    
+    contenedor.innerHTML = "";
+
+    const totalPaginas = Math.ceil(totalCursos / limitePorPagina);
+
+    if (totalPaginas <= 1) return;
+
+    // Botón Anterior
+    const liAnterior = document.createElement("li");
+    liAnterior.className = `page-item ${paginaActual === 1 ? 'disabled' : ''}`;
+    liAnterior.innerHTML = `<button class="page-link">Anterior</button>`;
+    if (paginaActual > 1) {
+        liAnterior.addEventListener("click", () => cargarCursos(paginaActual - 1));
+    }
+    contenedor.appendChild(liAnterior);
+
+    // Botones Numéricos
+    for (let i = 1; i <= totalPaginas; i++) {
+        const liNumero = document.createElement("li");
+        liNumero.className = `page-item ${paginaActual === i ? 'active' : ''}`;
+        liNumero.innerHTML = `<button class="page-link">${i}</button>`;
+
+        if (paginaActual !== i) {
+            liNumero.addEventListener("click", () => cargarCursos(i));
+        }
+        contenedor.appendChild(liNumero);
+    }
+
+    // Botón Siguiente
+    const liSiguiente = document.createElement("li");
+    liSiguiente.className = `page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`;
+    liSiguiente.innerHTML = `<button class="page-link">Siguiente</button>`;
+    if (paginaActual < totalPaginas) {
+        liSiguiente.addEventListener("click", () => cargarCursos(paginaActual + 1));
+    }
+    contenedor.appendChild(liSiguiente);
 }
 
 /**
@@ -209,7 +265,7 @@ async function guardarCurso() {
         modalBootstrap.hide();
 
         // Refrescamos la tabla para ver los cambios instantáneamente
-        await cargarCursos();
+        await cargarCursos(paginaActual);
         const elToast = document.getElementById('miToast');
         const toastMensaje = document.getElementById("contenidoToast");
         toastMensaje.innerHTML="<p> Curso Guardado con exito.</p>"
@@ -266,7 +322,7 @@ async function eliminarCurso() {
         modalBootstrap.hide();
 
         // Refrescamos la tabla
-        await cargarCursos();
+        await cargarCursos(paginaActual);
         //aca tiene que llamar a algo que avise al usuario
         alert('Curso eliminado correctamente.');
 
