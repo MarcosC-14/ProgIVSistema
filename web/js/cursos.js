@@ -223,6 +223,11 @@ async function abrirModalEdicion(id) {
  * 5. Crear y Modifica cursos
  */
 async function guardarCurso() {
+    // Bloquear botón de guardado.
+    const btnGuardar = document.getElementById('btnGuardar');
+    btnGuardar.disabled = true;
+    const textoOriginal = btnGuardar.textContent;
+
     const idCurso = document.getElementById('modalIdCurso').value;
     
     const estado = document.getElementById('modalEstadoCurso').value; 
@@ -290,6 +295,9 @@ async function guardarCurso() {
                 errorGuardar.style.display = "none";
             }, 3000)
         }
+    } finally{
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = textoOriginal;
     }
 }
 
