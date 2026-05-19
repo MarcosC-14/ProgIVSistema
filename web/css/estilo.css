@@ -118,8 +118,9 @@ footer{
 div .btn-botonNormal{
     background-color: #003366;
     color: rgb(255, 255, 255);
-    border: #000000; 
-    border-radius: 5%;
+    border: 1px solid #000000; 
+    display: inline-block;
+    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
