@@ -272,7 +272,6 @@ async function guardarCurso() {
     // Si el idCurso existe, significa que estamos EDITANDO, cambiamos url y método
     if (idCurso) {
         url = `${URL_API}/${idCurso}`;
-        metode = 'PUT';
         metodo = 'PUT';
     }
 
