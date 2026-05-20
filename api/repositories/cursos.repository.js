@@ -153,7 +153,7 @@ export default class CursosRepository {
             const {rows} = await client.query(query, values);
             return rows[0];
         }catch(error){
-            console.error("FAllo la actualizacion, ayda",error);
+            console.error("Fallo en la actualizacion",error);
             throw error;
         }finally{
             client.release();

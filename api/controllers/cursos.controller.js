@@ -44,18 +44,19 @@ export default class CursosController {
     }
     async update (req, res){
         try{
-            const {id} = req.params;
+            const curso = await this.service.update(req.id, req.data);
 
-            const curso = await this.service.update(id, req.body);
-            res.status(200).json(curso);
+
+            return res.status(200).json(curso);
         }catch(error){
             console.error(error);
             if(error.message=="Curso no encontrado"){
                 return res.status(404).json({error: error.message});
             }
-            res.status(500).json({error: 'Error al actualizar el curso'});
+            return res.status(500).json({error: 'Error al actualizar el curso'});
         }
     }
+    
     async borrar(req, res){
         try{
             const {id}= req.params;

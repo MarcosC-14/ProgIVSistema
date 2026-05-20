@@ -1,6 +1,11 @@
-import { body, validationResult } from 'express-validator';
+import { body, param, validationResult } from 'express-validator';
 
-const cursosCreateValidation = [
+const cursosUpdateValidation = [
+    param('id')
+        .exists().withMessage('El identificador del curso en la ruta es obligatorio.')
+        .isInt({ min: 1 }).withMessage('El identificador del curso debe ser un número entero positivo.')
+        .toInt(),
+
     body('nombre')
         .exists().withMessage('El campo nombre es obligatorio.')
         .isString().withMessage('El nombre debe ser una cadena de texto.')
@@ -26,7 +31,7 @@ const cursosCreateValidation = [
 
     body('inscriptosMax')
         .exists().withMessage('El cupo máximo es obligatorio.')
-        .isInt({ min: 1, max: 10000 }).withMessage('El cupo máximo debe ser un número entero positivo entre 1 y 10000.')
+        .isInt({ min: 1, max: 200 }).withMessage('El cupo máximo debe ser un número entero positivo entre 1 y 10000.')
         .toInt(),
 
     body('idCursoEstado')
@@ -48,4 +53,4 @@ const cursosCreateValidation = [
     }
 ];
 
-export default cursosCreateValidation;
+export default cursosUpdateValidation;

@@ -4,6 +4,8 @@ import cursosFindAllValidation from "../../validators/cursosFindAll.validation.j
 import cursosCreateTransform from "../../transforms/cursosCreate.transform.js";
 import cursosFindAllTransform from "../../transforms/cursosFindAll.transform.js";
 import cursosCreateValidation from "../../validators/cursosCreate.validation.js";
+import cursosUpdateValidation from "../../validators/cursosUpdate.validation.js";
+import cursosUpdateTransform from "../../transforms/cursosUpdate.transform.js";
 
 const router = express.Router();
 
@@ -15,7 +17,7 @@ router.get("/cursos/:id", cursosController.getById.bind(cursosController));
 
 router.post("/cursos", [cursosCreateValidation, cursosCreateTransform], cursosController.create.bind(cursosController));
 
-router.put("/cursos/:id", cursosController.update.bind(cursosController));
+router.put("/cursos/:id", [cursosUpdateValidation,cursosUpdateTransform], cursosController.update.bind(cursosController));
 
 router.delete("/cursos/:id", cursosController.borrar.bind(cursosController));
 

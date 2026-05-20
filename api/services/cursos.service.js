@@ -50,15 +50,7 @@ export default class CursosService extends BaseService {
 
     async update(id, data){
         await this.getById(id);
-        const datosMap = {
-            nombre: data.nombre,
-            descripcion: data.descripcion,
-            fecha_inicio: data.fechaInicio,
-            cantidad_horas: data.cantidadHoras,
-            inscriptos_max: data.inscriptosMax,
-            id_curso_estado: data.idCursoEstado,
-            id_usuario_modificacion: data.idUsuarioModificacion
-        };
+        const datosMap = this.mapKeysToColumns(data, CursosService.KEYS_MAP);
 
         const nuevoCurso = await this.repository.update(id, datosMap);
         return new CursoResponseDTO(nuevoCurso);
