@@ -181,7 +181,7 @@ function configurarEventos() {
 
         }catch(error){
             console.error('Error al eliminar curso:', error);
-            cerrarModalPorId('modalConfirmacion');
+            cerrarTodosLosModales();
             mostrarErrorAviso("Ocurrió un error al intentar eliminar el curso."); 
         }
     })
