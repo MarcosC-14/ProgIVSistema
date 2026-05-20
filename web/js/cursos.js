@@ -271,8 +271,13 @@ async function guardarCurso() {
     let mensajeDeErrorDeIngreso = "";
     
 
-    if (nombreFinal.length === 0 || descripcionFinal.length === 0){
-        mensajeDeErrorDeIngreso = "El nombre y la descripción no pueden estar vacíos ni contener solo espacios.";
+    if (nombreFinal.length <= 5 || 
+            nombreFinal.length > 120 ||
+            descripcionFinal.length <= 5 ||
+            descripcionFinal.length <= 5 ||
+            descripcionFinal.length > 500
+        ){
+        mensajeDeErrorDeIngreso = "El nombre y la descripción no pueden estar vacíos y deben tener entre 5 y 120 caracteres.";
         errorDeIngreso = true;
     } else if(!fechaFinal) {
         mensajeDeErrorDeIngreso = "La fecha de inicio es obligatoria.";
