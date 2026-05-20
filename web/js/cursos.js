@@ -34,7 +34,7 @@ async function cargarCursos(paginaReq = 1) {
     `;
 
     try {
-        // Hacemos la petición GET a nuestro backend
+        // Hacemos la petición GET al backend
         const respuesta = await fetch(`${URL_API}?limit=${limitePorPagina}&offset=${offset}`);
         
         if (!respuesta.ok) {
@@ -148,7 +148,7 @@ function configurarEventos() {
         document.getElementById('modalDescripcion').value="";
     });
 
-    // Escuchamos el Submit del Formulario (Sirve tanto para CREAR como para ACTUALIZAR)
+    // Escuchamos el Submit del Formulario (Sirve tanto para crear como para actualizar)
     formCurso.addEventListener('submit', async (e) => {
         e.preventDefault(); // Evitamos que la página se recargue
         await guardarCurso();
@@ -220,7 +220,7 @@ async function abrirModalEdicion(id) {
         if (estadoCurso) {
             document.getElementById('modalEstadoCurso').value = estadoCurso;
         }
-        // Formateamos la fecha al formato YYYY-MM-DD que requiere el input de tipo date
+        // Formateamos la fecha al formato YYYY-MM-DD
         if (curso.fechaInicio) {
             document.getElementById('modalFecha').value = curso.fechaInicio.split('T')[0];
         }
@@ -233,7 +233,7 @@ async function abrirModalEdicion(id) {
         document.getElementById('btnEliminar').style.display = 'block';
         document.getElementById('btnGuardar').textContent= 'Modificar Curso';
 
-        // Abrimos el modal programáticamente usando la instancia de Bootstrap instalada
+        // Abrimos el modal usando la instancia de Bootstrap
         const modalCurso = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCurso'));
         modalCurso.show();
 
@@ -269,7 +269,7 @@ async function guardarCurso() {
     let url = URL_API;
     let metodo = 'POST';
 
-    // Si el idCurso existe, significa que estamos EDITANDO, cambiamos url y método
+    // Si el idCurso existe, significa que estamos editando, cambiamos url y método
     if (idCurso) {
         url = `${URL_API}/${idCurso}`;
         metodo = 'PUT';
