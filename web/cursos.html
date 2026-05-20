@@ -101,12 +101,12 @@
 
                         <div class = "mb-3">
                             <label class="form-label">Nombre del Curso</label>
-                            <input type="text" class="form-control" id="modalNombre" placeholder="Ej: Robotica" autocomplete="off" required>
+                            <input type="text" class="form-control" id="modalNombre" placeholder="Ej: Robotica" autocomplete="off" minlength="5" maxlength="120" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\-\.,:]+" title="Solo se permiten letras, números, espacios y puntuación básica (-,.)" required>
                         </div>
 
                         <div class= "mb-3">
                             <label class="form-label">Descripción:</label>
-                            <textarea class="form-control" id="modalDescripcion" placeholder="Ej: Se utilizara Arduino" autocomplete="off" required></textarea>
+                            <textarea class="form-control" id="modalDescripcion" placeholder="Ej: Se utilizara Arduino" minlength="5" maxlength="500" autocomplete="off" required></textarea>
                         </div>
                         
                         <div class="mb-3">
@@ -116,11 +116,11 @@
                         <div class="row">
                             <div class="col-6 mb-3">
                                 <label class="form-label">Cantidad de Horas:</label>
-                                <input type="number" class="form-control" min="1" id="modalHoras" placeholder="Ej: 3" autocomplete="off" required>
+                                <input type="number" class="form-control" min="1" id="modalHoras" placeholder="Ej: 3" step="1" autocomplete="off" max="5000" required>
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">Cupo Máximo:</label>
-                                <input type="number" class="form-control" min="1" id="modalCupo" placeholder="Ej: 43" autocomplete="off" required>
+                                <input type="number" class="form-control" min="1" max="10000" id="modalCupo" placeholder="Ej: 43" step="1" autocomplete="off" required>
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">Estado del curso:</label>

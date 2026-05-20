@@ -34,8 +34,7 @@ export default class CursosController {
 
     async create (req, res){
         try{
-                    
-            const curso = await this.service.create(req.body);
+            const curso = await this.service.create(req.data);
             res.status(200).json(curso);
 
         }catch(error){

@@ -146,6 +146,11 @@ function configurarEventos() {
         document.getElementById('btnEliminar').style.display = 'none';
         document.getElementById('btnGuardar').textContent= 'Crear Curso';
         document.getElementById('modalDescripcion').value="";
+
+        // Control de que la fecha no sea anterior al día actual
+        const inputFecha = document.getElementById('modalFecha');
+        const hoy = new Date().toISOString().split('T')[0];
+        inputFecha.setAttribute('min', hoy);
     });
 
     // Escuchamos el Submit del Formulario (Sirve tanto para crear como para actualizar)
@@ -221,8 +226,11 @@ async function abrirModalEdicion(id) {
             document.getElementById('modalEstadoCurso').value = estadoCurso;
         }
         // Formateamos la fecha al formato YYYY-MM-DD
+        const inputFecha = document.getElementById('modalFecha');
+        inputFecha.removeAttribute('min');
+
         if (curso.fechaInicio) {
-            document.getElementById('modalFecha').value = curso.fechaInicio.split('T')[0];
+            inputFecha.value = curso.fechaInicio.split('T')[0];
         }
         
         document.getElementById('modalHoras').value = curso.cantidadHoras;
@@ -256,6 +264,18 @@ async function guardarCurso() {
     
     const estado = document.getElementById('modalEstadoCurso').value; 
     
+    const nombreFinal = document.getElementById('modalNombre').value.trim();
+    
+    const descripcionFinal = document.getElementById('modalDescripcion').value.trim();
+
+    if (nombreFinal.length === 0 || descripcionFinal.length === 0){
+        mostrarErrorAviso("El nombre y la descripción no pueden estar vacíos ni contener solo espacios.");
+        cerrarModalPorId('modalCurso');
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = textoOriginal;
+        return;
+    }
+
     const datosCurso = {
         nombre: document.getElementById('modalNombre').value,
         descripcion: document.getElementById('modalDescripcion').value,
@@ -296,9 +316,9 @@ async function guardarCurso() {
         
     } catch (error) {
         console.error('Error al guardar curso:', error);
-        cerrarModalPorId('modalCurso');
         mostrarErrorAviso("Ocurrió un error al intentar guardar el curso.");
     } finally{
+        cerrarModalPorId('modalCurso');
         btnGuardar.disabled = false;
         btnGuardar.textContent = textoOriginal;
     }

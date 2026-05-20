@@ -1,7 +1,9 @@
 import express from "express";
 import CursosController from "../../controllers/cursos.controller.js";
 import cursosFindAllValidation from "../../validators/cursosFindAll.validation.js";
+import cursosCreateTransform from "../../transforms/cursosCreate.transform.js";
 import cursosFindAllTransform from "../../transforms/cursosFindAll.transform.js";
+import cursosCreateValidation from "../../validators/cursosCreate.validation.js";
 
 const router = express.Router();
 
@@ -11,7 +13,7 @@ router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosC
 
 router.get("/cursos/:id", cursosController.getById.bind(cursosController));
 
-router.post("/cursos", cursosController.create.bind(cursosController));
+router.post("/cursos", [cursosCreateValidation, cursosCreateTransform], cursosController.create.bind(cursosController));
 
 router.put("/cursos/:id", cursosController.update.bind(cursosController));
 

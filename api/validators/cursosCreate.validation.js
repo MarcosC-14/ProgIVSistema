@@ -1,0 +1,51 @@
+import { body, validationResult } from 'express-validator';
+
+const cursosCreateValidation = [
+    body('nombre')
+        .exists().withMessage('El campo nombre es obligatorio.')
+        .isString().withMessage('El nombre debe ser una cadena de texto.')
+        .trim()
+        .notEmpty().withMessage('El nombre no puede estar vacío.')
+        .isLength({ min: 5, max: 120 }).withMessage('El nombre debe tener entre 5 y 120 caracteres.'),
+        
+    body('descripcion')
+        .exists().withMessage('El campo descripción es obligatorio.')
+        .isString().withMessage('La descripción debe ser una cadena de texto.')
+        .trim()
+        .notEmpty().withMessage('La descripción no puede estar vacía.')
+        .isLength({ min: 5, max: 500 }).withMessage('La descripción debe tener entre 5 y 500 caracteres.'),
+        
+    body('fechaInicio')
+        .exists().withMessage('La fecha de inicio es obligatoria.')
+        .toDate(),
+
+        body('cantidadHoras')
+        .exists().withMessage('La cantidad de horas es obligatoria.')
+        .isInt({ min: 1, max: 5000 }).withMessage('La cantidad de horas debe ser un número entero entre 1 y 5000.')
+        .toInt(),
+
+    body('inscriptosMax')
+        .exists().withMessage('El cupo máximo es obligatorio.')
+        .isInt({ min: 1, max: 10000 }).withMessage('El cupo máximo debe ser un número entero positivo entre 1 y 10000.')
+        .toInt(),
+
+    body('idCursoEstado')
+        .exists().withMessage('El estado del curso es obligatorio.')
+        .isInt({ min: 1 }).withMessage('El identificador del estado debe ser un número entero válido.')
+        .toInt(),
+
+    body('idUsuarioModificacion')
+        .exists().withMessage('El identificador de usuario es obligatorio.')
+        .isInt({ min: 1 }).withMessage('El identificador del usuario debe ser un número entero válido.')
+        .toInt(),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    }
+];
+
+export default cursosCreateValidation;
