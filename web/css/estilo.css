@@ -148,7 +148,7 @@ div .btn-botonNormal:hover, div .btn-botonNormal:active, div .btn-botonNormal:vi
     transition: all 0.3s ease;
 }
 
-.modal-header .btn-botonCerrar:hover {
+div .modal-header .btn-botonCerrar:hover {
     background-color: #ff0000 !important;
 }
 

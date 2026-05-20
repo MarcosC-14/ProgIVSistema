@@ -137,9 +137,10 @@ function configurarEventos() {
     const btnAgregar = document.getElementById('btnAgregarCurso');
     const formCurso = document.getElementById('formCurso');
     const btnEliminar = document.getElementById('btnEliminar');
-    
+    const btnConfirmarAccion = document.getElementById('btnConfirmarAccion');
+
     btnAgregar.addEventListener('click', () => {
-        document.getElementById('formCurso').reset();
+        formCurso.reset();
         document.getElementById('modalIdCurso').value = '';
         document.getElementById('modalCursoLabel').textContent = 'Nuevo Curso';
         document.getElementById('btnEliminar').style.display = 'none';
@@ -154,11 +155,36 @@ function configurarEventos() {
     });
 
     // Escuchamos el clic del botón Eliminar
-    btnEliminar.addEventListener('click', async () => {
-        await eliminarCurso();
+    btnEliminar.addEventListener('click', () => {
+        eliminarCurso();
     });
     
-    
+    btnConfirmarAccion.addEventListener('click', async()=>{
+        const idCurso = document.getElementById('modalIdCurso').value;
+        if(!idCurso) return;
+
+        try{
+            console.log("ID procesando eliminación en servidor:", idCurso);
+            const respuesta = await fetch(`${URL_API}/${idCurso}`, {
+                method: 'DELETE'
+            });
+
+            if (!respuesta.ok) {
+                throw new Error('No se pudo eliminar el curso del servidor');
+            }
+
+            cerrarTodosLosModales();
+
+            // Refrescar datos y notificar éxito
+            await cargarCursos(paginaActual);
+            mostrarToast("Curso Eliminado con éxito.");
+
+        }catch(error){
+            console.error('Error al eliminar curso:', error);
+            cerrarModalPorId('modalConfirmacion');
+            mostrarErrorAviso("Ocurrió un error al intentar eliminar el curso."); 
+        }
+    })
 }
 
 /**
@@ -208,14 +234,12 @@ async function abrirModalEdicion(id) {
         document.getElementById('btnGuardar').textContent= 'Modificar Curso';
 
         // Abrimos el modal programáticamente usando la instancia de Bootstrap instalada
-        const modalElement = document.getElementById('modalCurso');
-        const modalBootstrap = bootstrap.Modal.getOrCreateInstance(modalElement);
-        modalBootstrap.show();
+        const modalCurso = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCurso'));
+        modalCurso.show();
 
     } catch (error) {
         console.error(error);
-        
-        alert('Error al cargar los detalles del curso.');
+        mostrarErrorAviso("Ocurrió un error al intentar cargar los detalles del curso.");
     }
 }
 
@@ -233,13 +257,13 @@ async function guardarCurso() {
     const estado = document.getElementById('modalEstadoCurso').value; 
     
     const datosCurso = {
-    nombre: document.getElementById('modalNombre').value,
-    descripcion: document.getElementById('modalDescripcion').value,
-    fechaInicio: document.getElementById('modalFecha').value, // <-- camelCase
-    cantidadHoras: parseInt(document.getElementById('modalHoras').value) || 0, // <-- camelCase
-    inscriptosMax: parseInt(document.getElementById('modalCupo').value) || 0, // <-- camelCase
-    idCursoEstado: parseInt(document.getElementById('modalEstadoCurso').value), // <-- camelCase
-    idUsuarioModificacion: 1 
+        nombre: document.getElementById('modalNombre').value,
+        descripcion: document.getElementById('modalDescripcion').value,
+        fechaInicio: document.getElementById('modalFecha').value,
+        cantidadHoras: parseInt(document.getElementById('modalHoras').value) || 0,
+        inscriptosMax: parseInt(document.getElementById('modalCupo').value) || 0,
+        idCursoEstado: parseInt(document.getElementById('modalEstadoCurso').value),
+        idUsuarioModificacion: 1 
     };
 
     let url = URL_API;
@@ -248,6 +272,7 @@ async function guardarCurso() {
     // Si el idCurso existe, significa que estamos EDITANDO, cambiamos url y método
     if (idCurso) {
         url = `${URL_API}/${idCurso}`;
+        metode = 'PUT';
         metodo = 'PUT';
     }
 
@@ -264,37 +289,16 @@ async function guardarCurso() {
             throw new Error('Error al procesar la solicitud en el servidor');
         }
 
-        // Si todo salió bien, cerramos el modal de Bootstrap
-        const modalElement = document.getElementById('modalCurso');
-        const modalBootstrap = bootstrap.Modal.getInstance(modalElement);
-        modalBootstrap.hide();
-
-        // Refrescamos la tabla para ver los cambios instantáneamente
+        cerrarModalPorId('modalCurso');
+        
         await cargarCursos(paginaActual);
-        const elToast = document.getElementById('miToast');
-        const toastMensaje = document.getElementById("contenidoToast");
-        toastMensaje.innerHTML="<p> Curso Guardado con exito.</p>"
-        // Lo inicializamos con Bootstrap
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(elToast);
-        
-        // Lo mostramos
-        toastBootstrap.show();
-        
 
+        mostrarToast("Curso Guardado con éxito.");
+        
     } catch (error) {
         console.error('Error al guardar curso:', error);
-        const errorGuardar = document.getElementById("error");
-        const modalElement = document.getElementById('modalCurso');
-        const modalBootstrap = bootstrap.Modal.getInstance(modalElement);
-        if(errorGuardar){
-            errorGuardar.innerHTML="<p> Ocurrió un error al intentar guardar el curso.</p>"
-            errorGuardar.style.display="block";
-            modalBootstrap.hide();
-            window.scrollTo(0,0);
-            setTimeout(() =>{
-                errorGuardar.style.display = "none";
-            }, 3000)
-        }
+        cerrarModalPorId('modalCurso');
+        mostrarErrorAviso("Ocurrió un error al intentar guardar el curso.");
     } finally{
         btnGuardar.disabled = false;
         btnGuardar.textContent = textoOriginal;
@@ -302,63 +306,17 @@ async function guardarCurso() {
 }
 
 /**
- * Eliminar
+ *  Control flujo
  */
-async function eliminarCurso() {
+function eliminarCurso() {
     const idCurso = document.getElementById('modalIdCurso').value;
-    const nombreCurso = document.getElementById('modalNombre').value;
-
     if (!idCurso) return;
 
-    // Aca tiene que aparecer algo que le pregunte al usuario si esta seguro
-    const confirmar = confirm(`¿Estás seguro de que querés eliminar el curso "${nombreCurso}"?`);
-    
-    if (!confirmar) return;
-
-    try {
-        const respuesta = await fetch(`${URL_API}/${idCurso}`, {
-            method: 'DELETE'
-        });
-
-        if (!respuesta.ok) {
-            throw new Error('No se pudo eliminar el curso del servidor');
-        }
-
-        // Cerramos el modal
-        const modalElement = document.getElementById('modalCurso');
-        const modalBootstrap = bootstrap.Modal.getInstance(modalElement);
-        modalBootstrap.hide();
-
-        // Refrescamos la tabla
-        await cargarCursos(paginaActual);
-        //aca tiene que llamar a algo que avise al usuario
-        const elToast = document.getElementById('miToast');
-        const toastMensaje = document.getElementById("contenidoToast");
-        toastMensaje.innerHTML="<p> Curso Eliminado con exito.</p>"
-        // Lo inicializamos con Bootstrap
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(elToast);
-        
-        // Lo mostramos
-        toastBootstrap.show();
-
-    } catch (error) {
-        console.error('Error al eliminar curso:', error);
-        //aca tiene que llamar a algo que avise al usuario
-        const errorGuardar = document.getElementById("error");
-        const modalElement = document.getElementById('modalCurso');
-        const modalBootstrap = bootstrap.Modal.getInstance(modalElement);
-        if(errorGuardar){
-            errorGuardar.innerHTML="<p> Ocurrió un error al intentar eliminar el curso.</p>"
-            errorGuardar.style.display="block";
-            modalBootstrap.hide();
-            window.scrollTo(0,0);
-            setTimeout(() =>{
-                errorGuardar.style.display = "none";
-            }, 3000)
-        }
-    }
-    
+    // Solo abrimos el modal de confirmación
+    const modalConfirm = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalConfirmacion'));
+    modalConfirm.show();
 }
+    
 async function cargarEstados() {
     const selectEstado = document.getElementById('modalEstadoCurso');
     
@@ -376,14 +334,42 @@ async function cargarEstados() {
 
         estados.forEach(estado => {
             const option = document.createElement('option');
-            
             option.value = estado.idCursoEstado;
             option.textContent = estado.descripcion;
             selectEstado.appendChild(option);
-
         });
 
     } catch (error) {
         console.error('Error al rellenar el select de estados:', error);
+    }
+}
+function cerrarModalPorId(idModal) {
+    const el = document.getElementById(idModal);
+    const instance = bootstrap.Modal.getInstance(el);
+    if (instance) instance.hide();
+}
+
+function cerrarTodosLosModales() {
+    cerrarModalPorId('modalConfirmacion');
+    cerrarModalPorId('modalCurso');
+}
+
+function mostrarToast(mensaje) {
+    const elToast = document.getElementById('miToast');
+    const toastMensaje = document.getElementById("contenidoToast");
+    toastMensaje.innerHTML = `<p>${mensaje}</p>`;
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(elToast);
+    toastBootstrap.show();
+}
+
+function mostrarErrorAviso(mensaje) {
+    const errorGuardar = document.getElementById("error");
+    if (errorGuardar) {
+        errorGuardar.innerHTML = `<p>${mensaje}</p>`;
+        errorGuardar.style.display = "block";
+        window.scrollTo(0, 0);
+        setTimeout(() => {
+            errorGuardar.style.display = "none";
+        }, 3000);
     }
 }

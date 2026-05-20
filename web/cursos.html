@@ -69,10 +69,10 @@
     </footer>
 
     
-    <!-- Contenedor que lo fija en la esquina superior derecha -->
+    
     <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
     
-    <!-- El Toast (le agregamos un ID para controlarlo con JS) -->
+    <!-- El Toast -->
         <div id="miToast" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <strong class="me-auto">Notificación</strong>
@@ -83,9 +83,11 @@
 
     </div>
 
+    
 
+    <!-- Ventana Modal de detalles, Edicion y Eliminacion-->
     <div class="modal fade" id="modalCurso" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-white shadow">
             
             <div class="modal-header">
@@ -137,6 +139,25 @@
                 </div>   
             </div>
         </div>
-    </div>    
+    </div> 
+
+    <!--Modal de confirmacion-->
+    <div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">¿Estás seguro?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    Esta acción es irreversible. ¿Deseas continuar?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmarAccion">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>   
 </body>
 </html>
