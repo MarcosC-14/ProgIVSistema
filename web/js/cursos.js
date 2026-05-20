@@ -261,15 +261,32 @@ async function guardarCurso() {
     const textoOriginal = btnGuardar.textContent;
 
     const idCurso = document.getElementById('modalIdCurso').value;
-    
     const estado = document.getElementById('modalEstadoCurso').value; 
-    
     const nombreFinal = document.getElementById('modalNombre').value.trim();
-    
     const descripcionFinal = document.getElementById('modalDescripcion').value.trim();
+    const fechaFinal = document.getElementById('modalFecha').value;
+
+    // Control de ingreso
+    let errorDeIngreso = false;
+    let mensajeDeErrorDeIngreso = "";
+    
 
     if (nombreFinal.length === 0 || descripcionFinal.length === 0){
-        mostrarErrorAviso("El nombre y la descripción no pueden estar vacíos ni contener solo espacios.");
+        mensajeDeErrorDeIngreso = "El nombre y la descripción no pueden estar vacíos ni contener solo espacios.";
+        errorDeIngreso = true;
+    } else if(!fechaFinal) {
+        mensajeDeErrorDeIngreso = "La fecha de inicio es obligatoria.";
+        errorDeIngreso = true;
+    } else {
+        const anioIngresado = parseInt(fechaFinal.split('-')[0], 10);
+        if (anioIngresado > 2099) {
+            mensajeDeErrorDeIngreso = "El año de la fecha no debe superar el límite máximo de 2099.";
+            errorDeIngreso = true;
+        }
+    }
+
+    if (errorDeIngreso){
+        mostrarErrorAviso(mensajeDeErrorDeIngreso);
         cerrarModalPorId('modalCurso');
         btnGuardar.disabled = false;
         btnGuardar.textContent = textoOriginal;
@@ -277,9 +294,9 @@ async function guardarCurso() {
     }
 
     const datosCurso = {
-        nombre: document.getElementById('modalNombre').value,
-        descripcion: document.getElementById('modalDescripcion').value,
-        fechaInicio: document.getElementById('modalFecha').value,
+        nombre: nombreFinal,
+        descripcion: descripcionFinal,
+        fechaInicio: fechaFinal,
         cantidadHoras: parseInt(document.getElementById('modalHoras').value) || 0,
         inscriptosMax: parseInt(document.getElementById('modalCupo').value) || 0,
         idCursoEstado: parseInt(document.getElementById('modalEstadoCurso').value),

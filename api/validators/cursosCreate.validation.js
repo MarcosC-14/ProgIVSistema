@@ -17,6 +17,7 @@ const cursosCreateValidation = [
         
     body('fechaInicio')
         .exists().withMessage('La fecha de inicio es obligatoria.')
+        .isBefore('2100-01-01').withMessage('El año de la fecha ingresada excede el límite máximo.')
         .toDate(),
 
     body('cantidadHoras')
