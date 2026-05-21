@@ -19,8 +19,7 @@ export default class CursosController {
     }
     async getById(req, res){
         try{
-            const {id}= req.params;
-            const curso =  await this.service.getById(id);
+            const curso =  await this.service.getById(req.id);
 
             res.status(200).json(curso);
         }catch(error){
@@ -59,8 +58,7 @@ export default class CursosController {
 
     async borrar(req, res){
         try{
-            const {id}= req.params;
-            const resultado= await this.service.borrar(id);
+            const resultado= await this.service.borrar(req.id);
             res.status(200).json(resultado);
         }catch(error){
             console.error(error);

@@ -1,11 +1,15 @@
 import express from "express";
 import CursosController from "../../controllers/cursos.controller.js";
 import cursosFindAllValidation from "../../validators/cursosFindAll.validation.js";
-import cursosCreateTransform from "../../transforms/cursosCreate.transform.js";
 import cursosFindAllTransform from "../../transforms/cursosFindAll.transform.js";
+import cursosGetByIdValidation from "../../validators/cursosGetById.validation.js";
+import cursosGetByIdTransform from "../../transforms/cursosGetById.transform.js";
 import cursosCreateValidation from "../../validators/cursosCreate.validation.js";
+import cursosCreateTransform from "../../transforms/cursosCreate.transform.js";
 import cursosUpdateValidation from "../../validators/cursosUpdate.validation.js";
 import cursosUpdateTransform from "../../transforms/cursosUpdate.transform.js";
+import cursosBorrarValidation from "../../validators/cursosBorrar.validation.js";
+import cursosBorrarTransform from "../../transforms/cursosBorrar.transform.js";
 
 const router = express.Router();
 
@@ -13,13 +17,13 @@ const cursosController = new CursosController();
 
 router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
 
-router.get("/cursos/:id", cursosController.getById.bind(cursosController));
+router.get("/cursos/:id", [cursosGetByIdValidation, cursosGetByIdTransform], cursosController.getById.bind(cursosController));
 
 router.post("/cursos", [cursosCreateValidation, cursosCreateTransform], cursosController.create.bind(cursosController));
 
 router.put("/cursos/:id", [cursosUpdateValidation,cursosUpdateTransform], cursosController.update.bind(cursosController));
 
-router.delete("/cursos/:id", cursosController.borrar.bind(cursosController));
+router.delete("/cursos/:id", [cursosBorrarValidation,cursosBorrarTransform], cursosController.borrar.bind(cursosController));
 
 router.get('/api/estados', async (req, res) => {
     try {
