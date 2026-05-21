@@ -1,6 +1,8 @@
+import CursosFindAllDTO from "../dtos/cursosFindAll.dto.js";
+
 const cursosFindAllTransform = (req, res, next) => {
-    req.limit = req.query.limit ? Number(req.query.limit) : 0;
-    req.offset = req.query.offset ? Number(req.query.offset) : 0;
+    const limit = req.query.limit ? Number(req.query.limit) : 0;
+    const offset = req.query.offset ? Number(req.query.offset) : 0;
 
     const filterObj = {};
     const orderObj = {idCurso : "ASC"};
@@ -15,6 +17,9 @@ const cursosFindAllTransform = (req, res, next) => {
 
     req.filter = filterObj;
     req.order = orderObj;
+
+    //DTO
+    req.dto = new CursosFindAllDTO(limit, offset, filterObj,orderObj);
 
     next();
 };

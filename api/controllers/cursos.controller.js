@@ -8,7 +8,7 @@ export default class CursosController {
     async getAll(req, res) {
         try {
 
-            const { filter, limit, offset, order} = req;
+            const { filter, limit, offset, order} = req.dto;
             const cursos = await this.service.getAll(filter, limit, offset, order);
             res.status(200).json(cursos);
             
@@ -34,7 +34,7 @@ export default class CursosController {
 
     async create (req, res){
         try{
-            const curso = await this.service.create(req.data);
+            const curso = await this.service.create(req.dto);
             res.status(200).json(curso);
 
         }catch(error){
@@ -44,7 +44,7 @@ export default class CursosController {
     }
     async update (req, res){
         try{
-            const curso = await this.service.update(req.id, req.data);
+            const curso = await this.service.update(req.id, req.dto);
 
 
             return res.status(200).json(curso);
@@ -56,7 +56,7 @@ export default class CursosController {
             return res.status(500).json({error: 'Error al actualizar el curso'});
         }
     }
-    
+
     async borrar(req, res){
         try{
             const {id}= req.params;
