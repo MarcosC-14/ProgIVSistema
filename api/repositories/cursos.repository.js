@@ -108,7 +108,7 @@ export default class CursosRepository {
                 data.fechaInicio,
                 data.cantidadHoras,
                 data.inscriptosMax,
-                data.id_CursoEstado || 1,
+                data.idCursoEstado || 1,
                 data.idUsuarioModificacion ||null
             ];
             const { rows } = await client.query(query, values);
