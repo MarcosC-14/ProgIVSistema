@@ -1,5 +1,5 @@
 import CursosRepository from "../repositories/cursos.repository.js";
-import CursoResponseDTO from "../dtos/curso.response.dto.js";
+import CursoResponseDTO from "../dtos/cursos/curso.response.dto.js";
 import BaseService from './base.services.js';
 
 export default class CursosService extends BaseService {

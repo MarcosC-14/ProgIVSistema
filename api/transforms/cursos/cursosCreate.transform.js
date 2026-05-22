@@ -1,8 +1,7 @@
-import CursosUpdateDTO from "../dtos/cursosUpdate.dto.js";
+import CursosCreateDTO from "../../dtos/cursos/cursosCreate.dto.js";
 
-const cursosUpdateTransform = (req, res, next) => {
-    req.id = req.params.id;
-
+const cursosCreateTransform = (req, res, next) => {
+    
     /* No es necesario por uso de DTO. Hace lo mismo
     const { nombre, descripcion, fechaInicio, cantidadHoras, inscriptosMax, idCursoEstado, idUsuarioModificacion} = req.body;
 
@@ -16,11 +15,10 @@ const cursosUpdateTransform = (req, res, next) => {
         idUsuarioModificacion
     };
     */
-
     //DTO
-    req.dto = new CursosUpdateDTO(req.body);
+        req.dto = new CursosCreateDTO(req.body);
 
     next();
 };
 
-export default cursosUpdateTransform;
+export default cursosCreateTransform;

@@ -1,15 +1,15 @@
 import express from "express";
 import CursosController from "../../controllers/cursos.controller.js";
-import cursosFindAllValidation from "../../validators/cursosFindAll.validation.js";
-import cursosFindAllTransform from "../../transforms/cursosFindAll.transform.js";
-import cursosGetByIdValidation from "../../validators/cursosGetById.validation.js";
-import cursosGetByIdTransform from "../../transforms/cursosGetById.transform.js";
-import cursosCreateValidation from "../../validators/cursosCreate.validation.js";
-import cursosCreateTransform from "../../transforms/cursosCreate.transform.js";
-import cursosUpdateValidation from "../../validators/cursosUpdate.validation.js";
-import cursosUpdateTransform from "../../transforms/cursosUpdate.transform.js";
-import cursosBorrarValidation from "../../validators/cursosBorrar.validation.js";
-import cursosBorrarTransform from "../../transforms/cursosBorrar.transform.js";
+import cursosFindAllValidation from "../../validators/cursos/cursosFindAll.validation.js";
+import cursosFindAllTransform from "../../transforms/cursos/cursosFindAll.transform.js";
+import cursosGetByIdValidation from "../../validators/cursos/cursosGetById.validation.js";
+import cursosGetByIdTransform from "../../transforms/cursos/cursosGetById.transform.js";
+import cursosCreateValidation from "../../validators/cursos/cursosCreate.validation.js";
+import cursosCreateTransform from "../../transforms/cursos/cursosCreate.transform.js";
+import cursosUpdateValidation from "../../validators/cursos/cursosUpdate.validation.js";
+import cursosUpdateTransform from "../../transforms/cursos/cursosUpdate.transform.js";
+import cursosBorrarValidation from "../../validators/cursos/cursosBorrar.validation.js";
+import cursosBorrarTransform from "../../transforms/cursos/cursosBorrar.transform.js";
 
 const router = express.Router();
 

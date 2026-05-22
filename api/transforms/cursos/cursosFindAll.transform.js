@@ -1,4 +1,4 @@
-import CursosFindAllDTO from "../dtos/cursosFindAll.dto.js";
+import CursosFindAllDTO from "../../dtos/cursos/cursosFindAll.dto.js";
 
 const cursosFindAllTransform = (req, res, next) => {
     const limit = req.query.limit ? Number(req.query.limit) : 0;

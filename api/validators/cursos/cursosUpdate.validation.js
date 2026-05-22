@@ -11,7 +11,7 @@ const cursosUpdateValidation = [
         .isString().withMessage('El nombre debe ser una cadena de texto.')
         .trim()
         .notEmpty().withMessage('El nombre no puede estar vacío.')
-        .isLength({ min: 5, max: 120 }).withMessage('El nombre debe tener entre 5 y 120 caracteres.'),
+        .isLength({ min: 5, max: 45 }).withMessage('El nombre debe tener entre 5 y 45 caracteres.'),
         
     body('descripcion')
         .exists().withMessage('El campo descripción es obligatorio.')

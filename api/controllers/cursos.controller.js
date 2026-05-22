@@ -44,8 +44,6 @@ export default class CursosController {
     async update (req, res){
         try{
             const curso = await this.service.update(req.id, req.dto);
-
-
             return res.status(200).json(curso);
         }catch(error){
             console.error(error);
