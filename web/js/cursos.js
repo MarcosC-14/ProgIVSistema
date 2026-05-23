@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarCursos(1);
     configurarEventos();
     cargarEstados();
+    cargarEstadosCheckboxes();
 });
 
 /**
@@ -66,7 +67,7 @@ async function cargarCursos(paginaReq = 1) {
                 <td>${curso.cantidadHoras} hs</td>
                 <td>${curso.inscriptosMax}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-primary btn-editar" data-id="${curso.idCurso}">👁️ Ver</button>
+                    <button class="btn btn-sm btn-outline-primary btn-editar" title="Ver" data-id="${curso.idCurso}">👁️</button>
                 </td>
             `;
             tbody.appendChild(fila);
@@ -384,6 +385,43 @@ async function cargarEstados() {
         console.error('Error al rellenar el select de estados:', error);
     }
 }
+
+async function cargarEstadosCheckboxes() {
+    const contenedor = document.getElementById("contenedor-checkboxes-estados");
+
+    try {
+        const respuesta = await fetch('http://localhost:3000/api/estados'); 
+
+        if (!respuesta.ok) {
+            throw new Error('No se pudieron obtener los estados');
+        }
+
+        const estados = await respuesta.json();
+
+        contenedor.innerHTML="";
+
+        estados.forEach(estado => {
+            const checkboxHTML = `
+                <div class="form-check">
+                    <input class="form-check-input check-estado" 
+                            type="checkbox" 
+                            value="${estado.idCursoEstado}" 
+                            id="estado_${estado.idCursoEstado}" 
+                            name="estados">
+                    <label class="form-check-label" for="estado_${estado.idCursoEstado}">
+                        ${estado.descripcion}
+                    </label>
+                </div>
+            `;
+            // Lo sumamos al contenedor
+            contenedor.insertAdjacentHTML("beforeend", checkboxHTML);
+        });
+    }catch (error) {
+        console.error("Hubo un problema al cargar los estados de los cursos:", error);
+        contenedor.innerHTML = `<span class="text-danger small">No se pudieron cargar los estados</span>`;
+    }
+} 
+
 function cerrarModalPorId(idModal) {
     const el = document.getElementById(idModal);
     const instance = bootstrap.Modal.getInstance(el);
