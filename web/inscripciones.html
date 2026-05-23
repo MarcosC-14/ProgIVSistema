@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscripciones | Facuultad</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/inscripciones-styles.css">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>    
+<script src="js\inscripciones.js" type="module" defer></script>
+</head>
+<body>
+    <header>
+        <div id="headercito" class="contenedorcito">
+            <img id="logouner" src="imagen\logo_fcad.png" alt="Logo de la UNER">
+            <div>
+                <h1>Hola, Usuario</h1>
+                <button type="button" class="btn btn-primary">cerrar sesión</button>
+            </div>
+        </div>
+    </header>
+    <nav class="navbarcito">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="#">Inicio</a></li>
+                    <li class="nav-item"><a href="#">Cursos</a></li>
+                    <li class="nav-item"><a href="#">Estudiantes</a></li>
+                    <li class="nav-item active"><a href="../inscripciones.html">Inscripciones</a></li>
+                </ul>           
+    </nav>
+    
+    <main>
+        <div>
+            <h1>Inscripciones</h1>
+            <button class="btn btn-primary"> Nueva inscripción</button>
+        </div>
+        
+        <section>
+            <form id="form-filtro">
+            <label for="buscar-curso">Buscar:</label>
+            <input type="text" id="buscar-curso" placeholder="Nombre o descripción...">
+            
+            <label for="filtro-estado">Estado:</label>
+            <select id="filtro-estado">
+                <option value="todos">Todos</option>
+                <option value="activos">Activos</option>
+                <option value="inactivos">Inactivos</option>
+            </select>
+            
+            <button type="submit">Filtrar</button>
+            </form>
+        </section>
+
+        <div id="error" class="alert alert-danger" role="alert" style="display: none;"></div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">ID</th>
+                    <th class="text-center" scope="col">ID Curso</th>
+                    <th class="text-center" scope="col">Curso Nombre</th>
+                    <th class="text-center" scope="col">ID Est.</th>
+                    <th class="text-center" scope="col">Estudiante</th>
+                    <th class="text-center" scope="col">Documento</th>
+                    <th class="text-center" scope="col">Fecha y Hora</th>
+                    <th class="text-center" scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+        <nav aria-label="Navegación de registros" class="mt-4">
+            <ul class="pagination justify-content-center" id="paginacion-contenedor">
+            </ul>
+        </nav>
+    </main>
+
+    <footer>
+        <p>&copy; FCAD 2026 derechos del autor me olvidé qué decía</p>
+    </footer>
+
+    <dialog id="modal-nueva-inscripcion">
+        <article>
+            <header>
+                <h3>Registrar Nueva Inscripción</h3>
+                <button id="btn-cerrar-inscripcion" type="button">&times;</button>
+            </header>
+            
+            <form id="form-inscripcion">
+                <div class="form-group" style="position: relative;">
+                    <label for="buscar-estudiante">Buscar Estudiante (DNI o Apellido):</label>
+                    <input type="text" id="buscar-estudiante" class="form-control" placeholder="Ej: Perez..." autocomplete="off" required>
+                    
+                    <ul id="resultados-estudiantes" class="list-group" style="position: absolute; z-index: 1000; width: 100%; display: none;"></ul>
+                    
+                    <input type="hidden" id="id_estudiante" name="id_estudiante" required>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label for="id_curso">Seleccionar Curso:</label>
+                    <select id="id_curso" name="id_curso" class="form-control" required>
+                        <option value="">-- Seleccione un curso --</option>
+                        </select>
+                </div>
+
+                <footer class="mt-4">
+                    <button type="button" id="btn-cancelar-inscripcion" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Confirmar Inscripción</button>
+                </footer>
+            </form>
+        </article>
+    </dialog>
+
+
+</body>
+</html>
