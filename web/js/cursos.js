@@ -66,7 +66,7 @@ async function cargarCursos(paginaReq = 1) {
                 <td>${curso.cantidadHoras} hs</td>
                 <td>${curso.inscriptosMax}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-primary btn-editar" data-id="${curso.idCurso}">👁️ Ver</button>
+                    <button class="btn btn-sm btn-outline-primary btn-editar" title="Ver" data-id="${curso.idCurso}">👁️</button>
                 </td>
             `;
             tbody.appendChild(fila);
