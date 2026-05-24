@@ -60,6 +60,12 @@ export default class InscripcionesService extends BaseService{
     }
 
 
+    async getById(id){
+        const inscripcionBD = await this.InscripcionesRepository.getById(id);
+        //NOTA WIP
+    }
+
+
 
 
 }

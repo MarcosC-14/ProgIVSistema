@@ -186,5 +186,38 @@ export default class InscripcionesRepository{
         }
     }
 
+    async getById(id){
+        const client = await BdUtils.createConnection();
+
+        try {
+            const sql = `
+            SELECT 
+                i.id_inscripcion,
+                i.fecha_hora_inscripcion,
+                e.id_estudiante,
+                e.documento,
+                e.apellido AS estudiante_apellido,
+                e.nombres AS estudiante_nombres,
+                c.id_curso,
+                c.nombre AS curso_nombre,
+                i.id_usuario_modificacion,
+                i.fecha_hora_modificacion
+            FROM inscripciones i
+            INNER JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
+            INNER JOIN cursos c ON i.id_curso = c.id_curso
+            INNER JOIN inscripciones_estados ie ON i.id_inscripcion_estado = ie.id_inscripcion_estado
+            WHERE ie.es_activo = 1 AND i.id_inscripcion = $1
+            `;
+
+            const {rows} = await client.query(sql,[id]);
+            return rows[0];
+        } catch (error) {
+            console.error(`Error en getById para la inscripción ${id}`, error);
+            throw new Error('Error al traer la inscripcion')
+        } finally{
+            client.release();
+        }
+    }
+
 }
 
