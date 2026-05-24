@@ -9,14 +9,14 @@
     <link rel="stylesheet" href="css/inscripciones-styles.css">
     <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js\inscripciones.js" type="module" defer></script>
+    <script src="js/inscripciones.js" type="module" defer></script>
     <script src="js/bootstrap.bundle.min.js" defer></script>
 </head>
 <body>
     <header>
         <div class = "contenedor">
             <img src="imagen/logo_fcad.png" alt="Logo FCAD">    
-            <h1>Cursos FCAD - UNER</h1>
+            <h1>Inscripciones FCAD - UNER</h1>
         </div> 
         
     </header>
@@ -35,8 +35,8 @@
 
     <main>
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Listado de Cursos</h2>
-                <button type="button" class="btn btn-botonNormal" id="btnAgregarCurso" data-bs-toggle="modal" data-bs-target="#modalCurso">
+            <h2>Listado de Inscripciones</h2>
+                <button type="button" class="btn btn-botonNormal" id="btnAgregarCurso" data-bs-toggle="modal" data-bs-target="#modalInscripcion">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus-lg icono-btn" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
                     </svg>
@@ -48,19 +48,19 @@
         
         <div class="card mb-4 shadow-sm">
             <div class="card-body">
-                <form id="formBusquedaCursos" class="row g-3 justify-content-between align-items-end gap-3">
+                <form id="formBusquedaInscripciones" class="row g-3 justify-content-between align-items-end gap-3">
                     <div class="col-12 col-sm-3 col-md-1">
-                        <label for="buscarId" class="form-label fw-bold">ID Curso</label>
+                        <label for="buscarId" class="form-label fw-bold">ID Inscripción</label>
                         <input type="number" id="buscarId" class="form-control" placeholder="Ej: 1" min="1">
                     </div>
 
                     <div class="col-12 col-sm-9 col-md-4">
-                        <label for="buscarTexto" class="form-label fw-bold">Nombre o descripción</label>
+                        <label for="buscarTexto" class="form-label fw-bold">Documento Estudiante</label>
                         <input type="text" id="buscarTexto" class="form-control" placeholder="Buscar...">
                     </div>
 
                     <div class="col-12 col-sm-6 col-md-4">
-                        <label for="buscarEstado" class="form-label fw-bold">Estado del curso</label>
+                        <label for="buscarEstado" class="form-label fw-bold">ID Curso</label>
                         <div id="contenedor-checkboxes-estados" class="d-flex gap-2 pt-1">
                             
                         </div>
@@ -102,7 +102,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 Cursos FCAD - UNER. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Inscripciones FCAD - UNER. Todos los derechos reservados.</p>
     </footer>
 
     
@@ -122,54 +122,35 @@
     
 
     <!-- Ventana Modal de detalles, Edicion y Eliminacion-->
-    <div class="modal fade" id="modalCurso" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-white shadow">
             
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCursoLabel">Detalles del Curso</h5>
+                <h5 class="modal-title" id="modalInscripcionLabel">Nueva inscripción</h5>
                 <button type="button" class="btn btn-botonCerrar" data-bs-dismiss="modal" aria-label="Close">X</button>               
             </div>
 
                 <div class="modal-body">
-                    <form id="formCurso">
-                        <input type="hidden" id="modalIdCurso">
+                    <form id="formInscripcion">
+                        <input type="hidden" id="modalIdInscripcion">
 
                         <div class = "mb-3">
-                            <label class="form-label">Nombre del Curso</label>
-                            <input type="text" class="form-control" id="modalNombre" placeholder="Ej: Robotica" autocomplete="off" minlength="5" maxlength="45" pattern="[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\-\.,:]+" title="Solo se permiten letras, números, espacios y puntuación básica (-,.)" required>
+                            <label class="form-label">Seleccionar Curso:</label>
+                            <select class="form-select" id="modalSelectCurso" required>
+                                <option selected disabled value="">Cargando cursos...</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 position-relative">
+                            <label class="form-label">Buscar Estudiante (Documento o Apellido):</label>
+                            <input type="text" class="form-control" id="modalBuscarEstudiante" placeholder="Ingrese al menos 2 caracteres..." autocomplete="off" required>
+                            <input type="hidden" id="modalIdEstudiante" required>
+                            <ul class="list-group position-absolute w-100 z-3" id="resultados-estudiantes" style="display: none"></ul>
                         </div>
 
-                        <div class= "mb-3">
-                            <label class="form-label">Descripción:</label>
-                            <textarea class="form-control" id="modalDescripcion" placeholder="Ej: Se utilizara Arduino" minlength="5" maxlength="500" autocomplete="off" required></textarea>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Fecha de Inicio:</label>
-                            <input type="date" class="form-control" id="modalFecha" autocomplete="off" max="2099-12-31" required>
-                        </div>    
-                        <div class="row">
-                            <div class="col-6 mb-3">
-                                <label class="form-label">Cantidad de Horas:</label>
-                                <input type="number" class="form-control" min="1" id="modalHoras" placeholder="Ej: 3" step="1" autocomplete="off" max="5000" required>
-                            </div>
-                            <div class="col-6 mb-3">
-                                <label class="form-label">Cupo Máximo:</label>
-                                <input type="number" class="form-control" min="1" max="10000" id="modalCupo" placeholder="Ej: 43" step="1" autocomplete="off" required>
-                            </div>
-                            <div class="col-6 mb-3">
-                                <label class="form-label">Estado del curso:</label>
-                                <select class="form-select" id="modalEstadoCurso" required>
-                                    <option selected disabled value="">Selecciona un estado ...</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-botonNormal" id="btnEliminar">Eliminar Curso</button>
-                            <button type="submit" class="btn btn-botonNormal" id="btnGuardar">Modificar Curso</button>
+                            <button type="button" class="btn btn-danger" id="btnEliminar" style="display: none">Anular Inscripción</button>
+                            <button type="submit" class="btn btn-botonNormal" id="btnGuardar">Registrar Inscripción</button>
                         </div>
                     </form>
                 </div>   

@@ -1,4 +1,5 @@
 body{
+    background-color: rgb(196, 215, 255);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -113,9 +114,10 @@ div.contenedor-principal a:hover {
 
 
 main{
-      flex: 1;
-      width: 100%;
-      padding: 2rem;
+    background-color: rgb(212, 218, 255);
+    flex: 1;
+    width: 100%;
+    padding: 2rem;
 }
 
 
