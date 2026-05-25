@@ -252,8 +252,7 @@ function asignarEventosBotonesVer() {
 
 
 /**
- * 6. Visualización de Registro Existente (Lectura y opción de borrado)
- * En bases relacionales, una inscripción usualmente no se "edita", se anula y se crea una nueva.
+ * 6. Visualización de inscripción seleccionada.
  */
 async function abrirModalDetalle(id) {
     try {
@@ -261,15 +260,16 @@ async function abrirModalDetalle(id) {
         if (!respuesta.ok) throw new Error('No se pudo obtener el detalle');
         
         const inscripcion = await respuesta.json();
-
+        console.log(inscripcion);
+        
         document.getElementById('modalIdInscripcion').value = inscripcion.idInscripcion || id;
         
-        // Seteamos el curso y bloqueamos el select
+        // Cargamos el curso y bloqueamos el select
         const selectCurso = document.getElementById('modalSelectCurso');
         selectCurso.value = inscripcion.idCurso;
         selectCurso.disabled = true;
 
-        // Seteamos el estudiante visualmente y bloqueamos el typeahead
+        // Cargamos el estudiante visualmente y bloqueamos el typeahead
         const inputBuscar = document.getElementById('modalBuscarEstudiante');
         inputBuscar.value = `Documento: ${inscripcion.documento} - ID: ${inscripcion.idEstudiante}`;
         inputBuscar.disabled = true;
@@ -277,10 +277,10 @@ async function abrirModalDetalle(id) {
 
         document.getElementById('modalInscripcionLabel').textContent = 'Detalle de Inscripción';
         
-        // Ocultamos el botón de guardar porque estamos en modo lectura
+        // Ocultamos el botón de guardar
         document.getElementById('btnGuardar').style.display = 'none';
         
-        // Mostramos el botón de eliminar por si se desea anular
+        // Mostramos el botón de eliminar
         const btnEliminar = document.getElementById('btnEliminar');
         btnEliminar.style.display = 'block';
 

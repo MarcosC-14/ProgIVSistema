@@ -21,8 +21,8 @@ import inscripcionesFindAllValidation from "../../validators/inscripciones/inscr
 import inscripcionesCreateValidation from "../../validators/inscripciones/inscripcionesCreate.validation.js";
 import inscripcionesFindAllTransform from "../../transforms/inscripciones/inscripcionesFindAll.transform.js";
 import inscripcionesCreateTransform from "../../transforms/inscripciones/inscripcionesCreate.transform.js";
-
-
+import inscripcionesGetByIdValidation from "../../validators/inscripciones/inscripcionesGetById.validation.js";
+import inscripcionesGetByIdTransform from "../../transforms/inscripciones/inscripcionesGetById.transform.js";
 
 
 const router = express.Router();
@@ -58,6 +58,8 @@ router.get('/api/estados', async (req, res) => {
 router.get("/estudiantes", [estudiantesFindAllValidation, estudiantesFindAllTransform], estudiantesController.getAll.bind(estudiantesController));
 
 router.get("/inscripciones",[inscripcionesFindAllValidation,inscripcionesFindAllTransform], inscripcionesController.getAll.bind(inscripcionesController));
+
+router.get("/inscripciones/:id",[inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.getById.bind(inscripcionesController));
 
 router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateTransform],inscripcionesController.create.bind(inscripcionesController));
 

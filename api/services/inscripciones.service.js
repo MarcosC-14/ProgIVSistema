@@ -45,8 +45,10 @@ export default class InscripcionesService extends BaseService{
         const curso = await this.CursosRepository.getById(idCurso);
         if (!curso) throw new Error('El curso no existe.');
 
+        /*NOTA Comentado hasta que se haya hecho esa parte en el repo :(
         const estudiante = await this.EstudiantesRepository.getById(idEstudiante);
         if (!estudiante) throw new Error('El estudiante no existe');
+        */
 
         const inscripto = await this.repository.exists(idEstudiante,idCurso);
         if (inscripto) throw new Error('El estudiante ya está registrado en el curso.');
@@ -61,8 +63,12 @@ export default class InscripcionesService extends BaseService{
 
 
     async getById(id){
-        const inscripcionBD = await this.InscripcionesRepository.getById(id);
-        //NOTA WIP
+        const inscripcionBD = await this.repository.getById(id);
+        if (!inscripcionBD){
+            throw new Error("Inscripcin no encontrada");
+        }
+
+        return new InscripcionResponseDTO(inscripcionBD);
     }
 
 
