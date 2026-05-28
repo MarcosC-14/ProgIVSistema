@@ -84,4 +84,31 @@ export default class InscripcionesController {
             });
         }
     };
+
+    async borrar(req,res){
+        try{
+            const inscripcionBorrada = await this.service.borrar(req.id);
+            if (!inscripcionBorrada) throw new Error('La inscripción no existe');
+            
+            return res.status(200).json({
+                status: "success",
+                message: "Inscripción borrada exitosamente",
+                data: inscripcionBorrada
+            });
+        } catch (error){
+            console.error(error);
+            if(error.message === 'La inscripción no existe'){
+                return res.status(404).json({
+                    status: "fail",
+                    message: error.message
+                });
+            }
+
+            return res.status(500).json({
+                status: "error",
+                message: "Fallo estructural al procesar la eliminación de la inscripción",
+                detail: error.message
+            });
+        }
+    }
 }

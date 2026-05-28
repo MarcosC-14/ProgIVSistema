@@ -23,7 +23,8 @@ import inscripcionesFindAllTransform from "../../transforms/inscripciones/inscri
 import inscripcionesCreateTransform from "../../transforms/inscripciones/inscripcionesCreate.transform.js";
 import inscripcionesGetByIdValidation from "../../validators/inscripciones/inscripcionesGetById.validation.js";
 import inscripcionesGetByIdTransform from "../../transforms/inscripciones/inscripcionesGetById.transform.js";
-
+import inscripcionesBorrarValidation from "../../validators/inscripciones/inscripcionesBorrar.validation.js";
+import inscripcionesBorrarTransform from "../../transforms/inscripciones/inscripcionesBorrar.transform.js";
 
 const router = express.Router();
 
@@ -62,6 +63,8 @@ router.get("/inscripciones",[inscripcionesFindAllValidation,inscripcionesFindAll
 router.get("/inscripciones/:id",[inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.getById.bind(inscripcionesController));
 
 router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateTransform],inscripcionesController.create.bind(inscripcionesController));
+
+router.delete("/inscripciones/:id", [inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
 
 
 export default router;

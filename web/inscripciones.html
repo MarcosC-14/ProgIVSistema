@@ -26,9 +26,9 @@
         <nav>
             <ul>
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="">Inscripciones</a></li>
+                <li><a href="" class="active">Inscripciones</a></li>
                 <li><a href="">Estudiantes</a></li>
-                <li><a href="cursos.html" class="active">Cursos</a></li>
+                <li><a href="cursos.html">Cursos</a></li>
         </ul> 
         </nav>
     </div>
@@ -149,7 +149,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" id="btnEliminar" style="display: none">Anular Inscripción</button>
+                            <button type="button" class="btn btn-danger" id="btnEliminar" style="display: none">Eliminar Inscripción</button>
                             <button type="submit" class="btn btn-botonNormal" id="btnGuardar">Registrar Inscripción</button>
                         </div>
                     </form>
@@ -176,5 +176,51 @@
             </div>
         </div>
     </div>   
+
+    <div class="modal fade" id="modalDetalleInscripcion" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white shadow">
+                
+                <div class="modal-header">
+                    <h5 class="modal-title text-dark" id="modalDetalleLabel">Detalle de la Inscripción</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>               
+                </div>
+
+                <div class="modal-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5 text-secondary">ID Inscripción:</dt>
+                        <dd class="col-sm-7" id="detIdInscripcion"></dd>
+
+                        <dt class="col-sm-5 text-secondary">Fecha Inscripción:</dt>
+                        <dd class="col-sm-7" id="detFecha"></dd>
+
+                        <hr class="my-2">
+
+                        <dt class="col-sm-5 text-secondary">ID Curso:</dt>
+                        <dd class="col-sm-7" id="detIdCurso"></dd>
+
+                        <dt class="col-sm-5 text-secondary">Nombre del Curso:</dt>
+                        <dd class="col-sm-7" id="detCursoNombre"></dd>
+
+                        <hr class="my-2">
+
+                        <dt class="col-sm-5 text-secondary">ID Estudiante:</dt>
+                        <dd class="col-sm-7" id="detIdEstudiante"></dd>
+
+                        <dt class="col-sm-5 text-secondary">Estudiante:</dt>
+                        <dd class="col-sm-7" id="detEstudianteNombre"></dd>
+
+                        <dt class="col-sm-5 text-secondary">Documento:</dt>
+                        <dd class="col-sm-7" id="detDocumento"></dd>
+                    </dl>
+                </div>   
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="btnEliminarDesdeDetalle">Eliminar Inscripción</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
