@@ -155,8 +155,6 @@ export default class InscripcionesRepository{
         const client = await BdUtils.createConnection();
 
         try {
-            const sqlEstado = `SELECT id_inscripcion_estado FROM public.inscripciones_estados WHERE es_activo = 1 LIMIT 1;`;
-            const estadoRes = await client.query(sqlEstado);
             const idEstadoActivo = estadoRes.rows[0].id_inscripcion_estado;
 
             const sqlInsert = `
@@ -168,14 +166,19 @@ export default class InscripcionesRepository{
                     id_usuario_modificacion, 
                     fecha_hora_modificacion
                 ) 
-                VALUES ($1, $2, (NOW() AT TIME ZONE 'America/Argentina/Buenos_Aires'), $3, $4, (NOW() AT TIME ZONE 'America/Argentina/Buenos_Aires'))
+                VALUES ($1, 
+                $2, 
+                (NOW() AT TIME ZONE 'America/Argentina/Buenos_Aires'), 
+                (SELECT id_inscripcion_estado FROM public.inscripciones_estados WHERE es_activo = 1 LIMIT 1), 
+                $3, 
+                (NOW() AT TIME ZONE 'America/Argentina/Buenos_Aires')
+                )
                 RETURNING id_inscripcion;
             `;
             
             const values = [
                 data.id_curso,
                 data.id_estudiante,
-                idEstadoActivo,
                 data.id_usuario_modificacion
             ];
             const { rows } = await client.query(sqlInsert, values);
@@ -214,6 +217,31 @@ export default class InscripcionesRepository{
         } catch (error) {
             console.error(`Error en getById para la inscripción ${id}`, error);
             throw new Error('Error al traer la inscripcion')
+        } finally{
+            client.release();
+        }
+    }
+
+    async borrar(id){
+        const client = await BdUtils.createConnection();
+        try{
+            const sql = `
+            UPDATE public.inscripciones 
+                SET id_inscripcion_estado = (
+                    SELECT id_inscripcion_estado 
+                    FROM public.inscripciones_estados 
+                    WHERE es_activo = 0 
+                    LIMIT 1
+                )
+                WHERE id_inscripcion = $1
+                RETURNING id_inscripcion
+            `;
+
+            const {rows} = await client.query(sql,[id]);
+            return rows[0];
+        } catch(error){
+            console.error("Fallo al borrar",error);
+            throw error;
         } finally{
             client.release();
         }

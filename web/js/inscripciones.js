@@ -126,6 +126,7 @@ function configurarEventos() {
     const inputHiddenId = document.getElementById('modalIdEstudiante');
     const btnEliminar = document.getElementById('btnEliminar');
     const btnConfirmarAccion = document.getElementById('btnConfirmarAccion');
+    const btnEliminarDesdeDetalle = document.getElementById('btnEliminarDesdeDetalle'); //NOTA testing
 
     // Apertura del modal para Alta
     if (btnAgregar) {
@@ -145,9 +146,22 @@ function configurarEventos() {
         });
     }
 
+    if (btnEliminarDesdeDetalle) {
+        btnEliminarDesdeDetalle.addEventListener('click', () => {
+            // Transferimos el ID desde el texto del detalle al input hidden de eliminación (si lo usas), 
+            // o simplemente abrimos la confirmación y leemos directamente 'detIdInscripcion' en la función de borrado.
+            document.getElementById('modalIdInscripcion').value = document.getElementById('detIdInscripcion').textContent;
+            
+            // Ocultamos el modal de detalle y abrimos confirmación
+            cerrarModalPorId('modalDetalleInscripcion');
+            const modalConfirm = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalConfirmacion'));
+            modalConfirm.show();
+        });
+    }
+
     // Typeahead: Búsqueda dinámica de estudiantes
     inputBuscar.addEventListener('input', (e) => {
-        const query = e.target.value.trim();
+        const query = e.target.value.trim().toUpperCase();
         clearTimeout(peticionesTimer); 
 
         if (query.length < 2) {
@@ -250,46 +264,39 @@ function asignarEventosBotonesVer() {
     });
 }
 
-
 /**
- * 6. Visualización de inscripción seleccionada.
+ * 6. Visualización de Registro Existente (Solo Lectura)
  */
 async function abrirModalDetalle(id) {
     try {
         const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${id}`);
-        if (!respuesta.ok) throw new Error('No se pudo obtener el detalle');
+        if (!respuesta.ok) throw new Error('No se pudo obtener el detalle de la inscripción');
+        const respuestaJson = await respuesta.json(); //NOTA testing
+        const inscripcion = respuestaJson.data;
         
-        const inscripcion = await respuesta.json();
-        console.log(inscripcion);
+        // Mapeo directo a los nodos de texto del DOM
+        document.getElementById('detIdInscripcion').textContent = inscripcion.idInscripcion || id;
         
-        document.getElementById('modalIdInscripcion').value = inscripcion.idInscripcion || id;
-        
-        // Cargamos el curso y bloqueamos el select
-        const selectCurso = document.getElementById('modalSelectCurso');
-        selectCurso.value = inscripcion.idCurso;
-        selectCurso.disabled = true;
+        // Formateo de fecha
+        const fechaLocal = new Date(inscripcion.fechaInscripcion).toLocaleString("es-AR", { hour12: false });
+        document.getElementById('detFecha').textContent = fechaLocal;
 
-        // Cargamos el estudiante visualmente y bloqueamos el typeahead
-        const inputBuscar = document.getElementById('modalBuscarEstudiante');
-        inputBuscar.value = `Documento: ${inscripcion.documento} - ID: ${inscripcion.idEstudiante}`;
-        inputBuscar.disabled = true;
-        document.getElementById('modalIdEstudiante').value = inscripcion.idEstudiante;
+        // Datos del Curso
+        document.getElementById('detIdCurso').textContent = inscripcion.idCurso;
+        document.getElementById('detCursoNombre').textContent = inscripcion.cursoNombre;
 
-        document.getElementById('modalInscripcionLabel').textContent = 'Detalle de Inscripción';
-        
-        // Ocultamos el botón de guardar
-        document.getElementById('btnGuardar').style.display = 'none';
-        
-        // Mostramos el botón de eliminar
-        const btnEliminar = document.getElementById('btnEliminar');
-        btnEliminar.style.display = 'block';
+        // Datos del Estudiante
+        document.getElementById('detIdEstudiante').textContent = inscripcion.idEstudiante;
+        document.getElementById('detEstudianteNombre').textContent = `${inscripcion.estudianteApellido}, ${inscripcion.estudianteNombres}`;
+        document.getElementById('detDocumento').textContent = inscripcion.documento;
 
-        const modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalInscripcion'));
+        // mostrar del modal
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalDetalleInscripcion'));
         modalInstance.show();
 
     } catch (error) {
         console.error(error);
-        mostrarErrorAviso("Ocurrió un error al intentar cargar los detalles.");
+        mostrarErrorAviso("Ocurrió un error al intentar cargar los detalles de la inscripción.");
     }
 }
 
@@ -349,12 +356,13 @@ async function eliminarInscripcion() {
     if (!idInscripcion) return;
 
     try {
+        console.log(`${URL_API_INSCRIPCIONES}/${idInscripcion}`);
         const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${idInscripcion}`, {
             method: 'DELETE'
         });
 
         if (!respuesta.ok) {
-            throw new Error('No se pudo anular la inscripción en el servidor');
+            throw new Error('No se pudo eliminar la inscripción en el servidor');
         }
 
         cerrarTodosLosModales();
@@ -362,9 +370,9 @@ async function eliminarInscripcion() {
         mostrarToast("Inscripción anulada con éxito.");
 
     } catch (error) {
-        console.error('Error al anular:', error);
+        console.error('Error al eliminar:', error);
         cerrarTodosLosModales();
-        mostrarErrorAviso("Ocurrió un error al intentar anular la inscripción."); 
+        mostrarErrorAviso("Ocurrió un error al intentar eliminar la inscripción."); 
     }
 }
 
@@ -382,6 +390,7 @@ function cerrarModalPorId(idModal) {
 function cerrarTodosLosModales() {
     cerrarModalPorId('modalConfirmacion');
     cerrarModalPorId('modalInscripcion');
+    cerrarModalPorId('modalDetalleInscripcion');
 }
 
 function mostrarToast(mensaje) {
