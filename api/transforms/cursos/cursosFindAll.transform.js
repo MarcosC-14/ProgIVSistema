@@ -5,15 +5,39 @@ const cursosFindAllTransform = (req, res, next) => {
     const offset = req.query.offset ? Number(req.query.offset) : 0;
 
     const filterObj = {};
-    const orderObj = {idCurso : "ASC"};
+    const orderObj = {id_curso: "ASC"};
+    
+    const idCursoQuery = req.query.idCurso
+    const terminoQuery = req.query.termino || req.query.nombre || req.query.descripcion;
+    
+    const estadoQuery = req.query.idCursoEstado;
 
-    const { idCurso, nombre, descripcion, idCursoEstado, order } = req.query;
+    const order = req.query.order;
+    const asc = req.query.asc;
+
     /*id, nombre, descripción y estado*/
-    if (idCurso) filterObj.idCurso = Number(idCurso);
-    if (nombre) filterObj.nombre = nombre;
-    if (descripcion) filterObj.descripcion = descripcion;
-    if (idCursoEstado) filterObj.idCursoEstado =Number(idCursoEstado);
-    if (order) orderObj[order] = req.query.asc === "true" ? "ASC" : "DESC";
+    if (idCursoQuery){
+        filterObj.id_curso = Number(idCursoQuery);
+    } 
+    
+    if (terminoQuery) {
+        filterObj.termino = String(terminoQuery).trim();
+    }
+
+    if (estadoQuery) {
+        if (Array.isArray(estadoQuery)) {
+            // Si son varios, mapeamos cada uno a entero
+            filterObj.id_curso_estado = estadoQuery.map(id => parseInt(id, 10));
+        } else {
+            // Si es uno solo, lo hacemos entero directo
+            filterObj.id_curso_estado = parseInt(estadoQuery, 10);
+        }
+    }
+    if (order) {
+        delete orderObj.id_curso;
+        orderObj[order] = asc === "true" ? "ASC" : "DESC";
+
+    }
 
     req.filter = filterObj;
     req.order = orderObj;

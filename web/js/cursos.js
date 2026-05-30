@@ -16,10 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
 async function cargarCursos(paginaReq = 1) {
     const tbody = document.getElementById('tbody');
     const divError = document.getElementById('error');
-    
+
     // Actualizar página actual
     paginaActual = paginaReq;
-    
+
     // Cálculo del offset
     const offset = (paginaActual - 1) * limitePorPagina;
 
@@ -33,11 +33,30 @@ async function cargarCursos(paginaReq = 1) {
             </td>
         </tr>
     `;
-
+    
     try {
-        // Hacemos la petición GET al backend
-        const respuesta = await fetch(`${URL_API}?limit=${limitePorPagina}&offset=${offset}`);
-        
+        // Valores del formulario de busqueda
+        const buscarId = document.getElementById('buscarId')?.value.trim() || "";
+        const buscarTexto = document.getElementById('buscarTexto')?.value.trim() || "";
+
+        const params = new URLSearchParams();
+        params.append('limit', limitePorPagina);
+        params.append('offset',offset);
+
+        if (buscarId !== ""){
+            params.append('idCurso', buscarId);
+        }
+        if (buscarTexto !== ""){
+            params.append('termino', buscarTexto);
+        }
+
+        const checkboxEstados = document.querySelectorAll('.check-estado:checked');
+        checkboxEstados.forEach(cb =>{
+            params.append('idCursoEstado', cb.value);
+        })
+
+        const respuesta = await fetch(`${URL_API}?${params.toString()}`);
+
         if (!respuesta.ok) {
             throw new Error('No se pudo conectar con el servidor');
         }
@@ -49,8 +68,9 @@ async function cargarCursos(paginaReq = 1) {
         tbody.innerHTML = '';
         divError.style.display = 'none';
 
-        if (cursos.length === 0) {
+        if (!cursos || cursos.length === 0) {
             tbody.innerHTML = `<tr><td colspan="7" class="text-center">No hay cursos registrados actualmente.</td></tr>`;
+            mostrarControlesPaginacion(0);
             return;
         }
 
@@ -139,6 +159,15 @@ function configurarEventos() {
     const formCurso = document.getElementById('formCurso');
     const btnEliminar = document.getElementById('btnEliminar');
     const btnConfirmarAccion = document.getElementById('btnConfirmarAccion');
+    const btnBusqueda = document.getElementById('lupa');
+
+   if (btnBusqueda) {
+        btnBusqueda.addEventListener('click', (e) => {
+            e.preventDefault();
+            cargarCursos(1);
+        });
+    }
+
 
     btnAgregar.addEventListener('click', () => {
         formCurso.reset();
@@ -221,8 +250,7 @@ async function abrirModalEdicion(id) {
         document.getElementById('modalIdCurso').value = curso.idCurso || id;
         document.getElementById('modalNombre').value = curso.nombre;
         document.getElementById('modalDescripcion').value = curso.descripcion;
-        
-        const estadoCurso = curso.idCursoEstado || curso.id_curso_estado;
+        const estadoCurso = curso.idCursoEstado;
         if (estadoCurso) {
             document.getElementById('modalEstadoCurso').value = estadoCurso;
         }
