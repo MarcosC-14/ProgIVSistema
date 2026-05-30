@@ -8,13 +8,26 @@ export default class InscripcionesService extends BaseService{
 
     static KEYS_MAP = {
         idInscripcion: 'id_inscripcion',
-        idCurso: 'c.id_curso',
-        idEstudiante: 'e.id_estudiante',
+        idCurso: 'id_curso',
+        idEstudiante: 'id_estudiante',
         cursoNombre: 'nombre',
         estudianteApellido: 'apellido',
         estudianteDocumento: 'documento',
         fechaHoraInscripcion: 'fecha_hora_inscripcion',
         idUsuarioModificacion: 'id_usuario_modificacion',
+        estudianteTermino: 'estudiante_termino'
+    }
+
+    static KEYS_MAP_JOIN = {
+        idInscripcion: 'i.id_inscripcion',
+        idCurso: 'c.id_curso',
+        idEstudiante: 'e.id_estudiante',
+        cursoNombre: 'c.nombre',
+        estudianteApellido: 'e.apellido',
+        estudianteDocumento: 'e.documento',
+        fechaHoraInscripcion: 'i.fecha_hora_inscripcion',
+        idUsuarioModificacion: 'i.id_usuario_modificacion',
+        estudianteTermino: 'estudiante_termino'
     }
  
     constructor(){
@@ -25,10 +38,10 @@ export default class InscripcionesService extends BaseService{
     
     }
 
-    async getAll(filter,limit,offset,order){
-        const sqlFilter = this.mapKeysToColumns(filter, InscripcionesService.KEYS_MAP);
-        
-        const sqlOrder = this.mapKeysToColumns(order, InscripcionesService.KEYS_MAP);
+    async getAll(data){
+        const {filter,limit,offset,order} = data;
+        const sqlFilter = this.mapKeysToColumns(filter, InscripcionesService.KEYS_MAP_JOIN);
+        const sqlOrder = this.mapKeysToColumns(order, InscripcionesService.KEYS_MAP_JOIN);
 
         const [respuestaBD, totalInscripciones] = await Promise.all([
             this.repository.getAll(sqlFilter, limit, offset, sqlOrder),

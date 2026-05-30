@@ -43,9 +43,9 @@ async function cargarTablaInscripciones(paginaReq = 1){
 
         // Si existen filtros en memoria, se adjuntan a la URL
         if (filtrosAplicados.idInscripcion) queryParams.append('idInscripcion', filtrosAplicados.idInscripcion);
-        if (filtrosAplicados.estudianteTermino) queryParams.append('documento', filtrosAplicados.estudianteTermino);
+        if (filtrosAplicados.estudianteTermino) queryParams.append('estudianteTermino', filtrosAplicados.estudianteTermino);
         if (filtrosAplicados.idCurso) queryParams.append('idCurso', filtrosAplicados.idCurso);
-
+        console.log(`${URL_API_INSCRIPCIONES}?${queryParams.toString()}`);
 
         const respuesta = await fetch(`${URL_API_INSCRIPCIONES}?${queryParams.toString()}`);
         if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);

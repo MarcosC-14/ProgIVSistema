@@ -1,6 +1,10 @@
 import { query, validationResult } from 'express-validator';
 
 const inscripcionesFindAllValidation = [
+    query('idInscripcion')
+        .optional()
+        .isInt({ min: 1 }).withMessage('idInscripcion debe ser un número entero positivo')
+        .toInt(),
     query('idCurso')
         .optional()
         .isInt({ min: 1 }).withMessage('idCurso debe ser un número entero positivo')
@@ -9,17 +13,10 @@ const inscripcionesFindAllValidation = [
         .optional()
         .isInt({ min: 1 }).withMessage('idEstudiante debe ser un número entero positivo')
         .toInt(),
-    query('cursoNombre')
+    query('estudianteTermino')
         .optional()
-        .notEmpty().withMessage('cursoNombre no puede estar vacío')
-        .isString().withMessage('cursoNombre debe ser una cadena de texto'),
-    query('estudianteApellido')
-        .optional()
-        .notEmpty().withMessage('estudianteApellido no puede estar vacío')
-        .isString().withMessage('estudianteApellido debe ser una cadena de texto'),
-    query('estudianteDocumento')
-        .optional()
-        .isString().withMessage('estudianteDocumento debe ser una cadena de texto'),
+        .notEmpty().withMessage('estudianteTermino no puede estar vacío')
+        .isString().withMessage('estudianteTermino debe ser una cadena de texto'),
     query('limit')
         .optional()
         .isInt({ min: 0 }).withMessage('limit debe ser un entero no negativo')
