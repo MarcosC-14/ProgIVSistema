@@ -6,6 +6,13 @@ let paginaActual = 1;
 const limitePorPagina = 10;
 let peticionesTimer;
 
+let filtrosAplicados = {
+    idInscripcion: '',
+    estudianteTermino: '',
+    idCurso: ''
+};
+
+
 document.addEventListener("DOMContentLoaded", async function(){
     cargarTablaInscripciones(1);
     configurarEventos();
@@ -29,7 +36,18 @@ async function cargarTablaInscripciones(paginaReq = 1){
     `;
     
     try {
-        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}?limit=${limitePorPagina}&offset=${offset}`);
+        const queryParams = new URLSearchParams({
+            limit: limitePorPagina,
+            offset: offset
+        });
+
+        // Si existen filtros en memoria, se adjuntan a la URL
+        if (filtrosAplicados.idInscripcion) queryParams.append('idInscripcion', filtrosAplicados.idInscripcion);
+        if (filtrosAplicados.estudianteTermino) queryParams.append('documento', filtrosAplicados.estudianteTermino);
+        if (filtrosAplicados.idCurso) queryParams.append('idCurso', filtrosAplicados.idCurso);
+
+
+        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}?${queryParams.toString()}`);
         if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
 
         const datos = await respuesta.json();
@@ -119,14 +137,15 @@ function mostrarControlesPaginacion(totalInscripciones) {
  * 3. Configuración de Listeners del DOM
  */
 function configurarEventos() {
-    const btnAgregar = document.getElementById('btnAgregarCurso'); // Asegúrate de actualizar el ID en el HTML a btnAgregarInscripcion
+    const btnAgregar = document.getElementById('btnAgregarCurso');
     const formInscripcion = document.getElementById('formInscripcion');
     const inputBuscar = document.getElementById('modalBuscarEstudiante');
     const listaResultados = document.getElementById('resultados-estudiantes');
     const inputHiddenId = document.getElementById('modalIdEstudiante');
     const btnEliminar = document.getElementById('btnEliminar');
     const btnConfirmarAccion = document.getElementById('btnConfirmarAccion');
-    const btnEliminarDesdeDetalle = document.getElementById('btnEliminarDesdeDetalle'); //NOTA testing
+    const btnEliminarDesdeDetalle = document.getElementById('btnEliminarDesdeDetalle');
+    const formBusqueda = document.getElementById('formBusquedaInscripciones');
 
     // Apertura del modal para Alta
     if (btnAgregar) {
@@ -139,27 +158,38 @@ function configurarEventos() {
             document.getElementById('btnGuardar').textContent = 'Registrar Inscripción';
             document.getElementById('btnGuardar').style.display = 'block';
             
-            // Habilitamos los controles por si veníamos de una vista de solo lectura
+            // Habilitamos los controles
             document.getElementById('modalSelectCurso').disabled = false;
             inputBuscar.disabled = false;
             listaResultados.style.display = 'none';
         });
     }
 
+    if (formBusqueda) {
+        formBusqueda.addEventListener('submit', (e) => {
+            e.preventDefault(); // Evita recargar la página
+
+            filtrosAplicados = {
+                idInscripcion: document.getElementById('buscarId').value.trim(),
+                estudianteTermino: document.getElementById('buscarDocumento').value.trim(),
+                idCurso: document.getElementById('buscarIdCurso').value
+            };
+
+            cargarTablaInscripciones(1);
+        });
+    }
+
     if (btnEliminarDesdeDetalle) {
         btnEliminarDesdeDetalle.addEventListener('click', () => {
-            // Transferimos el ID desde el texto del detalle al input hidden de eliminación (si lo usas), 
-            // o simplemente abrimos la confirmación y leemos directamente 'detIdInscripcion' en la función de borrado.
             document.getElementById('modalIdInscripcion').value = document.getElementById('detIdInscripcion').textContent;
             
-            // Ocultamos el modal de detalle y abrimos confirmación
             cerrarModalPorId('modalDetalleInscripcion');
             const modalConfirm = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalConfirmacion'));
             modalConfirm.show();
         });
     }
 
-    // Typeahead: Búsqueda dinámica de estudiantes
+    // Typeahead para búsqueda de estudiantes
     inputBuscar.addEventListener('input', (e) => {
         const query = e.target.value.trim().toUpperCase();
         clearTimeout(peticionesTimer); 
@@ -186,7 +216,7 @@ function configurarEventos() {
                     estudiantes.forEach(est => {
                         const li = document.createElement('li');
                         li.className = 'list-group-item list-group-item-action clickeable';
-                        li.textContent = `${est.documento || ''} - ${est.apellido}, ${est.nombres}`;
+                        li.textContent = `${est.documento} - ${est.apellido}, ${est.nombres}`;
                         
                         // Selección de un item de la lista
                         li.addEventListener('click', () => {
@@ -233,21 +263,31 @@ function configurarEventos() {
  * 4. Precarga del elemento Select de Cursos
  */
 async function cargarCursosSelect() {
-    const selectCurso = document.getElementById('modalSelectCurso');
+    const selectCursoModal = document.getElementById('modalSelectCurso');
+    const selectCursoFiltro = document.getElementById('buscarIdCurso');
+    
     try {
         const respuesta = await fetch(`${URL_API_CURSOS}?limit=50`); // NOTA Capaz poner un order por fecha desc? 
         if (!respuesta.ok) throw new Error('Error obteniendo cursos');
         const datos = await respuesta.json();
+        const cursos = datos.respuesta; 
         
-        const cursos = datos.data || datos.respuesta || datos; 
-        
-        selectCurso.innerHTML = '<option value="" selected disabled>-- Seleccione un curso --</option>';
+        let opcionesHTML = '';
         cursos.forEach(curso => {
-            selectCurso.innerHTML += `<option value="${curso.idCurso || curso.id_curso}">${curso.nombre}</option>`;
+            opcionesHTML += `<option value="${curso.idCurso}">${curso.nombre}</option>`;
         });
+
+        if (selectCursoModal) {
+            selectCursoModal.innerHTML = '<option value="" selected disabled>-- Seleccione un curso --</option>' + opcionesHTML;
+        }
+        
+        // Inyectamos las opciones en el Filtro de búsqueda general
+        if (selectCursoFiltro) {
+            selectCursoFiltro.innerHTML = '<option value="">Todos los cursos</option>' + opcionesHTML;
+        }
+
     } catch (error) {
         console.error("Error cargando cursos:", error);
-        selectCurso.innerHTML = '<option value="" disabled>Error al cargar cursos</option>';
     }
 }
 
@@ -356,7 +396,6 @@ async function eliminarInscripcion() {
     if (!idInscripcion) return;
 
     try {
-        console.log(`${URL_API_INSCRIPCIONES}/${idInscripcion}`);
         const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${idInscripcion}`, {
             method: 'DELETE'
         });
