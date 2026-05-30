@@ -8,8 +8,8 @@ export default class InscripcionesService extends BaseService{
 
     static KEYS_MAP = {
         idInscripcion: 'id_inscripcion',
-        idCurso: 'id_curso',
-        idEstudiante: 'id_estudiante',
+        idCurso: 'c.id_curso',
+        idEstudiante: 'e.id_estudiante',
         cursoNombre: 'nombre',
         estudianteApellido: 'apellido',
         estudianteDocumento: 'documento',
@@ -27,6 +27,7 @@ export default class InscripcionesService extends BaseService{
 
     async getAll(filter,limit,offset,order){
         const sqlFilter = this.mapKeysToColumns(filter, InscripcionesService.KEYS_MAP);
+        
         const sqlOrder = this.mapKeysToColumns(order, InscripcionesService.KEYS_MAP);
 
         const [respuestaBD, totalInscripciones] = await Promise.all([

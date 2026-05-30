@@ -63,8 +63,8 @@ export default class InscripcionesRepository{
 
             const sqlParams = [];
             let paramIndex = 1;
-
             if (filter && Object.keys(filter).length > 0){
+                
                 Object.entries(filter).forEach(([key,value]) => {
                     if (typeof value === 'string'){
                         sql += ` AND ${key} ILIKE $${paramIndex}`;

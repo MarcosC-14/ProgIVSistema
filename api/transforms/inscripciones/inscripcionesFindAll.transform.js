@@ -16,8 +16,8 @@ const inscripcionesFindAllTransform = (req, res, next) => {
         asc 
     } = req.query;
 
-    if (idCurso) filterObj.idCurso = idCurso;
-    if (idEstudiante) filterObj.idEstudiante = idEstudiante;
+    if (idCurso) filterObj.idCurso =Number(idCurso);
+    if (idEstudiante) filterObj.idEstudiante = Number(idEstudiante);
     if (cursoNombre) filterObj.cursoNombre = cursoNombre;
     if (estudianteApellido) filterObj.estudianteApellido = estudianteApellido;
     if (estudianteDocumento) filterObj.estudianteDocumento = estudianteDocumento;
