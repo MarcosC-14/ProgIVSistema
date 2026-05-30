@@ -45,7 +45,6 @@ async function cargarTablaInscripciones(paginaReq = 1){
         if (filtrosAplicados.idInscripcion) queryParams.append('idInscripcion', filtrosAplicados.idInscripcion);
         if (filtrosAplicados.estudianteTermino) queryParams.append('estudianteTermino', filtrosAplicados.estudianteTermino);
         if (filtrosAplicados.idCurso) queryParams.append('idCurso', filtrosAplicados.idCurso);
-        console.log(`${URL_API_INSCRIPCIONES}?${queryParams.toString()}`);
 
         const respuesta = await fetch(`${URL_API_INSCRIPCIONES}?${queryParams.toString()}`);
         if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
@@ -202,6 +201,7 @@ function configurarEventos() {
 
         peticionesTimer = setTimeout(async () => {
             try {
+                //NOTA cambiar una vez haya uno de termino en estudiantes si los hay
                 const response = await fetch(`${URL_API_ESTUDIANTES}?limit=5&apellido=${query}`);
                 if (!response.ok) throw new Error("Error en la red");
                 
