@@ -17,9 +17,18 @@ export default class InscripcionesRepository{
 
             const sqlParams = [];
             let paramIndex = 1;
-
             if (filter && Object.keys(filter).length > 0) {
-                Object.entries(filter).forEach(([key, value]) => {
+                //destructuración para evitar errores varios por delete
+                const {estudiante_termino, ...otrosFiltros} = filter;
+                //Filtro para buscar el nombre o dni al mismo tiempo
+                if (estudiante_termino){
+                    sql += ` AND (e.documento ILIKE $${paramIndex} OR e.nombres ILIKE $${paramIndex} OR e.apellido ILIKE $${paramIndex})`;
+                    sqlParams.push(`%${estudiante_termino}%`);
+                    paramIndex++;
+                }
+
+                
+                Object.entries(otrosFiltros).forEach(([key, value]) => {
                     if (typeof value === 'string') {
                         sql += ` AND ${key} ILIKE $${paramIndex}`;
                         sqlParams.push(`%${value}%`);
@@ -30,11 +39,13 @@ export default class InscripcionesRepository{
                     paramIndex++;
                 });
             }
-
             const { rows } = await client.query(sql, sqlParams);
             return parseInt(rows[0].total, 10); 
             
-        } finally {
+        } catch (error) {
+            console.error(`Error en getCount para las inscripciones`, error);
+            throw new Error('Error al contar las inscripciones');   
+        }finally {
             client.release();
         }
     }
@@ -64,8 +75,18 @@ export default class InscripcionesRepository{
             const sqlParams = [];
             let paramIndex = 1;
             if (filter && Object.keys(filter).length > 0){
-                
-                Object.entries(filter).forEach(([key,value]) => {
+
+                //destructuración para evitar errores varios por delete
+                const {estudiante_termino, ...otrosFiltros} = filter;
+                //Filtro para buscar el nombre o dni al mismo tiempo
+                if (estudiante_termino){
+                    sql += ` AND (e.documento ILIKE $${paramIndex} OR e.nombres ILIKE $${paramIndex} OR e.apellido ILIKE $${paramIndex})`;
+                    sqlParams.push(`%${estudiante_termino}%`);
+                    paramIndex++;
+                }
+
+
+                Object.entries(otrosFiltros).forEach(([key,value]) => {
                     if (typeof value === 'string'){
                         sql += ` AND ${key} ILIKE $${paramIndex}`;
                         sqlParams.push(`%${value}%`);
@@ -122,7 +143,11 @@ export default class InscripcionesRepository{
             
             const {rows} = await client.query(sql, [idEstudiante, idCurso]);
             return rows.length > 0;
-        } finally{
+        } catch(error){
+            console.error(`Error en exists para la inscripción ${idEstudiante} al curso ${idCurso}`, error);
+            throw new Error('Error al buscar inscripción');
+        }
+        finally{
             client.release();
         }
     }
@@ -153,10 +178,7 @@ export default class InscripcionesRepository{
 
     async create(data){
         const client = await BdUtils.createConnection();
-
         try {
-            const idEstadoActivo = estadoRes.rows[0].id_inscripcion_estado;
-
             const sqlInsert = `
                 INSERT INTO public.inscripciones (
                     id_curso, 
@@ -184,7 +206,11 @@ export default class InscripcionesRepository{
             const { rows } = await client.query(sqlInsert, values);
             return rows[0];
 
-        } finally {
+        } catch(error){
+            console.error(`Error en create para la inscripción al curso ${data.id_curso}, de estudiante ${data.id_estudiante}, por usuario ${data.id_usuario_modificacion}`, error);
+            throw new Error('Error al crear la inscripcion')
+        } 
+        finally {
             client.release();
         }
     }

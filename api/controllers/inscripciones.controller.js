@@ -7,13 +7,7 @@ export default class InscripcionesController {
 
     getAll = async (req, res) => {
         try {
-            const resultado = await this.service.getAll(
-                req.filter,
-                req.limit,
-                req.offset,
-                req.order
-            );
-
+            const resultado = await this.service.getAll(req.dto);
             return res.status(200).json({
                 status: "success",
                 totalInscripciones: resultado.totalInscripciones,

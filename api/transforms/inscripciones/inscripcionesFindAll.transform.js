@@ -1,37 +1,33 @@
+import InscripcionesFindAllDTO from "../../dtos/inscripciones/inscripcionesFindAll.dto.js";
+
 const inscripcionesFindAllTransform = (req, res, next) => {
-    req.limit = req.query.limit !== undefined ? Number(req.query.limit) : 10;
-    req.offset = req.query.offset !== undefined ? Number(req.query.offset) : 0;
+    const limit = req.query.limit !== undefined ? Number(req.query.limit) : 10;
+    const offset = req.query.offset !== undefined ? Number(req.query.offset) : 0;
 
     const filterObj = {};
-    /// ESTO TÉCNICAMENTE DEBERÍA FUNCIONAR COMO VIMOS EN BASE DE DATOS CON MARIANO
-    const orderObj = { idInscripcion: "DESC" };
+    const orderObj = {};
 
     const { 
+        idInscripcion,
         idCurso, 
         idEstudiante, 
-        cursoNombre, 
-        estudianteApellido, 
-        estudianteDocumento, 
+        estudianteTermino,
         order, 
         asc 
     } = req.query;
 
+    if (idInscripcion) filterObj.idInscripcion =Number(idInscripcion);
     if (idCurso) filterObj.idCurso =Number(idCurso);
     if (idEstudiante) filterObj.idEstudiante = Number(idEstudiante);
-    if (cursoNombre) filterObj.cursoNombre = cursoNombre;
-    if (estudianteApellido) filterObj.estudianteApellido = estudianteApellido;
-    if (estudianteDocumento) filterObj.estudianteDocumento = estudianteDocumento;
+    if (estudianteTermino) filterObj.estudianteTermino = estudianteTermino;
 
     if (order) {
-        for (const prop of Object.keys(orderObj)) {
-            delete orderObj[prop];
-        }
         orderObj[order] = asc === "true" ? "ASC" : "DESC";
+    } else{
+        orderObj['idInscripcion'] = "DESC";
     }
-
-    req.filter = filterObj;
-    req.order = orderObj;
-
+    
+    req.dto = new InscripcionesFindAllDTO(filterObj,limit,offset,orderObj);
     next();
 };
 
