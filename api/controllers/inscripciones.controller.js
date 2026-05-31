@@ -50,7 +50,7 @@ export default class InscripcionesController {
 
     create = async (req, res) => {
         try {
-            const nuevaInscripcion = await this.service.create(req.data);
+            const nuevaInscripcion = await this.service.create(req.dto);
 
             return res.status(201).json({
                 status: "success",
