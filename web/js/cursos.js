@@ -199,7 +199,6 @@ function configurarEventos() {
         if(!idCurso) return;
 
         try{
-            console.log("ID procesando eliminación en servidor:", idCurso);
             const respuesta = await fetch(`${URL_API}/${idCurso}`, {
                 method: 'DELETE'
             });
@@ -230,7 +229,6 @@ function asignarEventosBotones() {
     botonesEditar.forEach(boton => {
         boton.addEventListener('click', async () => {
             const id = boton.getAttribute('data-id');
-            console.log("🔍 Detective Frontend - ID clickeado:", id);
             await abrirModalEdicion(id);
         });
     });

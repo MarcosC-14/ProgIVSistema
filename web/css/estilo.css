@@ -108,6 +108,11 @@ main {
     padding: 2rem;
     flex: 1;
 }
+
+main div{
+    padding: 0.5rem 0rem;
+}
+
 footer{
     color: rgb(212, 218, 255);
     background-color: #003366;
