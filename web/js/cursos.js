@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarCursos(1);
     configurarEventos();
     cargarEstados();
+    cargarEstadosCheckboxes();
 });
 
 /**
@@ -15,10 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
 async function cargarCursos(paginaReq = 1) {
     const tbody = document.getElementById('tbody');
     const divError = document.getElementById('error');
-    
+
     // Actualizar página actual
     paginaActual = paginaReq;
-    
+
     // Cálculo del offset
     const offset = (paginaActual - 1) * limitePorPagina;
 
@@ -32,11 +33,30 @@ async function cargarCursos(paginaReq = 1) {
             </td>
         </tr>
     `;
-
+    
     try {
-        // Hacemos la petición GET al backend
-        const respuesta = await fetch(`${URL_API}?limit=${limitePorPagina}&offset=${offset}`);
-        
+        // Valores del formulario de busqueda
+        const buscarId = document.getElementById('buscarId')?.value.trim() || "";
+        const buscarTexto = document.getElementById('buscarTexto')?.value.trim() || "";
+
+        const params = new URLSearchParams();
+        params.append('limit', limitePorPagina);
+        params.append('offset',offset);
+
+        if (buscarId !== ""){
+            params.append('idCurso', buscarId);
+        }
+        if (buscarTexto !== ""){
+            params.append('termino', buscarTexto);
+        }
+
+        const checkboxEstados = document.querySelectorAll('.check-estado:checked');
+        checkboxEstados.forEach(cb =>{
+            params.append('idCursoEstado', cb.value);
+        })
+
+        const respuesta = await fetch(`${URL_API}?${params.toString()}`);
+
         if (!respuesta.ok) {
             throw new Error('No se pudo conectar con el servidor');
         }
@@ -48,8 +68,9 @@ async function cargarCursos(paginaReq = 1) {
         tbody.innerHTML = '';
         divError.style.display = 'none';
 
-        if (cursos.length === 0) {
+        if (!cursos || cursos.length === 0) {
             tbody.innerHTML = `<tr><td colspan="7" class="text-center">No hay cursos registrados actualmente.</td></tr>`;
+            mostrarControlesPaginacion(0);
             return;
         }
 
@@ -66,7 +87,7 @@ async function cargarCursos(paginaReq = 1) {
                 <td>${curso.cantidadHoras} hs</td>
                 <td>${curso.inscriptosMax}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-primary btn-editar" data-id="${curso.idCurso}">👁️ Ver</button>
+                    <button class="btn btn-sm btn-outline-primary btn-editar" title="Ver" data-id="${curso.idCurso}">👁️</button>
                 </td>
             `;
             tbody.appendChild(fila);
@@ -138,6 +159,15 @@ function configurarEventos() {
     const formCurso = document.getElementById('formCurso');
     const btnEliminar = document.getElementById('btnEliminar');
     const btnConfirmarAccion = document.getElementById('btnConfirmarAccion');
+    const btnBusqueda = document.getElementById('lupa');
+
+   if (btnBusqueda) {
+        btnBusqueda.addEventListener('click', (e) => {
+            e.preventDefault();
+            cargarCursos(1);
+        });
+    }
+
 
     btnAgregar.addEventListener('click', () => {
         formCurso.reset();
@@ -169,7 +199,6 @@ function configurarEventos() {
         if(!idCurso) return;
 
         try{
-            console.log("ID procesando eliminación en servidor:", idCurso);
             const respuesta = await fetch(`${URL_API}/${idCurso}`, {
                 method: 'DELETE'
             });
@@ -200,7 +229,6 @@ function asignarEventosBotones() {
     botonesEditar.forEach(boton => {
         boton.addEventListener('click', async () => {
             const id = boton.getAttribute('data-id');
-            console.log("🔍 Detective Frontend - ID clickeado:", id);
             await abrirModalEdicion(id);
         });
     });
@@ -220,8 +248,7 @@ async function abrirModalEdicion(id) {
         document.getElementById('modalIdCurso').value = curso.idCurso || id;
         document.getElementById('modalNombre').value = curso.nombre;
         document.getElementById('modalDescripcion').value = curso.descripcion;
-        
-        const estadoCurso = curso.idCursoEstado || curso.id_curso_estado;
+        const estadoCurso = curso.idCursoEstado;
         if (estadoCurso) {
             document.getElementById('modalEstadoCurso').value = estadoCurso;
         }
@@ -384,6 +411,43 @@ async function cargarEstados() {
         console.error('Error al rellenar el select de estados:', error);
     }
 }
+
+async function cargarEstadosCheckboxes() {
+    const contenedor = document.getElementById("contenedor-checkboxes-estados");
+
+    try {
+        const respuesta = await fetch('http://localhost:3000/api/estados'); 
+
+        if (!respuesta.ok) {
+            throw new Error('No se pudieron obtener los estados');
+        }
+
+        const estados = await respuesta.json();
+
+        contenedor.innerHTML="";
+
+        estados.forEach(estado => {
+            const checkboxHTML = `
+                <div class="form-check">
+                    <input class="form-check-input check-estado" 
+                            type="checkbox" 
+                            value="${estado.idCursoEstado}" 
+                            id="estado_${estado.idCursoEstado}" 
+                            name="estados">
+                    <label class="form-check-label" for="estado_${estado.idCursoEstado}">
+                        ${estado.descripcion}
+                    </label>
+                </div>
+            `;
+            // Lo sumamos al contenedor
+            contenedor.insertAdjacentHTML("beforeend", checkboxHTML);
+        });
+    }catch (error) {
+        console.error("Hubo un problema al cargar los estados de los cursos:", error);
+        contenedor.innerHTML = `<span class="text-danger small">No se pudieron cargar los estados</span>`;
+    }
+} 
+
 function cerrarModalPorId(idModal) {
     const el = document.getElementById(idModal);
     const instance = bootstrap.Modal.getInstance(el);

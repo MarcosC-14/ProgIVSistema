@@ -1,37 +1,53 @@
-header {
-    /*header azul*/
-    background-color:#004a87;
-
+body{
+    background-color: rgb(196, 215, 255);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
 }
-/*header color azul titulo y logo */
+
+header{
+    background-color:#004a87;
+}
+
+header div.contenedorcito{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: row;
+    justify-content:space-between;
+    align-items:center;
+    text-align: end;
+    flex-flow: row;
+    
+    
+}
+
 header div.contenedor{
     width:100%;
     flex-direction: row;
     justify-content:space-between;
     display:flex;
     align-items:center;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
-/*titulo del header*/
 header h1{
     color: white;
     font-size: 2rem;
-    align-items: flex-start;
-    padding-right: 1rem;
+    align-items: flex-start; /* NO HACE NADA SIN DISPLAY FLEX */ 
 }
+
 
 header div.contenedor img {
     height: 70px;
     width: auto;
 }
 
-body{
-    /*Cuerpo lila*/
-    background-color: rgb(196, 215, 255);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    margin: 0;
+body nav{
+    padding: 0rem;
+    align-items: stretch;
 }
 
 
@@ -95,6 +111,16 @@ div.contenedor-principal a:hover {
      
 
 }
+
+
+main{
+    background-color: rgb(212, 218, 255);
+    flex: 1;
+    width: 100%;
+    padding: 2rem;
+}
+
+
 main h2{
     font-size: 2.5rem;
     color: #003366;
@@ -103,22 +129,10 @@ main h2{
     font-weight: bold;
 }
 
-main {
-    background-color: rgb(212, 218, 255);
-    padding: 2rem;
-    flex: 1;
-}
-
 main div{
     padding: 0.5rem 0rem;
 }
 
-footer{
-    color: rgb(212, 218, 255);
-    background-color: #003366;
-    justify-content: center;
-    display: flex;
-}
 /*Botones*/
 div .btn-botonNormal{
     background-color: #003366;
@@ -130,10 +144,12 @@ div .btn-botonNormal{
     transition: background-color 0.3s;
 }
 
-div .btn-botonNormal:hover, div .btn-botonNormal:active, div .btn-botonNormal:visited, div .btn-botonNormal:link, div .btn-botonNormal:focus-visible    {
+div .btn.btn-botonNormal:hover, div .btn.btn-botonNormal:active, div .btn.btn-botonNormal:visited, div .btn.btn-botonNormal:link, div .btn.btn-botonNormal:focus-visible, div .btn.btn-botonNormal:focus{
     background-color: #1971b9;
     color: white;
 }
+
+
 
 /*Header de modal*/
 .modal-header{
@@ -161,4 +177,44 @@ div .modal-header .btn-botonCerrar:hover {
     fill: #ffffff;
     transition: fill 0.3s ease;
     vertical-align: middle;
+}
+
+main div h1{
+    font-size: 1.5rem;
+    margin: 0px;
+    
+}
+
+.clickeable {
+  cursor: pointer;
+}
+
+.table .clickeable:hover td {
+  background-color: #004a87;
+    color: white;
+    transition: background-color 0.3s ease;
+    transition: color 0.1s ease;
+    box-shadow:none;
+}
+
+footer{
+    color: rgb(212, 218, 255);
+    background-color: #003366;
+    justify-content: center;
+    display: flex;
+}
+
+
+#resultados-estudiantes {
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#resultados-estudiantes li {
+    cursor: pointer;
+}
+
+#resultados-estudiantes li:hover {
+    background-color: #f8f9fa; /* Color de hover similar al de Bootstrap */
 }

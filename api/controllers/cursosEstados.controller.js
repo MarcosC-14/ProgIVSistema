@@ -9,7 +9,6 @@ export default class CursosEstadosController {
         try {
             const estados = await this.service.getAll();
             res.status(200).json(estados);
-            console.log(estados);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Error al obtener los estados de los cursos' });

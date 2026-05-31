@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Estudiantes FCAD - UNER</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/cursos.js" type= "module" defer></script>
+    <script src="js/bootstrap.bundle.min.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class = "contenedor">
+            <img src="imagen/logo_fcad.png" alt="Logo FCAD">    
+            <h1>Estudiantes FCAD - UNER</h1>
+        </div> 
+        
+    </header>
+    <div class="contenedor-principal">
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="inscripciones.html">Inscripciones</a></li>
+                <li><a href="estudiantes.html">Estudiantes</a></li>
+                <li><a href="cursos.html" class="active">Cursos</a></li>
+            </ul> 
+        </nav>
+    </div>
+    <main>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Listado de Estudiantes</h2>
+                <button type="button" class="btn btn-botonNormal" id="btnAgregarEstudiante" data-bs-toggle="modal" data-bs-target="#modalEstudiante">
+                    + Agregar Estudiante          
+                </button>
+        </div>
+        <div id="error" class="alert alert-danger" style="display: none" role="alert"></div>
+        
+        <table class = "table table-hover">
+            <thead>
+                <tr>
+                    <th>ID Estudiante</th>
+                    <th>Documento</th>
+                    <th>Apellido</th>
+                    <th>Nombres</th>
+                    <th>Email</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Tiempo Activo</th>
+                    <th>ID de la ultima modificacion</th>
+                    <th>Fecha y hora de la ultima modificacion</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+       </table>
+        <nav aria-label="Navegación de registros" class="mt-4">
+            <ul class="pagination justify-content-center" id="paginacion-contenedor">
+                </ul>
+        </nav>
+    </main>
+    <footer>
+        <p>&copy; 2026 Estudiantes FCAD - UNER. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Contenedor que lo fija en la esquina superior derecha -->
+    <div class="toast-container position- top-0 end-0 p-3">
+    
+    <!-- El Toast (le agregamos un ID para controlarlo con JS) -->
+        <div id="miToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Notificación</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div id="contenidoToast" class="toast-body"></div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="modalEstudiante" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-white shadow">
+            
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEstudianteLabel">Detalles del Estudiante</h5>
+                <button type="button" class="btn btn-botonCerrar" data-bs-dismiss="modal" aria-label="Close">X</button>               
+            </div>
+
+                <div class="modal-body">
+                    <form id="formEstudiante">
+                        <input type="hidden" id="modalIdEstudiante">
+
+                        <div class = "mb-3">
+                            <label class="form-label">Documento del Estudiante</label>
+                            <input type="text" class="form-control" id="modalDocumento" placeholder="Ej: 12345678" autocomplete="off" required inputmode="numeric" pattern="[0-9]+"required>
+                        </div>
+
+                        <div class= "mb-3">
+                            <label class="form-label">Apellido:</label>
+                            <input type="text" class="form-control" id="modalApellido" placeholder="Ej: Bartolomé" autocomplete="off" required>
+                        </div>
+                        
+                        <div class= "mb-3">
+                            <label class="form-label">Nombres:</label>
+                            <input type="text" class="form-control" id="modalNombres" placeholder="Ej: Mitre" autocomplete="off" required>
+                        </div>
+
+                        <div class= "mb-3">
+                            <label class="form-label">Email:</label>
+                            <input type="text" class="form-control" id="modalEmail" placeholder="Ej: fcad123@gmail.com" autocomplete="off" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Fecha de Nacimiento:</label>
+                            <input type="date" class="form-control" id="modalFecha" autocomplete="off" required>
+                        </div>    
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-botonNormal" id="btnEliminar">Eliminar</button>
+                            <button type="submit" class="btn btn-botonNormal" id="btnGuardar">Guardar</button>
+                        </div>
+                    </form>
+                </div>   
+            </div>
+        </div>
+    </div>    
+</body>
+</html>
