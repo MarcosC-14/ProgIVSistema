@@ -23,7 +23,7 @@
         <nav>
             <ul>
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="">Inscripciones</a></li>
+                <li><a href="inscripciones.html">Inscripciones</a></li>
                 <li><a href="">Estudiantes</a></li>
                 <li><a href="cursos.html" class="active">Cursos</a></li>
         </ul> 
@@ -34,28 +34,62 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Listado de Cursos</h2>
                 <button type="button" class="btn btn-botonNormal" id="btnAgregarCurso" data-bs-toggle="modal" data-bs-target="#modalCurso">
-                    + Agregar Curso          
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-plus-lg icono-btn" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+                    </svg>
+                    Agregar Curso        
                 </button>
         </div> 
 
         <div id="error" class="alert alert-danger" style="display: none" role="alert"></div>
         
-        <table class = "table table-hover">
-            <thead>
-                <tr>
-                    <th>ID Curso</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Fecha de inicio</th>
-                    <th>Cantidad de horas</th>
-                    <th>Inscriptos máximos</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="tbody">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <form id="formBusquedaCursos" class="row g-3 justify-content-between align-items-end gap-3">
+                    <div class="col-12 col-sm-3 col-md-1">
+                        <label for="buscarId" class="form-label fw-bold">ID Curso</label>
+                        <input type="number" id="buscarId" class="form-control" placeholder="Ej: 1" min="1">
+                    </div>
 
-            </tbody>
-       </table>
+                    <div class="col-12 col-sm-9 col-md-4">
+                        <label for="buscarTexto" class="form-label fw-bold">Nombre o descripción</label>
+                        <input type="text" id="buscarTexto" class="form-control" placeholder="Buscar...">
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <label for="buscarEstado" class="form-label fw-bold">Estado del curso</label>
+                        <div id="contenedor-checkboxes-estados" class="d-flex gap-2 pt-1">
+                            
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-3 col-md-1 ms-auto text-end">
+                        <button type="submit" class="btn btn-outline-primary w-100" id="lupa" title="Buscar">
+                            🔍
+                        </button>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+        <!-- Tabla cursos -->
+        <div class="card mb-4 shadow-sm" rounded-3>
+            <table class = "table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID Curso</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Fecha de inicio</th>
+                        <th>Cantidad de horas</th>
+                        <th>Inscriptos máximos</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+
+                </tbody>
+            </table>
+       </div>
        
        <nav aria-label="Navegación de registros" class="mt-4">
             <ul class="pagination justify-content-center" id="paginacion-contenedor">

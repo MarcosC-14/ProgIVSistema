@@ -11,8 +11,25 @@ import cursosUpdateTransform from "../../transforms/cursos/cursosUpdate.transfor
 import cursosBorrarValidation from "../../validators/cursos/cursosBorrar.validation.js";
 import cursosBorrarTransform from "../../transforms/cursos/cursosBorrar.transform.js";
 
+
+import EstudiantesController from "../../controllers/estudiantes.controller.js";
+import estudiantesFindAllValidation from "../../validators/estudiantesFindAll.validation.js";
+import estudiantesFindAllTransform from "../../transforms/estudiantesFindAll.transform.js";
+
+import InscripcionesController from "../../controllers/inscripciones.controller.js";
+import inscripcionesFindAllValidation from "../../validators/inscripciones/inscripcionesFindAll.validation.js";
+import inscripcionesCreateValidation from "../../validators/inscripciones/inscripcionesCreate.validation.js";
+import inscripcionesFindAllTransform from "../../transforms/inscripciones/inscripcionesFindAll.transform.js";
+import inscripcionesCreateTransform from "../../transforms/inscripciones/inscripcionesCreate.transform.js";
+import inscripcionesGetByIdValidation from "../../validators/inscripciones/inscripcionesGetById.validation.js";
+import inscripcionesGetByIdTransform from "../../transforms/inscripciones/inscripcionesGetById.transform.js";
+import inscripcionesBorrarValidation from "../../validators/inscripciones/inscripcionesBorrar.validation.js";
+import inscripcionesBorrarTransform from "../../transforms/inscripciones/inscripcionesBorrar.transform.js";
+
 const router = express.Router();
 
+const estudiantesController = new EstudiantesController();
+const inscripcionesController = new InscripcionesController();
 const cursosController = new CursosController();
 
 router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
@@ -37,4 +54,17 @@ router.get('/api/estados', async (req, res) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
+
+
+router.get("/estudiantes", [estudiantesFindAllValidation, estudiantesFindAllTransform], estudiantesController.getAll.bind(estudiantesController));
+
+router.get("/inscripciones",[inscripcionesFindAllValidation,inscripcionesFindAllTransform], inscripcionesController.getAll.bind(inscripcionesController));
+
+router.get("/inscripciones/:id",[inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.getById.bind(inscripcionesController));
+
+router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateTransform],inscripcionesController.create.bind(inscripcionesController));
+
+router.delete("/inscripciones/:id", [inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
+
+
 export default router;

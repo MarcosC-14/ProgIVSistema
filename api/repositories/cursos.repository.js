@@ -19,21 +19,32 @@ export default class CursosRepository {
             INNER JOIN public.cursos_estados e ON e.id_curso_estado = c.id_curso_estado
             WHERE e.es_activo = 1
             `;
-
+            
             const sqlParams = [];
             let paramIndex = 1;
 
-            if (filter && Object.keys(filter).length > 0){
-                Object.entries(filter).forEach(([key,value]) => {
-                    if (typeof value === 'string'){
-                        sql += ` AND ${key} ILIKE $${paramIndex}`;
-                        sqlParams.push(`%${value}%`);
-                    } else{
-                        sql += ` AND ${key} = $${paramIndex}`;
-                        sqlParams.push(value);
-                    }
+            if (filter){
+                if (filter.id_curso){
+                    sql += ` AND c.id_curso = $${paramIndex}`;
+                    sqlParams.push(parseInt(filter.id_curso, 10));
                     paramIndex++;
-                });
+                }
+
+                if (filter.id_curso_estado) {
+                    const estadosArray = Array.isArray(filter.id_curso_estado)
+                        ? filter.id_curso_estado.map(id => parseInt(id, 10))
+                        : [parseInt(filter.id_curso_estado, 10)];
+
+                    sql += ` AND c.id_curso_estado = ANY($${paramIndex}::int[])`;
+                    sqlParams.push(estadosArray);
+                    paramIndex++;
+                }
+                
+                if(filter.termino){
+                    sql += ` AND (c.nombre ILIKE $${paramIndex} OR c.descripcion ILIKE $${paramIndex})`;
+                    sqlParams.push(`%${filter.termino}%`);
+                    paramIndex++;
+                }
             }
 
             if (order && Object.keys(order).length >0){
@@ -105,11 +116,11 @@ export default class CursosRepository {
             const values =[
                 data.nombre,
                 data.descripcion,
-                data.fechaInicio,
-                data.cantidadHoras,
-                data.inscriptosMax,
-                data.idCursoEstado || 1,
-                data.idUsuarioModificacion ||null
+                data.fecha_inicio,
+                data.cantidad_horas,
+                data.inscriptos_max,
+                data.id_curso_estado || 1,
+                data.id_usuario_modificacion ||null
             ];
             const { rows } = await client.query(query, values);
             return await this.getById(rows[0].id_curso);
@@ -190,17 +201,28 @@ export default class CursosRepository {
             const sqlParams = [];
             let paramIndex = 1;
 
-            if (filter && Object.keys(filter).length > 0) {
-                Object.entries(filter).forEach(([key, value]) => {
-                    if (typeof value === 'string') {
-                        sql += ` AND ${key} ILIKE $${paramIndex}`;
-                        sqlParams.push(`%${value}%`);
-                    } else {
-                        sql += ` AND ${key} = $${paramIndex}`;
-                        sqlParams.push(value);
-                    }
+            if (filter) {
+                if (filter.id_curso) {
+                    sql += ` AND c.id_curso = $${paramIndex}`;
+                    sqlParams.push(parseInt(filter.id_curso, 10));
                     paramIndex++;
-                });
+                }
+
+                if (filter.id_curso_estado) {
+                    const estadosArray = Array.isArray(filter.id_curso_estado)
+                        ? filter.id_curso_estado.map(id => parseInt(id, 10))
+                        : [parseInt(filter.id_curso_estado, 10)];
+
+                    sql += ` AND c.id_curso_estado = ANY($${paramIndex}::int[])`;
+                    sqlParams.push(estadosArray);
+                    paramIndex++;
+                }
+
+                if (filter.termino) {
+                    sql += ` AND (c.nombre ILIKE $${paramIndex} OR c.descripcion ILIKE $${paramIndex})`;
+                    sqlParams.push(`%${filter.termino}%`);
+                    paramIndex++;
+                }
             }
 
             const { rows } = await client.query(sql, sqlParams);
