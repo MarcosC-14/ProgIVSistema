@@ -1,5 +1,4 @@
 export default class CursoResponseDTO {
-    //lleva de base y lleva a frontend
     constructor(curso) {
         this.nombre = curso.nombre;
         this.descripcion = curso.descripcion;

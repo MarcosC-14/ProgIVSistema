@@ -17,6 +17,7 @@ export default class CursosEstadosService extends BaseService{
 
     async getAll() {
         const estadosBD = await this.repository.getAll();
+        console.log(estadosBD);
         const respuesta = estadosBD.map(estado => (new CursosEstadosResponseDTO(estado)));
         return respuesta;
     }

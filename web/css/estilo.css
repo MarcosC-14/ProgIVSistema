@@ -108,11 +108,6 @@ main {
     padding: 2rem;
     flex: 1;
 }
-
-main div{
-    padding: 0.5rem 0rem;
-}
-
 footer{
     color: rgb(212, 218, 255);
     background-color: #003366;
@@ -157,8 +152,3 @@ div .modal-header .btn-botonCerrar:hover {
     background-color: #ff0000 !important;
 }
 
-#btnAgregarCurso .icono-btn {
-    fill: #ffffff;
-    transition: fill 0.3s ease;
-    vertical-align: middle;
-}

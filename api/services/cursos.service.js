@@ -22,11 +22,12 @@ export default class CursosService extends BaseService {
     }
 
     async getAll(filter, limit, offset, order) {
-        //const sqlFilter = this.mapKeysToColumns(filter, CursosService.KEYS_MAP);
-        //const sqlOrder = this.mapKeysToColumns(order, CursosService.KEYS_MAP);
+        const sqlFilter = this.mapKeysToColumns(filter, CursosService.KEYS_MAP);
+        const sqlOrder = this.mapKeysToColumns(order, CursosService.KEYS_MAP);
+
         const [respuestaBD, totalCursos] = await Promise.all([
-            this.repository.getAll(filter, limit, offset, order),
-            this.repository.getCount(filter)
+            this.repository.getAll(sqlFilter, limit, offset, sqlOrder),
+            this.repository.getCount(sqlFilter)
         ]);
 
         const respuesta = respuestaBD.map(curso => (new CursoResponseDTO(curso)));
@@ -49,8 +50,9 @@ export default class CursosService extends BaseService {
 
     async update(id, data){
         await this.getById(id);
-        
-        const nuevoCurso = await this.repository.update(id, data);
+        const datosMap = this.mapKeysToColumns(data, CursosService.KEYS_MAP);
+
+        const nuevoCurso = await this.repository.update(id, datosMap);
         return new CursoResponseDTO(nuevoCurso);
     }
     async borrar(id){
