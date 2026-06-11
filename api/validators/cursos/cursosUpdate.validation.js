@@ -23,7 +23,7 @@ const cursosUpdateValidation = [
     body('fechaInicio')
         .exists().withMessage('La fecha de inicio es obligatoria.')
         .isBefore('2100-01-01').withMessage('El año de la fecha ingresada excede el límite máximo.')
-        .toDate(),
+        .isDate(),
 
     body('cantidadHoras')
         .exists().withMessage('La cantidad de horas es obligatoria.')
