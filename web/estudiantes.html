@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/estilo.css">
     <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/cursos.js" type= "module" defer></script>
+    <script src="js/estudiantes.js" type= "module" defer></script>
     <script src="js/bootstrap.bundle.min.js" defer></script>
 </head>
 <body>
@@ -23,8 +23,8 @@
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="inscripciones.html">Inscripciones</a></li>
-                <li><a href="estudiantes.html">Estudiantes</a></li>
-                <li><a href="cursos.html" class="active">Cursos</a></li>
+                <li><a href="estudiantes.html"class="active" >Estudiantes</a></li>
+                <li><a href="cursos.html">Cursos</a></li>
             </ul> 
         </nav>
     </div>
@@ -46,13 +46,13 @@
                     </div>
 
                     <div class="col-12 col-sm-9 col-md-4">
-                        <label for="buscarTexto" class="form-label fw-bold">Nombres</label>
-                        <input type="text" id="buscarTexto" class="form-control" placeholder="Buscar...">
+                        <label for="buscarNombres" class="form-label fw-bold">Nombres</label>
+                        <input type="text" id="buscarNombres" class="form-control" placeholder="Buscando Nombres...">
                     </div>
 
                     <div class="col-12 col-sm-9 col-md-4">
-                        <label for="buscarTexto" class="form-label fw-bold">Apellido</label>
-                        <input type="text" id="buscarTexto" class="form-control" placeholder="Buscar...">
+                        <label for="buscarApellido" class="form-label fw-bold">Apellido</label>
+                        <input type="text" id="buscarApellido" class="form-control" placeholder="Buscando Apellido...">
                     </div>
 
                     <div class="col-12 col-sm-3 col-md-1 ms-auto text-end">
@@ -73,10 +73,11 @@
                     <th>Apellido</th>
                     <th>Nombres</th>
                     <th>Email</th>
-                    <th>Fecha de Nacimiento</th>
-                    <th>Tiempo Activo</th>
-                    <th>ID de la ultima modificacion</th>
-                    <th>Fecha y hora de la ultima modificacion</th>
+                    <th>F.Nacimiento</th>
+                    <th>Activo</th>
+                    <th>ID de modificacion</th>
+                    <th>Tiempo de la ultima modificacion</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="tbody">
