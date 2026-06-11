@@ -14,18 +14,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function configurarEventos() {
+    const btnAgregar = document.getElementById('btnAgregarEstudiante');
     const formBusqueda = document.getElementById('formBusquedaEstudiante');
+    const formEstudiante = document.getElementById('formEstudiante');
+    const btnEliminar = document.getElementById('btnEliminar');
+    const btnConfirmarAccion = document.getElementById('btnConfirmarAccion');
 
     if (formBusqueda) {
         formBusqueda.addEventListener('submit', (e) => {
-            e.preventDefault(); // Evitamos que la página se recargue por completo
-
-            // Guardamos en la memoria global lo que el usuario escribió en la pantalla
+            e.preventDefault();
             filtrosEstudiantes.idEstudiante = document.getElementById('buscarId').value.trim();
             filtrosEstudiantes.nombres = document.getElementById('buscarNombres').value.trim();
             filtrosEstudiantes.apellido = document.getElementById('buscarApellido').value.trim();
-
-            // Cada vez que se busca, reiniciamos a la página 1 y llamamos al "motor"
             cargarEstudiantes(1);
         });
     }
@@ -40,6 +40,19 @@ function configurarEventos() {
         });
     }
 
+    if (formEstudiante) {
+        formEstudiante.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await guardarEstudiante();
+        });
+    }
+
+    if (btnEliminar) {
+        btnConfirmarAccion.addEventListener('click', async () =>{
+            await eliminarEstudiante();
+        })
+    }
+
 }
 
 async function cargarEstudiantes(paginaReq = 1) {
@@ -47,7 +60,6 @@ async function cargarEstudiantes(paginaReq = 1) {
     const errorDiv = document.getElementById("error");
     
     paginaActual = paginaReq;
-
     const offset = (paginaActual - 1) * limitePorPagina;
 
     tabla.innerHTML = `
@@ -59,7 +71,6 @@ async function cargarEstudiantes(paginaReq = 1) {
         </tr>
     `
     try {
-
         const queryParams = new URLSearchParams({
             limit: limitePorPagina,
             offset: offset
@@ -77,52 +88,60 @@ async function cargarEstudiantes(paginaReq = 1) {
         tabla.innerHTML = "";
         errorDiv.style.display = "none";
 
+        const listaEstudiantes = datos.respuesta || datos;
+
+        if (!listaEstudiantes || listaEstudiantes.length === 0) {
+            tabla.innerHTML = `<tr><td colsapan="10" class="text-center">No se encontraron estudiantes.</td></tr>`;
+            mostrarControlesPaginacion(0);
+            return;
+        }
+
+        listaEstudiantes.forEach(estudiante =>{
+            const fila = document.createElement("tr");
+            const fechaNac = estudiante.fecha_nacimiento ? 
+                new Date(estudiante.fecha_nacimiento).toLocaleDateString('es-AR')
+                : '-';
+            const fechaMod = estudiante.fecha_hora_modificacion ? 
+                new Date(estudiante.fecha_hora_modificacion).toLocaleString('es-AR', {hour12: false})
+                : '-';
+
+            const estadoActivo = estudiante.activo ? "Si" : "No";
+
+            fila.innerHTML = `
+                <td>${estudiante.id_estudiante}</td>
+                <td>${estudiante.documento}</td>
+                <td>${estudiante.apellido}</td>
+                <td>${estudiante.nombres}</td>
+                <td>${estudiante.email}</td>
+                <td class="text-center">${fechaNac}</td>
+                <td class="text-center">${estadoActivo}</td>
+                <td class="text-center">${estudiante.id_usuario_modificacion || '-'}</td>
+                <td class="text-center">${fechaMod}</td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-outline-primary btn-ver-estudiante" data-id=${estudiante.id_estudiante}">👁️</button>
+                </td>
+            `;
+            tabla.appendChild(fila);
+        });
+
+        asignarEventosBotones();
+        mostrarControlesPaginacion(datos.totalEstudiantes || 0);
+
     } catch (error) {
         console.error("Error al obtener los estudiantes:", error);
         tabla.innerHTML = "";
         mostrarErrorAviso("No se pudo conectar el servidor para cargar los estudiantes");
     }
-
-    cargarEstudiantes.forEach(estudiante =>{
-        const fila = document.createElement("tr");
-
-        const fechaNac = new Date(estudiante.fecha_nacimiento). toLocaleDateString('es-AR');
-
-        const fechaMod = estudiante.fecha_hora_modificacion ? 
-        new Date(estudiante.fecha_hora_modificacion).toLocaleString('es-AR', {hour12: false})
-        : `-`;
-
-        const estadoActivo = estudiante.activo ? "Si" : "No";
-
-        fila.innerHTML = `
-            <td>${estudiante.id_estudiante}</td>
-            <td>${estudiante.documento}</td>
-            <td>${estudiante.apellido}</td>
-            <td>${estudiante.nombres}</td>
-            <td>${estudiante.email}</td>
-            <td class="text-center">${fechaNac}</td>
-            <td class="text-center">${estadoActivo}</td>
-            <td class="text-center">${estudiante.id_usuario_modificacion || '-'}</td>
-            <td class="text-center">${fechaMod}</td>
-            <td class="text-center"><button class="btn btn-sm btn-outline-primary btn-ver-estudiante" data-id=${estudiante.id_estudiante}">👁️</td>
-        `;
-
-        tabla.appendChild(fila);
-    })
 }
 
 function asignarEventosBotones() {
-    
     const botonesVer = document.querySelectorAll('.btn-ver-estudiante');
-
     botonesVer.forEach (boton => {
         boton.addEventListener('click', async () => {
-            
             const id = boton.getAttribute('data-id');
-
             await abrirModalEstudiante(id);
-        })
-    })
+        });
+    });
 }
 
 async function abrirModalEstudiante(id) {
@@ -136,7 +155,7 @@ async function abrirModalEstudiante(id) {
         document.getElementById('modalIdEstudiante').value = estudiante.id_estudiante || id;
         document.getElementById('modalDocumento').value = estudiante.documento;
         document.getElementById('modalApellido').value = estudiante.apellido;
-        document.getElementById('modalNombre').value = estudiante.nombres;
+        document.getElementById('modalNombres').value = estudiante.nombres;
         document.getElementById('modalEmail').value = estudiante.email;
 
         if (estudiante.fecha_nacimiento){
@@ -147,7 +166,7 @@ async function abrirModalEstudiante(id) {
         document.getElementById('btnGuardar').textContent = 'Guardar Cambios';
         document.getElementById('btnEliminar').style.display = 'block';
 
-        const modalEstudiante = bootsrap.Modal.getOrCreateInstance(document.getElementById('modalEstudiante'));
+        const modalEstudiante = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEstudiante'));
         midModal.show();
 
     } catch (error){
@@ -160,7 +179,7 @@ async function guardarEstudiante(){
     const btnGuardar = document.getElementById('btnGuardar');
     const textoOriginal = btnGuardar.textContent;
 
-    btnGuardar.disabled = true
+    btnGuardar.disabled = true;
     btnGuardar.textContent = "Procesando...";
 
     const datosEstudiante = {
@@ -195,18 +214,15 @@ async function guardarEstudiante(){
         }
 
         cerrarTodosLosModales();
-
         await cargarEstudiantes(paginaActual);
-
         mostrarToast("Informacion del estudiante guardada correctamente.");
+
     } catch (error) {
         console.error("Fallo guardando la informacion del estudiante: ", error);
         mostrarErrorAviso("Ocurrio un error al guardar la informacion del estudiante");
-    
     } finally {
         btnGuardar.disabled = false;
         btnGuardar.textContent = textoOriginal;
-    
     }
 }
 
@@ -237,16 +253,14 @@ function mostrarControlesPaginacion(totalEstudiantes) {
     contenedor.innerHTML = "";
 
     const totalPaginas = Math.ceil(totalEstudiantes / limitePorPagina);
-
     if (totalPaginas <= 1) return;
 
     const liAnterior = document.createElement("li");
-    liAnterior.className = `page-item ${paginaActual === 1 ? 'disabled' : ''};`
+    liAnterior.className = `page-item ${paginaActual === 1 ? 'disabled' : ''}`;
     liAnterior.innerHTML = `<button class="page-link">Anterior</button>`;
     if (paginaActual > 1) {
         liAnterior.addEventListener("click", () => cargarEstudiantes(paginaActual - 1));
     }
-    
     contenedor.appendChild(liAnterior);
 
     for (let i =1; i <= totalPaginas; i++) {
@@ -257,7 +271,6 @@ function mostrarControlesPaginacion(totalEstudiantes) {
         if (paginaActual !== i) {
             liNumero.addEventListener("click", () => cargarEstudiantes(i));
         }
-
         contenedor.appendChild(liNumero);
     }
 
@@ -273,7 +286,7 @@ function mostrarControlesPaginacion(totalEstudiantes) {
 function cerrarModalPorId(idModal) {
     const el = document.getElementById(idModal);
     if (el) {
-        const instancia = bootsrap.Modal.getInstance(el);
+        const instancia = bootstrap.Modal.getInstance(el);
         if (instancia) instancia.hide();
     }
 }
@@ -287,8 +300,8 @@ function mostrarToast(mensaje) {
     const elToast = document.getElementById('miToast');
     const toastMensaje = document.getElementById("contenidoToast");
     if (elToast && toastMensaje) {
-        toastMensaje.innerHTML = `<p class="mb-0>${mensaje}</p>`;
-        const toastBootstrap = bootsrap.Toast.getOrCreateInstance(elToast);
+        toastMensaje.innerHTML = `<p class="mb-0">${mensaje}</p>`;
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(elToast);
         toastBootstrap.show();
     }
 }
