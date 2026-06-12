@@ -25,12 +25,14 @@ import inscripcionesGetByIdValidation from "../../validators/inscripciones/inscr
 import inscripcionesGetByIdTransform from "../../transforms/inscripciones/inscripcionesGetById.transform.js";
 import inscripcionesBorrarValidation from "../../validators/inscripciones/inscripcionesBorrar.validation.js";
 import inscripcionesBorrarTransform from "../../transforms/inscripciones/inscripcionesBorrar.transform.js";
+import UsuariosController from "../../controllers/usuarios.controller.js";
 
 const router = express.Router();
 
 const estudiantesController = new EstudiantesController();
 const inscripcionesController = new InscripcionesController();
 const cursosController = new CursosController();
+const usuariosController = new UsuariosController();
 
 router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
 
@@ -66,5 +68,8 @@ router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateT
 
 router.delete("/inscripciones/:id", [inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
 
+router.post("/usuarios", usuariosController.register.bind(usuariosController));
+
+router.post("/login", usuariosController.login.bind(usuariosController));
 
 export default router;

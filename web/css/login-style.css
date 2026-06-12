@@ -1,5 +1,5 @@
 header{
-    background-color: #0c4d61;
+    background-color: #004a87;
     display: flex;          
     align-items: center;    
     padding: 15px 50px;   
@@ -16,12 +16,12 @@ main{
     align-items: center;      
     min-height: calc(90vh - 30px); 
     
-    background-color: #f0f2f5f5;  
+    background-color: rgb(196, 215, 255);  
 
 }
 
 main div.contenedor{
-    background-color: rgb(180, 213, 228);
+    background-color: rgb(255, 255, 255);
     padding: 80px;
     border-radius: 10px;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);  
@@ -58,7 +58,7 @@ input {
 button {
     width: 100%;
     padding: 12px;
-    background-color: #004a61;  
+    background-color: #003366;  
     color:white;
     border: none;
     border-radius: 4px;
@@ -69,5 +69,25 @@ button {
 }
 
 button:hover {
-    background-color: #003344;
+    background-color: #1971b9;
+}
+
+.link-alternativo {
+    width: 100%;
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: center;
+}
+
+.link-alternativo a {
+    color: #004a87; 
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.link-alternativo a:hover {
+    text-decoration: underline;
+    color: #1971b9; 
 }
