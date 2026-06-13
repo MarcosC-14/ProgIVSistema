@@ -71,10 +71,10 @@ async function cargarEstudiantes(paginaReq = 1) {
         const buscarDoc = document.getElementById('buscarDoc')?.value.trim() || "";
 
         if (buscarId !== ""){
-            params.append('idEstudiante', buscarId);
+            params.append('id_estudiante', buscarId);
         }
         if (buscarTexto !== ""){
-            params.append('texto', buscarTexto);
+            params.append('termino', buscarTexto);
         }
         if (buscarDoc !== "") {
             params.append('documento', buscarDoc);
@@ -98,27 +98,27 @@ async function cargarEstudiantes(paginaReq = 1) {
 
         listaEstudiantes.forEach(estudiante =>{
             const fila = document.createElement("tr");
-            const fechaNac = estudiante.fecha_nacimiento ? 
-                new Date(estudiante.fecha_nacimiento).toLocaleDateString('es-AR')
+            const fechaNac = estudiante.fechaNacimiento ? 
+                new Date(estudiante.fechaNacimiento).toLocaleDateString('es-AR')
                 : '-';
-            const fechaMod = estudiante.fecha_hora_modificacion ? 
-                new Date(estudiante.fecha_hora_modificacion).toLocaleString('es-AR', {hour12: false})
+            const fechaMod = estudiante.fechaHoraModificacion ? 
+                new Date(estudiante.fechaHoraModificacion).toLocaleString('es-AR', {hour12: false})
                 : '-';
 
             const estadoActivo = estudiante.activo ? "Si" : "No";
 
             fila.innerHTML = `
-                <td>${estudiante.id_estudiante}</td>
+                <td>${estudiante.idEstudiante}</td> 
                 <td>${estudiante.documento}</td>
                 <td>${estudiante.apellido}</td>
                 <td>${estudiante.nombres}</td>
                 <td>${estudiante.email}</td>
                 <td class="text-center">${fechaNac}</td>
                 <td class="text-center">${estadoActivo}</td>
-                <td class="text-center">${estudiante.id_usuario_modificacion || '-'}</td>
+                <td class="text-center">${estudiante.idUsuarioModificacion || '-'}</td>
                 <td class="text-center">${fechaMod}</td>
                 <td class="text-center">
-                    <button class="btn btn-sm btn-outline-primary btn-ver-estudiante" data-id=${estudiante.id_estudiante}">👁️</button>
+                    <button class="btn btn-sm btn-outline-primary btn-ver-estudiante" data-id=${estudiante.idEstudiante}">👁️</button>
                 </td>
             `;
             tabla.appendChild(fila);
@@ -152,7 +152,7 @@ async function abrirModalEstudiante(id) {
         const datos = await respuesta.json();
         const estudiante = datos.respuesta || datos;
 
-        document.getElementById('modalIdEstudiante').value = estudiante.id_estudiante || id;
+        document.getElementById('modalIdEstudiante').value = estudiante.idEstudiante || id;
         document.getElementById('modalDocumento').value = estudiante.documento;
         document.getElementById('modalApellido').value = estudiante.apellido;
         document.getElementById('modalNombres').value = estudiante.nombres;
