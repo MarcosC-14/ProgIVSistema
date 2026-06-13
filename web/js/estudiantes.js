@@ -2,12 +2,6 @@ const URL_API_ESTUDIANTES = 'http://localhost:3000/api/estudiantes';
 let paginaActual = 1;
 const limitePorPagina = 10;
 
-let filtrosEstudiantes = {
-    idEstudiante: '',
-    nombres: '',
-    apellido: ''
-};
-
 document.addEventListener('DOMContentLoaded', () => {
     cargarEstudiantes(1);
     configurarEventos();
@@ -23,9 +17,6 @@ function configurarEventos() {
     if (formBusqueda) {
         formBusqueda.addEventListener('submit', (e) => {
             e.preventDefault();
-            filtrosEstudiantes.idEstudiante = document.getElementById('buscarId').value.trim();
-            filtrosEstudiantes.nombres = document.getElementById('buscarNombres').value.trim();
-            filtrosEstudiantes.apellido = document.getElementById('buscarApellido').value.trim();
             cargarEstudiantes(1);
         });
     }
@@ -71,16 +62,25 @@ async function cargarEstudiantes(paginaReq = 1) {
         </tr>
     `
     try {
-        const queryParams = new URLSearchParams({
-            limit: limitePorPagina,
-            offset: offset
-        });
+        const params = new URLSearchParams();
+        params.append('limit', limitePorPagina);
+        params.append('offset', offset);
 
-        if (filtrosEstudiantes.idEstudiante) queryParams.append(`idEstudiante`, filtrosEstudiantes.idEstudiante);
-        if (filtrosEstudiantes.nombres) queryParams.append(`nombres`, filtrosEstudiantes.nombres);
-        if (filtrosEstudiantes.apellido) queryParams.append(`apellido`, filtrosEstudiantes.apellido);
+        const buscarId = document.getElementById('buscarId')?.value.trim() || "";
+        const buscarTexto = document.getElementById('buscarTexto')?.value.trim() || "";
+        const buscarDoc = document.getElementById('buscarDoc')?.value.trim() || "";
 
-        const respuesta = await fetch(`${URL_API_ESTUDIANTES}?${queryParams.toString()}`);
+        if (buscarId !== ""){
+            params.append('idEstudiante', buscarId);
+        }
+        if (buscarTexto !== ""){
+            params.append('texto', buscarTexto);
+        }
+        if (buscarDoc !== "") {
+            params.append('documento', buscarDoc);
+        }
+
+        const respuesta = await fetch(`${URL_API_ESTUDIANTES}?${params.toString()}`);
         if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
 
         const datos = await respuesta.json();
@@ -167,7 +167,7 @@ async function abrirModalEstudiante(id) {
         document.getElementById('btnEliminar').style.display = 'block';
 
         const modalEstudiante = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalEstudiante'));
-        midModal.show();
+        modalEstudiante.show();
 
     } catch (error){
         console.error(error);
@@ -192,7 +192,7 @@ async function guardarEstudiante(){
     };
 
     const idEstudiante = document.getElementById('modalIdEstudiante').value;
-    let irl = URL_API_ESTUDIANTES;
+    let url = URL_API_ESTUDIANTES;
     let metodo = 'POST';
 
     if (idEstudiante) {
@@ -266,7 +266,7 @@ function mostrarControlesPaginacion(totalEstudiantes) {
     for (let i =1; i <= totalPaginas; i++) {
         const liNumero = document.createElement("li");
         liNumero.className = `page-item ${paginaActual === i ? 'active' : ''}`;
-        liNumero.textContent = `<button class="page-link">${i}</button>`;
+        liNumero.innerHTML = `<button class="page-link">${i}</button>`;
 
         if (paginaActual !== i) {
             liNumero.addEventListener("click", () => cargarEstudiantes(i));
@@ -276,7 +276,7 @@ function mostrarControlesPaginacion(totalEstudiantes) {
 
     const liSiguiente = document.createElement("li");
     liSiguiente.className = `page-item ${paginaActual === totalPaginas ?'disabled' : ''}`;
-    liSiguiente.textContent = `<button class="page-link">Siguiente</button>`;
+    liSiguiente.innerHTML = `<button class="page-link">Siguiente</button>`;
     if (paginaActual < totalPaginas) {
         liSiguiente.addEventListener("click", () => cargarEstudiantes(paginaActual + 1));
     }

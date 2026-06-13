@@ -1,5 +1,5 @@
 import EstudiantesRepository from "../repositories/estudiantes.repository.js";
-import EstudianteResponseDTO from "../dtos/estudiante.response.dto.js";
+import EstudianteResponseDTO from "../dtos/estudiantes/estudiante.response.dto.js";
 import BaseService from './base.services.js';
 
 export default class EstudiantesService extends BaseService {
