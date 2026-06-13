@@ -13,16 +13,12 @@ export default class EstudiantesRepository {
         if (filter && Object.keys(filter).length > 0) {
             Object.entries(filter).forEach(([key, value]) => {
                 
-                // Interceptamos la búsqueda combinada
                 if (key === 'termino') {
-                    // Busca en nombres OR apellido ignorando mayúsculas/minúsculas
                     strWhere += ` AND (nombres ILIKE '%${value}%' OR apellido ILIKE '%${value}%') `;
                 } 
-                // Para las demás búsquedas de texto (como email)
                 else if (key === 'documento' || typeof value === 'string') {
                     strWhere += ` AND ${key} ILIKE '%${value}%' `;
                 } 
-                // Para las búsquedas numéricas (como id_estudiante o documento)
                 else {
                     strWhere += ` AND ${key} = ${value} `;
                 }
