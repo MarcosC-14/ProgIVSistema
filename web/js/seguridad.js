@@ -1,9 +1,5 @@
-(function() {
-    const sesionActiva = localStorage.getItem('sesion_activa');
+const token = localStorage.getItem('token_jwt');
 
-   
-    if (!sesionActiva || sesionActiva !== 'true') {
-        alert("Acceso denegado. Por favor, inicie sesión primero.");
-        window.location.href = "login.html"; 
-    }
-})();
+if (!token && !window.location.pathname.includes('login.html')) {
+    window.location.href = 'login.html';
+}
