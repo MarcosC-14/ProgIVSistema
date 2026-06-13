@@ -188,6 +188,7 @@ async function guardarEstudiante(){
         nombres: document.getElementById('modalNombres').value.trim(),
         email: document.getElementById('modalEmail').value.trim(),
         fecha_nacimiento: document.getElementById('modalFecha').value,
+        activo: 1,
         id_usuario_modificacion: 1
     };
 

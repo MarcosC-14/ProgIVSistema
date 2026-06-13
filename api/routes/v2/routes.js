@@ -13,8 +13,17 @@ import cursosBorrarTransform from "../../transforms/cursos/cursosBorrar.transfor
 
 
 import EstudiantesController from "../../controllers/estudiantes.controller.js";
-import estudiantesFindAllValidation from "../../validators/estudiantesFindAll.validation.js";
-import estudiantesFindAllTransform from "../../transforms/estudiantesFindAll.transform.js";
+import estudiantesFindAllValidation from "../../validators/estudiantes/estudiantesFindAll.validation.js";
+import estudiantesFindAllTransform from "../../transforms/estudiantes/estudiantesFindAll.transform.js";
+import estudiantesGetByIdTransform from "../../transforms/estudiantes/estudiantesGetById.transform.js";
+import estudiantesGetByIdValidation from "../../validators/estudiantes/estudiantesGetById.validation.js";
+import estudiantesCreateTransform from "../../transforms/estudiantes/estudiantesCreate.transform.js";
+import estudiantesCreateValidation from "../../validators/estudiantes/estudiantesCreate.validation.js";
+import estudiantesUpdateTransform from "../../transforms/estudiantes/estudiantesUpdate.transform.js";
+import estudiantesUpdateValidation from "../../validators/estudiantes/estudiantesUpdate.validation.js";
+import estudianteBorrarTransform from "../../transforms/estudiantes/estudiantesBorrar.transform.js";
+import estudiantesBorrarValidation from "../../validators/estudiantes/estudiantesBorrarValidation.js";
+
 
 import InscripcionesController from "../../controllers/inscripciones.controller.js";
 import inscripcionesFindAllValidation from "../../validators/inscripciones/inscripcionesFindAll.validation.js";
@@ -58,6 +67,15 @@ router.get('/api/estados', async (req, res) => {
 
 router.get("/estudiantes", [estudiantesFindAllValidation, estudiantesFindAllTransform], estudiantesController.getAll.bind(estudiantesController));
 
+router.get("/estudiantes/:id", [estudiantesGetByIdValidation, estudiantesGetByIdTransform], estudiantesController.getById.bind(estudiantesController));
+
+router.post("/estudiantes", [estudiantesCreateValidation, estudiantesCreateTransform], estudiantesController.create.bind(estudiantesController));
+
+router.put("/estudiantes/:id", [estudiantesUpdateValidation, estudiantesUpdateTransform], estudiantesController.update.bind(estudiantesController));
+
+router.delete("/estudiantes/:id", [estudiantesBorrarValidation, estudianteBorrarTransform], estudiantesController.borrar.bind(estudiantesController));
+
+
 router.get("/inscripciones",[inscripcionesFindAllValidation,inscripcionesFindAllTransform], inscripcionesController.getAll.bind(inscripcionesController));
 
 router.get("/inscripciones/:id",[inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.getById.bind(inscripcionesController));
@@ -65,6 +83,7 @@ router.get("/inscripciones/:id",[inscripcionesGetByIdValidation,inscripcionesGet
 router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateTransform],inscripcionesController.create.bind(inscripcionesController));
 
 router.delete("/inscripciones/:id", [inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
+
 
 
 export default router;

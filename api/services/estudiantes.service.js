@@ -12,7 +12,8 @@ export default class EstudiantesService extends BaseService {
         email: 'email',
         fechaNacimiento: 'fecha_nacimiento',
         activo: 'activo',
-        idUsuarioModificacion: 'id_usuario_modificacion'
+        idUsuarioModificacion: 'id_usuario_modificacion',
+        termino: 'termino'
     };
 
     constructor() {
@@ -27,5 +28,29 @@ export default class EstudiantesService extends BaseService {
         const respuestaBD = await this.repository.getAll(sqlFilter, limit, offset, sqlOrder);
         const respuesta = respuestaBD.map(estudiante => (new EstudianteResponseDTO(estudiante)));
         return respuesta;
+    }
+    
+    async getById(id) {
+        const estudianteBD = await this.repository.getById(id);
+        if (!estudianteBD) {
+            throw new Error ("Estudiante no encontrado");
+        }
+        return new EstudianteResponseDTO(estudianteBD);
+    }
+
+    async create(data) {
+        const nuevoEstudiante = await this.repository.create(data);
+        return new EstudianteResponseDTO(nuevoEstudiante);
+    }
+
+    async update(id, data) {
+        await this.getById(id);
+        const nuevoEstudiante = await this.repository.update(id, data);
+        return new EstudianteResponseDTO(nuevoEstudiante);
+    }
+
+    async borrar(id, data) {
+        const estudianteBorrado = await this.repository.borrar(id, data);
+        return {id: estudianteBorrado.id_estudiante, mensaje: "Estudiante eliminado correctamente"};
     }
 }

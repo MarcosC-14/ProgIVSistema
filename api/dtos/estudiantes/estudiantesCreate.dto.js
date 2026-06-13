@@ -1,4 +1,4 @@
-export default class estudiantesCreateDTO {
+export default class EstudiantesCreateDTO {
     constructor(body) {
         this.documento = body.documento;
         this.apellido = body.apellido;
