@@ -51,6 +51,9 @@ export default class EstudiantesService extends BaseService {
 
     async borrar(id, data) {
         const estudianteBorrado = await this.repository.borrar(id, data);
+        if (!estudianteBorrado) {
+            return null;
+        }
         return {id: estudianteBorrado.id_estudiante, mensaje: "Estudiante eliminado correctamente"};
     }
 }
