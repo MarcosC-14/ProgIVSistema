@@ -68,12 +68,14 @@ async function cargarTablaInscripciones(paginaReq = 1){
                     <td class="text-center">${fechaTabla}</td>
                     <td class="text-center">
                         <button class="btn btn-sm btn-outline-primary btn-ver" title="Ver Detalle" data-id="${inscripcion.idInscripcion}">👁️</button>
+                        <button class="btn btn-sm btn-outline-primary btn-diploma" title="Generar Diploma" data-id="${inscripcion.idInscripcion}">PDF</button>
                     </td>
                 `;
                 tabla.appendChild(fila);
             });
 
             asignarEventosBotonesVer();
+            asignarEventosBotonesDiploma();
 
         } else {
             tabla.innerHTML = `<tr><td colspan="8" class="text-center">No hay inscripciones registradas.</td></tr>`;
@@ -302,6 +304,79 @@ function asignarEventosBotonesVer() {
             await abrirModalDetalle(id);
         });
     });
+}
+
+function asignarEventosBotonesDiploma() {
+    const botonesDiploma = document.querySelectorAll('.btn-diploma');
+    botonesDiploma.forEach(boton => {
+        boton.addEventListener('click', async () => {
+            const id = boton.getAttribute('data-id');
+            await generarDiploma(id);
+        });
+    });
+    
+}
+
+/**
+ * 5.5 Intento 1 de generar diploma:
+ */
+
+async function generarDiploma(id){
+    /*
+    try{
+        console.log(id);
+        console.log(`${URL_API_INSCRIPCIONES}/${id}/diploma`);
+        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${id}/diploma`);
+    } catch (error){
+        console.error(error);
+        mostrarErrorAviso("Ocurrió un error al intentar generar un diploma.");
+    }
+    */
+    
+    const boton = document.querySelector(`.btn-diploma[data-id="${id}"]`);
+    const textoOriginal = boton.textContent;
+    
+    try {
+        // Bloquear el botón para evitar concurrencia de peticiones
+        boton.disabled = true;
+        boton.textContent = 'Generando...';
+
+        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${id}/diploma`);
+
+        // 2. Interceptar errores estructurados del backend
+        if (!respuesta.ok) {
+            const errorEstructurado = await respuesta.json();
+            throw new Error(errorEstructurado.message || 'Error HTTP en la obtención del diploma');
+        }
+
+        // 3. Conversión del flujo de bytes a un Binary Large Object (Blob)
+        const blob = await respuesta.blob();
+
+        // 4. Creación de una URL local en memoria referenciando al Blob
+        const urlBlob = window.URL.createObjectURL(blob);
+
+        // 5. Creación programática de un nodo de anclaje para forzar la escritura en disco
+        const a = document.createElement('a');
+        a.href = urlBlob;
+        a.download = `Certificado_Inscripcion_${id}.pdf`; // Atributo que fuerza la descarga
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        // 6. Limpieza del DOM y liberación de memoria
+        a.remove();
+        window.URL.revokeObjectURL(urlBlob);
+
+    } catch (error) {
+        console.error("Fallo durante la generación del diploma:", error);
+        mostrarErrorAviso(error.message);
+    } finally {
+        // Restaurar estado original de la UI
+        if (boton) {
+            boton.disabled = false;
+            boton.textContent = textoOriginal;
+        }
+    }
 }
 
 /**
