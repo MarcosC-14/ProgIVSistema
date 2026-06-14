@@ -208,9 +208,9 @@ function configurarEventos() {
                 if (!response.ok) throw new Error("Error en la red");
                 
                 const data = await response.json();
-                const estudiantes = data.data || data;
+                const estudiantes = data.respuesta;
                 listaResultados.innerHTML = '';
-
+                console.log(estudiantes);
                 if (estudiantes.length === 0) {
                     listaResultados.innerHTML = '<li class="list-group-item text-muted">Sin resultados</li>';
                 } else {
@@ -424,7 +424,8 @@ async function guardarInscripcion() {
     const selectCurso = document.getElementById('modalSelectCurso');
     const inputHiddenId = document.getElementById('modalIdEstudiante');
 
-    if (!inputHiddenId.value) {
+    if (!inputHiddenId.value){
+        cerrarTodosLosModales();
         mostrarErrorAviso("Debe seleccionar un estudiante válido del listado desplegable.");
         return;
     }

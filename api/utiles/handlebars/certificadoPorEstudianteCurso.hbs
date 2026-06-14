@@ -12,77 +12,132 @@
 
         body{
             font-family: 'Times New Roman', Times, serif;
-            margin: 0;
+           margin: 0;
             padding: 0;
-            background-color: #fcfbf7; /* Un tono marfil/crema muy sutil en lugar de blanco puro */
+            background-color: #fcfbf7;
             -webkit-print-color-adjust: exact;
+            /* Dimensiones estrictas para A4 apaisado */
+            width: 297mm;
+            height: 210mm;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
         }
 
-        /* Contenedor principal del diploma */
         .diploma-container {
+            width: 100%;
+            height: 100%;
             background-color: #ffffff;
             box-sizing: border-box;
             position: relative;
-            overflow: hidden;
             text-align: center;
-            margin-bottom: 30px;
             border: 20px solid #003366;
-            
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
         }
         
-        .diploma-container h1{
-            font-size: 42px;
-            margin-top: 50px;
-            margin-bottom: 10px;
-            letter-spacing: 10px;
-            font-weight: 700;
-        }
-        
-        .diploma-container p{
-            margin: 5px 0;
-        }
-
-        .logo-container {
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 0px;
-        }
-
-        .logo-img {
-        max-width: 150px; 
-        height: auto;
-        }
-
         .border-inner {
             position: absolute;
-            top: 35px;
-            left: 35px;
-            right: 35px;
-            bottom: 35px;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
             border: 2px solid #c5a059; 
             pointer-events: none;
         }
 
+        .logo-img {
+            max-width: 140px; 
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 38px;
+            margin: 0 0 20px 0;
+            letter-spacing: 8px;
+            font-weight: 700;
+            color: #000000;
+        }
+        
+        .label {
+            font-size: 18px;
+            color: #555555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .student-name {
+            font-size: 40px;
+            margin: 0;
+            color: #111111;
+        }
+
+        .divider {
+            width: 50%;
+            height: 2px;
+            background-color: #c5a059;
+            margin: 10px auto;
+        }
+
+        .student-doc {
+            font-size: 16px;
+            color: #3e3e3e;
+            margin-bottom: 30px;
+        }
+
+        .course-text {
+            font-size: 20px;
+            color: #3e3e3e;
+            margin: 0 0 10px 0;
+        }
+
+        .course-name {
+            font-size: 34px;
+            font-weight: bold;
+            color: #003366;
+            margin: 0 0 40px 0;
+        }
+
+        .metadata-container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            border-top: 1px solid #eeeeee;
+            padding-top: 15px;
+            font-size: 14px;
+            color: #3e3e3e;
+        }
     </style>
 
 </head>
 <body>
     <div class="diploma-container">
-        <div class="border-outer"></div>
         <div class="border-inner"></div>
 
         <div class="logo-container">
             <img src="{{logoBase64}}" alt="Logo Institucional" class="logo-img">
         </div>
+        
         <h1>CERTIFICADO DE APROBACIÓN</h1>
+        
         <div class="label">Otorgado a:</div>
-        <div class="divider"></div>
         <h2 class="student-name">{{NOMBRES}} {{APELLIDOS}}</h2>
+        <div class="divider"></div>
         <div class="student-doc">Documento: {{documento}}</div>
-        <p class="couse-text">Por su participacióm y aprobacion en el curso:</p>
+        
+        <div class="course-text">Por su participación y aprobación en el curso:</div>
         <h3 class="course-name">{{NOMBRE_DEL_CURSO}}</h3>
-        <div class="course-info"><strong>Id de incripcion: </strong>{{id_inscripcion}}.</div>
-        <div class="couse-info"><strong>Fecha de emisión:</strong>{{Día}} de {{Mes}} de {{Año}}.</div>
+        
+        <div class="metadata-container">
+            <div class="course-info"><strong>ID de inscripción:</strong> {{id_inscripcion}}</div>
+            <div class="course-info"><strong>Fecha de emisión:</strong> {{Día}} de {{Mes}} de {{Año}}</div>
+        </div>
     </div>
 </body>    
 </html>
