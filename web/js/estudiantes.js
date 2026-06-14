@@ -96,7 +96,7 @@ async function cargarEstudiantes(paginaReq = 1) {
         const listaEstudiantes = datos.respuesta || datos;
 
         if (!listaEstudiantes || listaEstudiantes.length === 0) {
-            tabla.innerHTML = `<tr><td colsapan="10" class="text-center">No se encontraron estudiantes.</td></tr>`;
+            tabla.innerHTML = `<tr><td colspan="10" class="text-center">No se encontraron estudiantes.</td></tr>`;
             mostrarControlesPaginacion(0);
             return;
         }
@@ -189,8 +189,8 @@ async function guardarEstudiante(){
 
     const datosEstudiante = {
         documento: document.getElementById('modalDocumento').value.trim(),
-        apellido: document.getElementById('modalApellido').value.trim(),
-        nombres: document.getElementById('modalNombres').value.trim(),
+        apellido: document.getElementById('modalApellido').value.trim().toUpperCase(),
+        nombres: document.getElementById('modalNombres').value.trim().toUpperCase(),
         email: document.getElementById('modalEmail').value.trim(),
         fecha_nacimiento: document.getElementById('modalFecha').value,
         activo: 1,
@@ -221,11 +221,11 @@ async function guardarEstudiante(){
 
         cerrarTodosLosModales();
         await cargarEstudiantes(paginaActual);
-        mostrarToast("Informacion del estudiante guardada correctamente.");
+        mostrarToast("Información del estudiante guardada correctamente.");
 
     } catch (error) {
-        console.error("Fallo guardando la informacion del estudiante: ", error);
-        mostrarErrorAviso("Ocurrio un error al guardar la informacion del estudiante");
+        console.error("Fallo guardando la información del estudiante: ", error);
+        mostrarErrorAviso("Ocurrio un error al guardar la información del estudiante");
     } finally {
         btnGuardar.disabled = false;
         btnGuardar.textContent = textoOriginal;
