@@ -8,11 +8,16 @@ const estudiantesCreateValidation = [
 
     body('apellido')
         .notEmpty().withMessage('El apellido es obligatorio')
-        .isString().withMessage('El apellido debe ser una cadena de texto'),
+        .isString().withMessage('El apellido debe ser una cadena de texto')
+        .trim()
+        .isLength({ min: 1, max: 45 }).withMessage('El apellido debe tener entre 1 y 45 caracteres.'),
+
 
     body('nombres')
         .notEmpty().withMessage('El nombre es obligatorio')
-        .isString().withMessage('El nombre debe ser una cadena de texto'),
+        .isString().withMessage('El nombre debe ser una cadena de texto')
+        .trim()
+        .isLength({ min: 1, max: 45 }).withMessage('El nombre debe tener entre 1 y 45 caracteres.'),
 
     body('email')
         .notEmpty().withMessage('El email es obligatorio')

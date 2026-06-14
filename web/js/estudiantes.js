@@ -39,9 +39,14 @@ function configurarEventos() {
     }
 
     if (btnEliminar) {
+        btnEliminar.addEventListener('click', () => {
+            const modalConfirmacion = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalConfirmacion'));
+            modalConfirmacion.show();
+        });
+        
         btnConfirmarAccion.addEventListener('click', async () =>{
             await eliminarEstudiante();
-        })
+        });
     }
 
 }
@@ -118,7 +123,7 @@ async function cargarEstudiantes(paginaReq = 1) {
                 <td class="text-center">${estudiante.idUsuarioModificacion || '-'}</td>
                 <td class="text-center">${fechaMod}</td>
                 <td class="text-center">
-                    <button class="btn btn-sm btn-outline-primary btn-ver-estudiante" data-id=${estudiante.idEstudiante}">👁️</button>
+                    <button class="btn btn-sm btn-outline-primary btn-ver-estudiante" data-id="${estudiante.idEstudiante}">👁️</button>
                 </td>
             `;
             tabla.appendChild(fila);
@@ -158,8 +163,8 @@ async function abrirModalEstudiante(id) {
         document.getElementById('modalNombres').value = estudiante.nombres;
         document.getElementById('modalEmail').value = estudiante.email;
 
-        if (estudiante.fecha_nacimiento){
-            document.getElementById('modalFecha').value = estudiante.fecha_nacimiento.split('T')[0];
+        if (estudiante.fechaNacimiento){
+            document.getElementById('modalFecha').value = estudiante.fechaNacimiento.split('T')[0];
         }
 
         document.getElementById('modalEstudianteLabel').textContent = 'Modificar Estudiante';

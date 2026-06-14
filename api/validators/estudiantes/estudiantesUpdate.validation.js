@@ -17,14 +17,14 @@ const estudiantesUpdateValidation = [
         .isString().withMessage('El apellido debe ser una cadena de texto.')
         .trim()
         .notEmpty().withMessage('El apellido no puede estar vacío.')
-        .isLength({ min: 5, max: 45 }).withMessage('El apellido debe tener entre 5 y 45 caracteres.'),
+        .isLength({ min: 1, max: 45 }).withMessage('El apellido debe tener entre 1 y 45 caracteres.'),
 
     body('nombres')
         .exists().withMessage('El campo nombres es obligatorio.')
         .isString().withMessage('El nombre debe ser una cadena de texto.')
         .trim()
         .notEmpty().withMessage('El nombre no puede estar vacío.')
-        .isLength({ min: 5, max: 45 }).withMessage('El nombre debe tener entre 5 y 45 caracteres.'),
+        .isLength({ min: 1, max: 45 }).withMessage('El nombre debe tener entre 1 y 45 caracteres.'),
 
     body('email')
         .exists().withMessage('El campo emial es obligatorio.')

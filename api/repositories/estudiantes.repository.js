@@ -14,10 +14,7 @@ export default class EstudiantesRepository {
             Object.entries(filter).forEach(([key, value]) => {
                 
                 if (key === 'termino') {
-                    strWhere += ` AND (nombres ILIKE '%${value}%' OR apellido ILIKE '%${value}%') `;
-                } 
-                else if (key === 'documento' || typeof value === 'string') {
-                    strWhere += ` AND ${key} ILIKE '%${value}%' `;
+                    strWhere += ` AND (nombres ILIKE '%${value}%' OR apellido ILIKE '%${value}%' OR documento ILIKE '%${value}%') `;
                 } 
                 else {
                     strWhere += ` AND ${key} = ${value} `;
@@ -25,6 +22,11 @@ export default class EstudiantesRepository {
 
             });
 
+        }
+
+        if (order && Object.keys(order).length > 0) {
+            const orderCampos = Object.entries(order).map(([key, value]) => `${key} ${value}`);
+            strOrder = `ORDER BY ${orderCampos.join(', ')} `;
         }
 
         if (limit) {

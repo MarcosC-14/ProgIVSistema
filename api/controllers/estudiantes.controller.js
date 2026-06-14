@@ -59,7 +59,7 @@ export default class EstudiantesController {
         try {
             const { id } = req.params;
             const idUsuarioModificacion = req.usuario?.id_usuario || 1; 
-            const estudianteEliminado = await this.service.delete(id, idUsuarioModificacion);
+            const estudianteEliminado = await this.service.borrar(id, idUsuarioModificacion);
             if (!estudianteEliminado) {
                 return res.status(404).json({ error: 'Estudiante no encontrado' });
             }
