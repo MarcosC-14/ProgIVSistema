@@ -61,6 +61,7 @@ export default class InscripcionesController {
             const erroresNegocio = [
                 "El estudiante ya está registrado en el curso.",
                 "El curso no existe.",
+                "El curso tiene las inscripciones cerradas.",
                 "El curso alcanzó su máximo de inscripciones."
             ];
 
