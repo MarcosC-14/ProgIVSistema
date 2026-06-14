@@ -36,6 +36,14 @@ export default class EstudiantesRepository {
         if (offset) {
             strOffset = `OFFSET ${offset} `
         }
+        
+        const countResult = await client.query(`
+            SELECT COUNT(*) as total 
+            FROM public.estudiantes
+            WHERE activo = 1
+            ${strWhere};
+        `);
+        const total = parseInt(countResult.rows[0].total, 10);
 
         const { rows } = await client.query(`
             SELECT  id_estudiante, 
@@ -54,8 +62,10 @@ export default class EstudiantesRepository {
             ${strLimit}
             ${strOffset};
         `);
+        
         client.release();
-        return rows;
+        
+        return { rows, total };
     }
 
     async getById(id) {

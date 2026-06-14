@@ -26,8 +26,11 @@ export default class EstudiantesService extends BaseService {
         const sqlOrder = this.mapKeysToColumns(order, EstudiantesService.KEYS_MAP);
 
         const respuestaBD = await this.repository.getAll(sqlFilter, limit, offset, sqlOrder);
-        const respuesta = respuestaBD.map(estudiante => (new EstudianteResponseDTO(estudiante)));
-        return respuesta;
+        const lista = respuestaBD.rows.map(estudiante => (new EstudianteResponseDTO(estudiante)));
+        return {
+            respuesta: lista,
+            totalEstudiantes: respuestaBD.total
+        };
     }
     
     async getById(id) {
