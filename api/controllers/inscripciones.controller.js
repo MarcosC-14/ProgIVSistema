@@ -106,4 +106,30 @@ export default class InscripcionesController {
             });
         }
     }
+
+    async generarDiploma(req, res){
+        try{
+            const diplomaGenerado = await this.service.generarDiploma(req.id); 
+            if (!diplomaGenerado) throw new Error('La inscripcion no existe.');
+            
+            res.set(diplomaGenerado.headers);
+
+            return res.status(200).send(diplomaGenerado.buffer);
+        }catch(error){
+            console.error(error);
+            if(error.message === 'La inscripción no existe'){
+                return res.status(404).json({
+                    status: "fail",
+                    message: error.message
+                });
+            }
+
+            return res.status(500).json({
+                status: "error",
+                message: "Fallo estructural al procesar la generacion de diploma",
+                detail: error.message
+            });
+        }
+
+    }
 }

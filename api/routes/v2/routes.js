@@ -71,6 +71,8 @@ router.get("/inscripciones",[inscripcionesFindAllValidation,inscripcionesFindAll
 
 router.get("/inscripciones/:id",[inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.getById.bind(inscripcionesController));
 
+router.get("/inscripciones/:id/diploma",[inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.generarDiploma.bind(inscripcionesController));
+
 router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateTransform],inscripcionesController.create.bind(inscripcionesController));
 
 router.delete("/inscripciones/:id", [inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
