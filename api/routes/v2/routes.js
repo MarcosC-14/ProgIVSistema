@@ -11,6 +11,8 @@ import cursosUpdateTransform from "../../transforms/cursos/cursosUpdate.transfor
 import cursosBorrarValidation from "../../validators/cursos/cursosBorrar.validation.js";
 import cursosBorrarTransform from "../../transforms/cursos/cursosBorrar.transform.js";
 
+import CursosEstadosController from "../../controllers/cursosEstados.controller.js";
+
 
 import EstudiantesController from "../../controllers/estudiantes.controller.js";
 import estudiantesFindAllValidation from "../../validators/estudiantes/estudiantesFindAll.validation.js";
@@ -40,6 +42,7 @@ const router = express.Router();
 const estudiantesController = new EstudiantesController();
 const inscripcionesController = new InscripcionesController();
 const cursosController = new CursosController();
+const cursosEstadosController = new CursosEstadosController();
 
 router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
 
@@ -51,19 +54,7 @@ router.put("/cursos/:id", [cursosUpdateValidation,cursosUpdateTransform], cursos
 
 router.delete("/cursos/:id", [cursosBorrarValidation,cursosBorrarTransform], cursosController.borrar.bind(cursosController));
 
-router.get('/api/estados', async (req, res) => {
-    try {
-        // Tu consulta SQL usando tu conexión (pool o client)
-        const resultado = await pool.query('SELECT id_curso_estado, descripcion FROM cursos_estados;');
-        
-        // Devolvemos las filas al frontend en formato JSON
-        res.json(resultado.rows); 
-    } catch (error) {
-        console.error("Error al obtener estados de la BD:", error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
-
+router.get('/estados', cursosEstadosController.getAll.bind(cursosEstadosController));
 
 router.get("/estudiantes", [estudiantesFindAllValidation, estudiantesFindAllTransform], estudiantesController.getAll.bind(estudiantesController));
 
