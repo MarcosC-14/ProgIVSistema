@@ -113,6 +113,10 @@ main div{
     padding: 0.5rem 0rem;
 }
 
+main div div.card-body{
+    padding: 0.2rem 1rem;
+}
+
 footer{
     color: rgb(212, 218, 255);
     background-color: #003366;

@@ -11,10 +11,21 @@ import cursosUpdateTransform from "../../transforms/cursos/cursosUpdate.transfor
 import cursosBorrarValidation from "../../validators/cursos/cursosBorrar.validation.js";
 import cursosBorrarTransform from "../../transforms/cursos/cursosBorrar.transform.js";
 
+import CursosEstadosController from "../../controllers/cursosEstados.controller.js";
+
 
 import EstudiantesController from "../../controllers/estudiantes.controller.js";
-import estudiantesFindAllValidation from "../../validators/estudiantesFindAll.validation.js";
-import estudiantesFindAllTransform from "../../transforms/estudiantesFindAll.transform.js";
+import estudiantesFindAllValidation from "../../validators/estudiantes/estudiantesFindAll.validation.js";
+import estudiantesFindAllTransform from "../../transforms/estudiantes/estudiantesFindAll.transform.js";
+import estudiantesGetByIdTransform from "../../transforms/estudiantes/estudiantesGetById.transform.js";
+import estudiantesGetByIdValidation from "../../validators/estudiantes/estudiantesGetById.validation.js";
+import estudiantesCreateTransform from "../../transforms/estudiantes/estudiantesCreate.transform.js";
+import estudiantesCreateValidation from "../../validators/estudiantes/estudiantesCreate.validation.js";
+import estudiantesUpdateTransform from "../../transforms/estudiantes/estudiantesUpdate.transform.js";
+import estudiantesUpdateValidation from "../../validators/estudiantes/estudiantesUpdate.validation.js";
+import estudianteBorrarTransform from "../../transforms/estudiantes/estudiantesBorrar.transform.js";
+import estudiantesBorrarValidation from "../../validators/estudiantes/estudiantesBorrarValidation.js";
+
 
 import InscripcionesController from "../../controllers/inscripciones.controller.js";
 import inscripcionesFindAllValidation from "../../validators/inscripciones/inscripcionesFindAll.validation.js";
@@ -31,6 +42,7 @@ const router = express.Router();
 const estudiantesController = new EstudiantesController();
 const inscripcionesController = new InscripcionesController();
 const cursosController = new CursosController();
+const cursosEstadosController = new CursosEstadosController();
 
 router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
 
@@ -42,21 +54,18 @@ router.put("/cursos/:id", [cursosUpdateValidation,cursosUpdateTransform], cursos
 
 router.delete("/cursos/:id", [cursosBorrarValidation,cursosBorrarTransform], cursosController.borrar.bind(cursosController));
 
-router.get('/api/estados', async (req, res) => {
-    try {
-        // Tu consulta SQL usando tu conexión (pool o client)
-        const resultado = await pool.query('SELECT id_curso_estado, descripcion FROM cursos_estados;');
-        
-        // Devolvemos las filas al frontend en formato JSON
-        res.json(resultado.rows); 
-    } catch (error) {
-        console.error("Error al obtener estados de la BD:", error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
-
+router.get('/estados', cursosEstadosController.getAll.bind(cursosEstadosController));
 
 router.get("/estudiantes", [estudiantesFindAllValidation, estudiantesFindAllTransform], estudiantesController.getAll.bind(estudiantesController));
+
+router.get("/estudiantes/:id", [estudiantesGetByIdValidation, estudiantesGetByIdTransform], estudiantesController.getById.bind(estudiantesController));
+
+router.post("/estudiantes", [estudiantesCreateValidation, estudiantesCreateTransform], estudiantesController.create.bind(estudiantesController));
+
+router.put("/estudiantes/:id", [estudiantesUpdateValidation, estudiantesUpdateTransform], estudiantesController.update.bind(estudiantesController));
+
+router.delete("/estudiantes/:id", [estudiantesBorrarValidation, estudianteBorrarTransform], estudiantesController.borrar.bind(estudiantesController));
+
 
 router.get("/inscripciones",[inscripcionesFindAllValidation,inscripcionesFindAllTransform], inscripcionesController.getAll.bind(inscripcionesController));
 
@@ -67,6 +76,7 @@ router.get("/inscripciones/:id/diploma",[inscripcionesGetByIdValidation,inscripc
 router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateTransform],inscripcionesController.create.bind(inscripcionesController));
 
 router.delete("/inscripciones/:id", [inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
+
 
 
 export default router;

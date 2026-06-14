@@ -202,12 +202,11 @@ function configurarEventos() {
         peticionesTimer = setTimeout(async () => {
             try {
                 //NOTA cambiar una vez haya uno de termino en estudiantes si los hay
-                const response = await fetch(`${URL_API_ESTUDIANTES}?limit=5&apellido=${query}`);
+                const response = await fetch(`${URL_API_ESTUDIANTES}?limit=5&termino=${query}`);
                 if (!response.ok) throw new Error("Error en la red");
                 
                 const data = await response.json();
                 const estudiantes = data.data || data;
-
                 listaResultados.innerHTML = '';
 
                 if (estudiantes.length === 0) {
@@ -229,6 +228,7 @@ function configurarEventos() {
                 }
                 listaResultados.style.display = 'block';
             } catch (error) {
+                cerrarTodosLosModales();
                 console.error("Error en Typeahead:", error);
             }
         }, 300); 
@@ -381,6 +381,7 @@ async function guardarInscripcion() {
 
     } catch (error) {
         console.error("Fallo durante POST:", error);
+        cerrarTodosLosModales();
         mostrarErrorAviso(error.message);
     } finally {
         btnGuardar.disabled = false;
