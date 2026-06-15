@@ -58,7 +58,7 @@
 
                     <div class="col-12 col-sm-12 col-md-7">
                         <label for="buscarEstado" class="form-label fw-bold mb-0">Estado del curso</label>
-                        <div id="contenedor-checkboxes-estados" class="d-flex align-items-center gap-3"></div>
+                        <div id="contenedor-checkboxes-estados" class="d-flex flex-wrap align-items-center gap-3"></div>
                     </div>
                     <div class="col-12 col-sm-3 col-md-1 ms-auto text-end d-flex align-items-center">
                         <button type="submit" class="btn btn-outline-primary w-100" id="lupa" title="Buscar">
@@ -71,22 +71,24 @@
         </div>
         <!-- Tabla cursos -->
         <div class="card mb-4 shadow-sm" rounded-3>
-            <table class = "table table-hover">
-                <thead>
-                    <tr>
-                        <th>ID Curso</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Fecha de inicio</th>
-                        <th>Cantidad de horas</th>
-                        <th>Inscriptos máximos</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
+            <div class="table-responsive">
+                <table class = "table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID Curso</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Fecha de inicio</th>
+                            <th>Cantidad de horas</th>
+                            <th>Inscriptos máximos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
        </div>
        
        <nav aria-label="Navegación de registros" class="mt-4">

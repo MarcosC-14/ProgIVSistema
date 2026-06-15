@@ -41,7 +41,7 @@ async function cargarTablaInscripciones(paginaReq = 1){
             offset: offset
         });
 
-        // Si existen filtros en memoria, se adjuntan a la URL
+        // Si existen filtros en memoria, se suman al url
         if (filtrosAplicados.idInscripcion) queryParams.append('idInscripcion', filtrosAplicados.idInscripcion);
         if (filtrosAplicados.estudianteTermino) queryParams.append('estudianteTermino', filtrosAplicados.estudianteTermino);
         if (filtrosAplicados.idCurso) queryParams.append('idCurso', filtrosAplicados.idCurso);
@@ -67,8 +67,8 @@ async function cargarTablaInscripciones(paginaReq = 1){
                     <td class="text-center">${inscripcion.documento}</td>
                     <td class="text-center">${fechaTabla}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-outline-primary btn-ver" title="Ver Detalle" data-id="${inscripcion.idInscripcion}">👁️</button>
-                        <button class="btn btn-sm btn-outline-primary btn-diploma" title="Generar Diploma" data-id="${inscripcion.idInscripcion}">PDF</button>
+                        <button class="btn btn-sm btn-outline-primary btn-ver" title="Ver Detalle" data-id="${inscripcion.idInscripcion}">👀👁️</button>
+                        <button class="btn btn-sm btn-outline-primary btn-diploma" title="Generar Diploma" data-id="${inscripcion.idInscripcion}">🖨️📄📜</button>
                     </td>
                 `;
                 tabla.appendChild(fila);

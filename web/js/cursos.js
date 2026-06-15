@@ -8,6 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarEventos();
     cargarEstados();
     cargarEstadosCheckboxes();
+
+
+    //Esto es para lo del link rápido a cursos activos en los requisitos
+    const parametrosUrl = new URLSearchParams(window.location.search);
+    const idCursoRuta = parametrosUrl.get('verCurso');
+    
+    if (idCursoRuta) {
+        abrirModalEdicion(idCursoRuta);
+    }
+
 });
 
 /**
@@ -345,6 +355,12 @@ async function guardarCurso() {
     }
 
     try {
+        console.log("Intento", url,  {
+            method: metodo,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datosCurso)});
         const respuesta = await fetch(url, {
             method: metodo,
             headers: {

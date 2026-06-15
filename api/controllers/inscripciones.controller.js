@@ -48,7 +48,7 @@ export default class InscripcionesController {
         }
     }
 
-    create = async (req, res) => {
+    async create(req, res){
         try {
             const nuevaInscripcion = await this.service.create(req.dto);
 
@@ -61,7 +61,7 @@ export default class InscripcionesController {
             const erroresNegocio = [
                 "El estudiante ya está registrado en el curso.",
                 "El curso no existe.",
-                "El curso tiene las inscripciones cerradas.",
+                "El curso no admite inscripciones.",
                 "El curso alcanzó su máximo de inscripciones."
             ];
 
@@ -71,7 +71,6 @@ export default class InscripcionesController {
                     message: error.message
                 });
             }
-
             return res.status(500).json({
                 status: "error",
                 message: "Fallo estructural al procesar la inscripción",
