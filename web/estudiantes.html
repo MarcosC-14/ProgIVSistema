@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="css/estilo.css">
     <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/estudiantes.js" type= "module" defer></script>
+    <script src="js/estudiantes.js" type="module" defer></script>
     <script src="js/bootstrap.bundle.min.js" defer></script>
    
 </head>
 <body>
     <header>
-        <div class = "contenedor">
+        <div class="contenedor">
             <img src="imagen/logo_fcad.png" alt="Logo FCAD">    
             <h1>Estudiantes FCAD - UNER</h1>
         </div> 
@@ -25,7 +25,7 @@
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="inscripciones.html">Inscripciones</a></li>
-                <li><a href="estudiantes.html"class="active" >Estudiantes</a></li>
+                <li><a href="estudiantes.html" class="active" >Estudiantes</a></li>
                 <li><a href="cursos.html">Cursos</a></li>
             </ul> 
         </nav>
@@ -41,24 +41,19 @@
 
          <div class="card mb-4 shadow-sm">
             <div class="card-body">
-                <form id="formBusquedaEstudiante" class="row g-3 justify-content-between align-items-end gap-3">
-                    <div class="col-12 col-sm-3 col-md-1">
+                <form id="formBusquedaEstudiante" class="row g-3 align-items-end">
+                    <div class="col-12 col-md-5">
                         <label for="buscarId" class="form-label fw-bold">ID del Estudiante</label>
                         <input type="number" id="buscarId" class="form-control" placeholder="Ej: 1" min="1">
                     </div>
 
-                    <div class="col-12 col-sm-9 col-md-4">
-                        <label for="buscarNombres" class="form-label fw-bold">Nombres</label>
-                        <input type="text" id="buscarNombres" class="form-control" placeholder="Buscando Nombres...">
+                    <div class="col-12 col-sm-7 col-md-5">
+                        <label for="buscarNombres" class="form-label fw-bold">Nombres, Apellido o Documento</label>
+                        <input type="text" id="buscarTexto" class="form-control" placeholder="Buscar...">
                     </div>
 
-                    <div class="col-12 col-sm-9 col-md-4">
-                        <label for="buscarApellido" class="form-label fw-bold">Apellido</label>
-                        <input type="text" id="buscarApellido" class="form-control" placeholder="Buscando Apellido...">
-                    </div>
-
-                    <div class="col-12 col-sm-3 col-md-1 ms-auto text-end">
-                        <button type="submit" class="btn btn-outline-primary w-100" id="lupa" title="Buscar">
+                    <div class="col-12 col-md-auto">
+                        <button type="submit" class="btn btn-outline-primary px-4" id="lupa" title="Buscar">
                             🔍
                         </button>
                     </div>
@@ -67,7 +62,7 @@
             </div>
         </div>
         
-        <table class = "table table-hover">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>ID Estudiante</th>
@@ -75,7 +70,7 @@
                     <th>Apellido</th>
                     <th>Nombres</th>
                     <th>Email</th>
-                    <th>F.Nacimiento</th>
+                    <th>Fecha de Nacimiento</th>
                     <th>Activo</th>
                     <th>ID de modificacion</th>
                     <th>Tiempo de la ultima modificacion</th>
@@ -96,10 +91,10 @@
     </footer>
 
     <!-- Contenedor que lo fija en la esquina superior derecha -->
-    <div class="toast-container position- top-0 end-0 p-3">
+    <div class="toast-container position-fixed top-0 end-0 p-3">
     
     <!-- El Toast (le agregamos un ID para controlarlo con JS) -->
-        <div id="miToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div id="miToast" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <strong class="me-auto">Notificación</strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -122,33 +117,33 @@
                     <form id="formEstudiante">
                         <input type="hidden" id="modalIdEstudiante">
 
-                        <div class = "mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Documento del Estudiante</label>
-                            <input type="text" class="form-control" id="modalDocumento" placeholder="Ej: 12345678" autocomplete="off" required inputmode="numeric" pattern="[0-9]+"required>
+                            <input type="text" class="form-control" id="modalDocumento" placeholder="Ej: 12345678" autocomplete="off" inputmode="numeric" pattern="[0-9]+" minlength="7" maxlength="10" required>
                         </div>
 
-                        <div class= "mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Apellido:</label>
-                            <input type="text" class="form-control" id="modalApellido" placeholder="Ej: Bartolomé" autocomplete="off" required>
+                            <input type="text" class="form-control" id="modalApellido" placeholder="Ej: Bartolomé" autocomplete="off" minlength="1" maxlength="45" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo se permiten letras" required>
                         </div>
                         
-                        <div class= "mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Nombres:</label>
-                            <input type="text" class="form-control" id="modalNombres" placeholder="Ej: Mitre" autocomplete="off" required>
+                            <input type="text" class="form-control" id="modalNombres" placeholder="Ej: Mitre" autocomplete="off" minlength="1" maxlength="45" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo se permiten letras" required>
                         </div>
 
-                        <div class= "mb-3">
+                        <div class="mb-3">
                             <label class="form-label">Email:</label>
-                            <input type="text" class="form-control" id="modalEmail" placeholder="Ej: fcad123@gmail.com" autocomplete="off" required>
+                            <input type="email" class="form-control" id="modalEmail" placeholder="Ej: fcad123@gmail.com" autocomplete="off" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Fecha de Nacimiento:</label>
-                            <input type="date" class="form-control" id="modalFecha" autocomplete="off" required>
+                            <input type="date" class="form-control" id="modalFecha" autocomplete="off" max="2099-12-30" required>
                         </div>    
                         
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-botonNormal" id="btnEliminar">Eliminar</button>
+                            <button type="button" class="btn btn-botonNormal" id="btnEliminar" data-bs-toggle="modal" data-bs-target="#modalConfirmacion">Eliminar</button>
                             <button type="submit" class="btn btn-botonNormal" id="btnGuardar">Guardar</button>
                         </div>
                     </form>

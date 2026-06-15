@@ -28,8 +28,8 @@
         <nav>
             <ul>
                 <li><a href="index.html">Inicio</a></li>
-                <li><a href="" class="active">Inscripciones</a></li>
-                <li><a href="">Estudiantes</a></li>
+                <li><a href="inscripciones.html" class="active">Inscripciones</a></li>
+                <li><a href="estudiantes.html">Estudiantes</a></li>
                 <li><a href="cursos.html">Cursos</a></li>
         </ul> 
         </nav>
@@ -50,25 +50,25 @@
         
         <div class="card mb-4 shadow-sm">
             <div class="card-body">
-                <form id="formBusquedaInscripciones" class="row g-3 justify-content-between align-items-end gap-3">
+                <form id="formBusquedaInscripciones" class="row g-3 gap-3" autocomplete="off">
                     <div class="col-12 col-sm-3 col-md-2">
                         <label for="buscarId" class="form-label fw-bold">ID Inscripción</label>
                         <input type="number" id="buscarId" class="form-control" placeholder="Ej: 1" min="1">
                     </div>
 
-                    <div class="col-12 col-sm-5 col-md-4">
+                    <div class="col-12 col-sm-9 col-md-3">
                         <label for="buscarDocumento" class="form-label fw-bold">Estudiante (DNI o Nombre)</label>
-                        <input type="text" id="buscarDocumento" class="form-control" placeholder="Ej: 34212942 o Aeroventila Pérez...">
+                        <input type="text" id="buscarDocumento" class="form-control" placeholder="Ej: 34212942 o Martina Pérez...">
                     </div>
 
-                    <div class="col-12 col-sm-4 col-md-4">
+                    <div class="col-12 col-sm-12 col-md-3">
                         <label for="buscarIdCurso" class="form-label fw-bold">Curso</label>
                         <select id="buscarIdCurso" class="form-select">
                             <option value="">Todos los cursos</option>
                             </select>
                     </div>
                     
-                    <div class="col-12 col-sm-12 col-md-1 ms-auto text-end">
+                    <div class="col-12 col-sm-3 col-md-1 ms-auto text-end d-flex align-items-center">
                         <button type="submit" class="btn btn-outline-primary w-100" id="lupa" title="Buscar">
                             🔍
                         </button>
@@ -134,7 +134,7 @@
             </div>
 
                 <div class="modal-body">
-                    <form id="formInscripcion">
+                    <form id="formInscripcion" autocomplete="off">
                         <input type="hidden" id="modalIdInscripcion">
 
                         <div class = "mb-3">
