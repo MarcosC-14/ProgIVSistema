@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <link rel="stylesheet" href="css/login-style.css">
-    <script src="js/login.js" defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/login.js" defer></script>
+    <link rel="stylesheet" href="css/login-style.css">
     <title>Inicio Sesion - UNER</title>
+     
+   
 </head>
 <body>
-    <header> 
-        <img src="logito uner header.png" alt="Facultad de Ciencias de la Administración">
-         
+   <header> 
+        <img src="imagen/logo_fcad.png" alt="Facultad de Ciencias de la Administración">
     </header>
 
     <main>
@@ -20,12 +21,14 @@
                 <label for="usuario">
                     Nombre de usuario:
                 </label>
-                <input type="text" name="usuario" id="usuario"  placeholder="usuario...">
+                <input type="text" name="usuario" id="usuario"  placeholder="usuario..." required>
                 <label for="contraseña">
                     Contraseña:
                 </label>
-                <input type="password" name="contraseña" id="contraseña">
+                <input type="password" name="contraseña" id="contraseña" required>
+                <div id="contenedor-error" class="alerta-error" role="alert"></div>
                 <button type="submit" id="btn-ingresar">Ingresar</button>
+            
             </form>
         </div>
     </main>

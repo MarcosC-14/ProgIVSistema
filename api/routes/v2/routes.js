@@ -1,4 +1,6 @@
 import express from "express";
+import passport from "passport";
+
 import CursosController from "../../controllers/cursos.controller.js";
 import cursosFindAllValidation from "../../validators/cursos/cursosFindAll.validation.js";
 import cursosFindAllTransform from "../../transforms/cursos/cursosFindAll.transform.js";
@@ -37,14 +39,22 @@ import inscripcionesGetByIdTransform from "../../transforms/inscripciones/inscri
 import inscripcionesBorrarValidation from "../../validators/inscripciones/inscripcionesBorrar.validation.js";
 import inscripcionesBorrarTransform from "../../transforms/inscripciones/inscripcionesBorrar.transform.js";
 
+import AuthController from "../../controllers/auth.controller.js";
+import { localStrategy, jwtStrategy } from "../../config/passport.js";
 
 import DashboardController from "../../controllers/dashboard.controller.js";
 
 const router = express.Router();
 
+passport.use('local', localStrategy);
+passport.use('jwt', jwtStrategy); 
+
 const estudiantesController = new EstudiantesController();
 const inscripcionesController = new InscripcionesController();
 const cursosController = new CursosController();
+const authController = new AuthController();
+
+router.post("/auth/login", authController.login.bind(authController)); 
 const cursosEstadosController = new CursosEstadosController();
 const dashboardController = new DashboardController();
 
