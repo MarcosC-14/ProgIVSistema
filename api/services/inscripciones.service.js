@@ -74,7 +74,7 @@ export default class InscripcionesService extends BaseService{
 
         const curso = await this.CursosRepository.getById(idCurso);
         if (!curso) throw new Error('El curso no existe.');
-        if (curso.id_curso_estado === 3) throw new Error('El curso tiene las inscripciones cerradas.');
+        if ([1,3].includes(curso.id_curso_estado)) throw new Error('El curso no admite inscripciones.');
         
         const estudiante = await this.EstudiantesRepository.getById(idEstudiante);
         if (!estudiante) throw new Error('El estudiante no existe');

@@ -37,12 +37,16 @@ import inscripcionesGetByIdTransform from "../../transforms/inscripciones/inscri
 import inscripcionesBorrarValidation from "../../validators/inscripciones/inscripcionesBorrar.validation.js";
 import inscripcionesBorrarTransform from "../../transforms/inscripciones/inscripcionesBorrar.transform.js";
 
+
+import DashboardController from "../../controllers/dashboard.controller.js";
+
 const router = express.Router();
 
 const estudiantesController = new EstudiantesController();
 const inscripcionesController = new InscripcionesController();
 const cursosController = new CursosController();
 const cursosEstadosController = new CursosEstadosController();
+const dashboardController = new DashboardController();
 
 router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
 
@@ -78,5 +82,6 @@ router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateT
 router.delete("/inscripciones/:id", [inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
 
 
+router.get("/dashboard/cursos-recientes", dashboardController.getCursosRecientes.bind(dashboardController));
 
 export default router;

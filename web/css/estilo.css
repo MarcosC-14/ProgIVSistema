@@ -10,6 +10,8 @@ header div.contenedor{
     justify-content:space-between;
     display:flex;
     align-items:center;
+    padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 /*titulo del header*/
@@ -17,7 +19,6 @@ header h1{
     color: white;
     font-size: 2rem;
     align-items: flex-start;
-    padding-right: 1rem;
 }
 
 header div.contenedor img {
@@ -49,6 +50,7 @@ div.contenedor-principal nav{
 
 div.contenedor-principal nav ul {
     display: flex;
+    flex-wrap: wrap;
     list-style: none;
     width: 100%;
     margin: 0; 

@@ -32,7 +32,7 @@ const cursosUpdateValidation = [
 
     body('inscriptosMax')
         .exists().withMessage('El cupo máximo es obligatorio.')
-        .isInt({ min: 1, max: 200 }).withMessage('El cupo máximo debe ser un número entero positivo entre 1 y 10000.')
+        .isInt({ min: 1, max: 10000 }).withMessage('El cupo máximo debe ser un número entero positivo entre 1 y 10000.')
         .toInt(),
 
     body('idCursoEstado')
