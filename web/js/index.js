@@ -1,0 +1,83 @@
+const API_CURSOS = 'http://localhost:3000/api/cursos';
+const API_ESTUDIANTES = 'http://localhost:3000/api/estudiantes';
+const API_INSCRIPCIONES = 'http://localhost:3000/api/inscripciones';
+const API_CURSOS_RECIENTES = 'http://localhost:3000/api/dashboard/cursos-recientes';
+document.addEventListener('DOMContentLoaded', () => {
+    cargarDatosDashboard();
+});
+
+async function cargarDatosDashboard() {
+    const errorContenedor = document.getElementById('error-dashboard');
+    
+    try {
+        const [resCursos, resEstudiantes, resInscripciones] = await Promise.allSettled([
+            fetch(`${API_CURSOS}?limit=1`),
+            fetch(`${API_ESTUDIANTES}?limit=1`),
+            fetch(`${API_INSCRIPCIONES}?limit=1`)
+        ]);
+
+        if (resCursos.status === 'fulfilled' && resCursos.value.ok) {
+            const dataCursos = await resCursos.value.json();
+            document.getElementById('kpi-cursos').textContent = dataCursos.totalCursos || 0;
+        }
+
+        if (resEstudiantes.status === 'fulfilled' && resEstudiantes.value.ok) {
+            const dataEst = await resEstudiantes.value.json();
+            document.getElementById('kpi-estudiantes').textContent = dataEst.totalEstudiantes || 0;
+        }
+
+        if (resInscripciones.status === 'fulfilled' && resInscripciones.value.ok) {
+            const dataInsc = await resInscripciones.value.json();
+            document.getElementById('kpi-inscripciones').textContent = dataInsc.totalInscripciones || 0;
+        }
+
+        await cargarCursosActivos();
+
+    } catch (error) {
+        console.error('Error procesando datos del dashboard:', error);
+        errorContenedor.textContent = 'Fallo en la sincronización de datos con el servidor.';
+        errorContenedor.style.display = 'block';
+    }
+}
+
+async function cargarCursosActivos() {
+    const tbody = document.getElementById('tbody-cursos-activos');
+    
+    try {
+        const respuesta = await fetch(`${API_CURSOS_RECIENTES}`);
+        
+        if (!respuesta.ok) throw new Error('Error en protocolo HTTP');
+        
+        const datos = await respuesta.json();
+        const cursos = datos.data;
+
+        tbody.innerHTML = '';
+        if (!cursos || cursos.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center">No hay cursos activos en el sistema.</td></tr>`;
+            return;
+        }
+
+        cursos.forEach(curso => {
+            const fecha = new Date(curso.fechaInicio).toLocaleDateString('es-AR');
+            const fechaUltimaInscripcion = new Date(curso.fechaUltimaInscripcion).toLocaleDateString('es-AR');
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td class="text-muted">${curso.idCurso}</td>
+                <td class="fw-bold">${curso.nombre}</td>
+                <td class="text-center">${fecha}</td>
+                <td class="text-center">${fechaUltimaInscripcion}</td>
+                <td class="text-center">${curso.totalInscriptos}</td>
+                <td class="text-center">${curso.cupoMaximo}</td>
+                <td class="text-center">${curso.disponibilidad}</td>
+                <td class="text-end pe-4">
+                    <a href="cursos.html?verCurso=${curso.idCurso}" class="btn btn-sm btn-outline-primary">👁️</a>
+                </td>
+            `;
+            tbody.appendChild(fila);
+        });
+
+    } catch (error) {
+        console.error('Error cargando la lista de cursos:', error);
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Error al cargar la tabla de cursos.</td></tr>`;
+    }
+}

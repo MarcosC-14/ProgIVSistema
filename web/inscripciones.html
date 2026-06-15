@@ -79,22 +79,24 @@
 
 
         <div class="card mb-4 shadow-sm" rounded-3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-center" scope="col">ID</th>
-                        <th class="text-center" scope="col">ID Curso</th>
-                        <th class="text-center" scope="col">Curso Nombre</th>
-                        <th class="text-center" scope="col">ID Est.</th>
-                        <th class="text-center" scope="col">Estudiante</th>
-                        <th class="text-center" scope="col">Documento</th>
-                        <th class="text-center" scope="col">Fecha y Hora</th>
-                        <th class="text-center" scope="col">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">ID</th>
+                            <th class="text-center" scope="col">ID Curso</th>
+                            <th class="text-center" scope="col">Nombre del Curso</th>
+                            <th class="text-center" scope="col">ID Estudiante</th>
+                            <th class="text-center" scope="col">Estudiante</th>
+                            <th class="text-center" scope="col">Documento</th>
+                            <th class="text-center" scope="col">Fecha y Hora</th>
+                            <th class="text-center" scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+            </div>
        </div>
 
         <nav aria-label="Navegación de registros" class="mt-4">
@@ -166,7 +168,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">¿Estás seguro?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <button type="button" class="btn btn-botonCerrar" data-bs-dismiss="modal" aria-label="Cerrar">X</button>
                 </div>
                 <div class="modal-body">
                     Esta acción es irreversible. ¿Deseas continuar?
@@ -185,7 +187,7 @@
                 
                 <div class="modal-header">
                     <h5 class="modal-title text-dark" id="modalDetalleLabel">Detalle de la Inscripción</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>               
+                    <button type="button" class="btn btn-botonCerrar" data-bs-dismiss="modal" aria-label="Close">X</button>               
                 </div>
 
                 <div class="modal-body">

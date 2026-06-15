@@ -42,6 +42,8 @@ import inscripcionesBorrarTransform from "../../transforms/inscripciones/inscrip
 import AuthController from "../../controllers/auth.controller.js";
 import { localStrategy, jwtStrategy } from "../../config/passport.js";
 
+import DashboardController from "../../controllers/dashboard.controller.js";
+
 const router = express.Router();
 
 passport.use('local', localStrategy);
@@ -54,6 +56,7 @@ const authController = new AuthController();
 
 router.post("/auth/login", authController.login.bind(authController)); 
 const cursosEstadosController = new CursosEstadosController();
+const dashboardController = new DashboardController();
 
 router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
 
@@ -89,5 +92,6 @@ router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateT
 router.delete("/inscripciones/:id", [inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
 
 
+router.get("/dashboard/cursos-recientes", dashboardController.getCursosRecientes.bind(dashboardController));
 
 export default router;
