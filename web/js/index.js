@@ -16,6 +16,11 @@ async function cargarDatosDashboard() {
             method: 'GET',
             headers: obtenerHeadersParaAuth()
         };
+
+        /** Esto estaba bueno pero el pool de conexiones era lo que causaba todos los errores de vite
+        *  Ahora lo hace de forma secuencial re aburrido pero más seguro supongo :(
+        */
+        /*
         const [resCursos, resEstudiantes, resInscripciones] = await Promise.allSettled([
             fetch(`${API_CURSOS}?limit=1`, headersRe),
             fetch(`${API_ESTUDIANTES}?limit=1`, headersRe),
@@ -35,6 +40,37 @@ async function cargarDatosDashboard() {
         if (resInscripciones.status === 'fulfilled' && resInscripciones.value.ok) {
             const dataInsc = await resInscripciones.value.json();
             document.getElementById('kpi-inscripciones').textContent = dataInsc.totalInscripciones || 0;
+        }
+        */
+
+        try {
+            const resCursos = await fetch(`${API_CURSOS}?limit=1`, headersRe);
+            if (resCursos.ok) {
+                const dataCursos = await resCursos.json();
+                document.getElementById('kpi-cursos').textContent = dataCursos.totalCursos || 0;
+            }
+        } catch (error) {
+            console.error('Error al cargar cursos:', error);
+        }
+
+        try {
+            const resEstudiantes = await fetch(`${API_ESTUDIANTES}?limit=1`, headersRe);
+            if (resEstudiantes.ok) {
+                const dataEst = await resEstudiantes.json();
+                document.getElementById('kpi-estudiantes').textContent = dataEst.totalEstudiantes || 0;
+            }
+        } catch (error) {
+            console.error('Error al cargar estudiantes:', error);
+        }
+
+        try {
+            const resInscripciones = await fetch(`${API_INSCRIPCIONES}?limit=1`, headersRe);
+            if (resInscripciones.ok) {
+                const dataInsc = await resInscripciones.json();
+                document.getElementById('kpi-inscripciones').textContent = dataInsc.totalInscripciones || 0;
+            }
+        } catch (error) {
+            console.error('Error al cargar inscripciones:', error);
         }
 
         await cargarCursosActivos();
