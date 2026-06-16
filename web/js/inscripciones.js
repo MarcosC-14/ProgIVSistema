@@ -50,6 +50,10 @@ async function cargarTablaInscripciones(paginaReq = 1){
             method: 'GET',
             headers: obtenerHeadersParaAuth()
         });
+
+        //Intento 2 de atrapar falta de token...
+        catchErrorToken(respuesta);
+
         if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
 
         const datos = await respuesta.json();
@@ -211,6 +215,9 @@ function configurarEventos() {
                     method: 'GET',
                     headers: obtenerHeadersParaAuth()
                 });
+
+                catchErrorToken(response);
+
                 if (!response.ok) throw new Error("Error en la red");
                 
                 const data = await response.json();
@@ -278,6 +285,9 @@ async function cargarCursosSelect() {
             method: 'GET',
             headers: obtenerHeadersParaAuth()
         });
+
+        catchErrorToken(respuesta);
+
         if (!respuesta.ok) throw new Error('Error obteniendo cursos');
         const datos = await respuesta.json();
         const cursos = datos.respuesta; 
@@ -343,6 +353,8 @@ async function generarDiploma(id){
             headers: obtenerHeadersParaAuth()
         });
 
+        catchErrorToken(respuesta);
+
         if (!respuesta.ok) {
             const errorEstructurado = await respuesta.json();
             throw new Error(errorEstructurado.message || 'Error HTTP en la obtención del diploma');
@@ -382,6 +394,9 @@ async function abrirModalDetalle(id) {
             method: 'GET',
             headers: obtenerHeadersParaAuth()
         });
+
+        catchErrorToken(respuesta);
+
         if (!respuesta.ok) throw new Error('No se pudo obtener el detalle de la inscripción');
         const respuestaJson = await respuesta.json(); //NOTA testing
         const inscripcion = respuestaJson.data;
@@ -436,14 +451,16 @@ async function guardarInscripcion() {
     };
 
     try {
-        const response = await fetch(URL_API_INSCRIPCIONES, {
+        const respuesta = await fetch(URL_API_INSCRIPCIONES, {
             method: 'POST',
             headers: obtenerHeadersParaAuth(true),
             body: JSON.stringify(payload)
         });
 
-        if (!response.ok) {
-            const result = await response.json(); 
+        catchErrorToken(respuesta);
+
+        if (!respuesta.ok) {
+            const result = await respuesta.json(); 
              if (result.status === 401 || result.status === 403) {
                 throw new Error('Sesión expirada. Vuelva a iniciar sesión.');
             }
@@ -477,6 +494,8 @@ async function eliminarInscripcion() {
             headers: obtenerHeadersParaAuth(false)
         });
 
+        catchErrorToken(respuesta);
+
         if (!respuesta.ok) {
             throw new Error('No se pudo eliminar la inscripción en el servidor');
         }
@@ -493,7 +512,7 @@ async function eliminarInscripcion() {
 }
 
 /**
- * Funciones extra de la interfaz y ahora el login :/
+ * Funciones extra de la interfaz
  */
 function cerrarModalPorId(idModal) {
     const el = document.getElementById(idModal);
@@ -528,6 +547,9 @@ function mostrarErrorAviso(mensaje) {
     }
 }
 
+/**
+ * Funciones del login :/
+ */
 function obtenerHeadersParaAuth(contentType=false){
     const token = localStorage.getItem('token_jwt');
 
@@ -537,4 +559,12 @@ function obtenerHeadersParaAuth(contentType=false){
 
     if(contentType) headers['Content-Type'] = 'application/json';
     return headers;
+}
+
+function catchErrorToken(respuesta){
+    if (respuesta.status === 401 || respuesta.status === 403) {
+        localStorage.removeItem('token_jwt');
+
+        window.location.href = 'login.html';
+    }
 }

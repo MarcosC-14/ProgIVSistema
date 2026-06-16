@@ -34,11 +34,6 @@ const estudiantesUpdateValidation = [
         .exists().withMessage('La fecha de nacimiento es obligatoria.')
         .isBefore('2100-01-01').withMessage('El año de la fecha ingresada excede el límite máximo.')
         .toDate(),
-    
-    body('id_usuario_modificacion')
-        .exists().withMessage('El identificador de usuario es obligatorio.')
-        .isInt({ min: 1 }).withMessage('El identificador del usuario debe ser un número entero válido.')
-        .toInt(),
 
     (req, res, next) => {
         const errors = validationResult(req);
