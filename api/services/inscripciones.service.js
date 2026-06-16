@@ -100,11 +100,11 @@ export default class InscripcionesService extends BaseService{
         return new InscripcionResponseDTO(inscripcionBD);
     }
 
-    async borrar(id){
+    async borrar(id, id_usuario){
         const inscripcion = await this.repository.getById(id);
         if (!inscripcion) throw new Error('La inscripción no existe');
 
-        const inscripcionBorrada = await this.repository.borrar(id);
+        const inscripcionBorrada = await this.repository.borrar(id,id_usuario);
         return new InscripcionResponseDTO(inscripcionBorrada);
     }
 

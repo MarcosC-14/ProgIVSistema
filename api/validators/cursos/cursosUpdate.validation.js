@@ -39,12 +39,6 @@ const cursosUpdateValidation = [
         .exists().withMessage('El estado del curso es obligatorio.')
         .isInt({ min: 1 }).withMessage('El identificador del estado debe ser un número entero válido.')
         .toInt(),
-
-    body('idUsuarioModificacion')
-        .exists().withMessage('El identificador de usuario es obligatorio.')
-        .isInt({ min: 1 }).withMessage('El identificador del usuario debe ser un número entero válido.')
-        .toInt(),
-
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

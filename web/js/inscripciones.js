@@ -216,7 +216,6 @@ function configurarEventos() {
                 const data = await response.json();
                 const estudiantes = data.respuesta;
                 listaResultados.innerHTML = '';
-                console.log(estudiantes);
                 if (estudiantes.length === 0) {
                     listaResultados.innerHTML = '<li class="list-group-item text-muted">Sin resultados</li>';
                 } else {
@@ -530,13 +529,12 @@ function mostrarErrorAviso(mensaje) {
 }
 
 function obtenerHeadersParaAuth(contentType=false){
-    const token = localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('token_jwt');
 
     const headers = {
-        'Authorization' : `Bearer${token}`
+        'Authorization' : `Bearer ${token}`
     }
 
     if(contentType) headers['Content-Type'] = 'application/json';
-
     return headers;
 }

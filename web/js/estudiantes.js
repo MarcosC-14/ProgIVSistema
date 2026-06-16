@@ -329,7 +329,7 @@ function mostrarErrorAviso(mensaje) {
 
 
 function obtenerHeadersParaAuth(contentType=false){
-    const token = localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('token_jwt');
 
     const headers = {
         'Authorization' : `Bearer ${token}`

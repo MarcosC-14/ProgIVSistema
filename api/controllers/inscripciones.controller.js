@@ -81,7 +81,7 @@ export default class InscripcionesController {
 
     async borrar(req,res){
         try{
-            const inscripcionBorrada = await this.service.borrar(req.id);
+            const inscripcionBorrada = await this.service.borrar(req.id,req.id_usuario);
             if (!inscripcionBorrada) throw new Error('La inscripción no existe');
             
             return res.status(200).json({

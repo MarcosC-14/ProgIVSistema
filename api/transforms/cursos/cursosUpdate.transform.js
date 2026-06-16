@@ -18,6 +18,7 @@ const cursosUpdateTransform = (req, res, next) => {
     */
 
     //DTO
+    req.body.idUsuarioModificacion = Number(req.user.id_usuario);
     req.dto = new CursosUpdateDTO(req.body);
 
     next();

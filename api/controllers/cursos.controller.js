@@ -56,7 +56,7 @@ export default class CursosController {
 
     async borrar(req, res){
         try{
-            const resultado= await this.service.borrar(req.id);
+            const resultado= await this.service.borrar(req.id,req.idUsuarioModificacion);
             res.status(200).json(resultado);
         }catch(error){
             console.error(error);

@@ -62,40 +62,40 @@ const dashboardController = new DashboardController();
 
 router.post("/auth/login", authController.login.bind(authController));
 
-router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
+router.get("/cursos", [verificarToken,cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
 
-router.get("/cursos/:id", [cursosGetByIdValidation, cursosGetByIdTransform], cursosController.getById.bind(cursosController));
+router.get("/cursos/:id", [verificarToken,cursosGetByIdValidation, cursosGetByIdTransform], cursosController.getById.bind(cursosController));
 
-router.post("/cursos", [cursosCreateValidation, cursosCreateTransform], cursosController.create.bind(cursosController));
+router.post("/cursos", [verificarToken,cursosCreateValidation, cursosCreateTransform], cursosController.create.bind(cursosController));
 
-router.put("/cursos/:id", [cursosUpdateValidation,cursosUpdateTransform], cursosController.update.bind(cursosController));
+router.put("/cursos/:id", [verificarToken,cursosUpdateValidation,cursosUpdateTransform], cursosController.update.bind(cursosController));
 
-router.delete("/cursos/:id", [cursosBorrarValidation,cursosBorrarTransform], cursosController.borrar.bind(cursosController));
+router.delete("/cursos/:id", [verificarToken,cursosBorrarValidation,cursosBorrarTransform], cursosController.borrar.bind(cursosController));
 
-router.get('/estados', cursosEstadosController.getAll.bind(cursosEstadosController));
+router.get('/estados',verificarToken, cursosEstadosController.getAll.bind(cursosEstadosController));
 
-router.get("/estudiantes", [estudiantesFindAllValidation, estudiantesFindAllTransform], estudiantesController.getAll.bind(estudiantesController));
+router.get("/estudiantes", [verificarToken,estudiantesFindAllValidation, estudiantesFindAllTransform], estudiantesController.getAll.bind(estudiantesController));
 
-router.get("/estudiantes/:id", [estudiantesGetByIdValidation, estudiantesGetByIdTransform], estudiantesController.getById.bind(estudiantesController));
+router.get("/estudiantes/:id", [verificarToken,estudiantesGetByIdValidation, estudiantesGetByIdTransform], estudiantesController.getById.bind(estudiantesController));
 
-router.post("/estudiantes", [estudiantesCreateValidation, estudiantesCreateTransform], estudiantesController.create.bind(estudiantesController));
+router.post("/estudiantes", [verificarToken,estudiantesCreateValidation, estudiantesCreateTransform], estudiantesController.create.bind(estudiantesController));
 
-router.put("/estudiantes/:id", [estudiantesUpdateValidation, estudiantesUpdateTransform], estudiantesController.update.bind(estudiantesController));
+router.put("/estudiantes/:id", [verificarToken,estudiantesUpdateValidation, estudiantesUpdateTransform], estudiantesController.update.bind(estudiantesController));
 
-router.delete("/estudiantes/:id", [estudiantesBorrarValidation, estudianteBorrarTransform], estudiantesController.borrar.bind(estudiantesController));
-
-
-router.get("/inscripciones",[inscripcionesFindAllValidation,inscripcionesFindAllTransform], inscripcionesController.getAll.bind(inscripcionesController));
-
-router.get("/inscripciones/:id",[inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.getById.bind(inscripcionesController));
-
-router.get("/inscripciones/:id/diploma",[inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.generarDiploma.bind(inscripcionesController));
-
-router.post("/inscripciones",[inscripcionesCreateValidation,inscripcionesCreateTransform],inscripcionesController.create.bind(inscripcionesController));
-
-router.delete("/inscripciones/:id", [inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
+router.delete("/estudiantes/:id", [verificarToken,estudiantesBorrarValidation, estudianteBorrarTransform], estudiantesController.borrar.bind(estudiantesController));
 
 
-router.get("/dashboard/cursos-recientes", dashboardController.getCursosRecientes.bind(dashboardController));
+router.get("/inscripciones",[verificarToken,inscripcionesFindAllValidation,inscripcionesFindAllTransform], inscripcionesController.getAll.bind(inscripcionesController));
+
+router.get("/inscripciones/:id",[verificarToken,inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.getById.bind(inscripcionesController));
+
+router.get("/inscripciones/:id/diploma",[verificarToken,inscripcionesGetByIdValidation,inscripcionesGetByIdTransform], inscripcionesController.generarDiploma.bind(inscripcionesController));
+
+router.post("/inscripciones",[verificarToken,inscripcionesCreateValidation,inscripcionesCreateTransform],inscripcionesController.create.bind(inscripcionesController));
+
+router.delete("/inscripciones/:id", [verificarToken,inscripcionesBorrarValidation,inscripcionesBorrarTransform], inscripcionesController.borrar.bind(inscripcionesController));
+
+
+router.get("/dashboard/cursos-recientes",verificarToken, dashboardController.getCursosRecientes.bind(dashboardController));
 
 export default router;

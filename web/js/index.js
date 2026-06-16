@@ -48,7 +48,10 @@ async function cargarCursosActivos() {
     const tbody = document.getElementById('tbody-cursos-activos');
     
     try {
-        const respuesta = await fetch(`${API_CURSOS_RECIENTES}`);
+        const respuesta = await fetch(`${API_CURSOS_RECIENTES}`, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        });
         
         if (!respuesta.ok) throw new Error('Error en protocolo HTTP');
         
@@ -88,13 +91,12 @@ async function cargarCursosActivos() {
 
 
 function obtenerHeadersParaAuth(contentType=false){
-    const token = localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('token_jwt');
 
     const headers = {
         'Authorization' : `Bearer ${token}`
     }
 
     if(contentType) headers['Content-Type'] = 'application/json';
-
     return headers;
 }
