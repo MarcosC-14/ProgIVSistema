@@ -1,11 +1,10 @@
 import InscripcionesCreateDTO from "../../dtos/inscripciones/inscripcionesCreate.dto.js";
 
 const inscripcionesCreateTransform = (req, res, next) => {
-    const { idCurso, idEstudiante, idUsuarioModificacion } = req.body;
-
+    const { idCurso, idEstudiante } = req.body;
     const idCursoDTO = Number(idCurso);
     const idEstudianteDTO = Number(idEstudiante);
-    const idUsuarioModificacionDTO = Number(idUsuarioModificacion);
+    const idUsuarioModificacionDTO = Number(req.user.id_usuario);
     
     req.dto = new InscripcionesCreateDTO (
         idCursoDTO,

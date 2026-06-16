@@ -9,10 +9,6 @@ const inscripcionesCreateValidation = [
         .exists().withMessage('El idEstudiante es obligatorio')
         .isInt({ min: 1 }).withMessage('El idEstudiante debe ser un número entero válido')
         .toInt(),
-    body('idUsuarioModificacion')
-        .exists().withMessage('El idUsuarioModificacion es obligatorio')
-        .isInt({ min: 1 }).withMessage('El idUsuarioModificacion debe ser un número entero válido')
-        .toInt(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

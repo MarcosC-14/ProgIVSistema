@@ -199,9 +199,8 @@ async function guardarEstudiante(){
         nombres: document.getElementById('modalNombres').value.trim().toUpperCase(),
         email: document.getElementById('modalEmail').value.trim(),
         fecha_nacimiento: document.getElementById('modalFecha').value,
-        activo: 1,
-        id_usuario_modificacion: 1
-    };
+        activo: 1
+        };
 
     const idEstudiante = document.getElementById('modalIdEstudiante').value;
     let url = URL_API_ESTUDIANTES;
@@ -329,7 +328,7 @@ function mostrarErrorAviso(mensaje) {
 
 
 function obtenerHeadersParaAuth(contentType=false){
-    const token = localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('token_jwt');
 
     const headers = {
         'Authorization' : `Bearer ${token}`

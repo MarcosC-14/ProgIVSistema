@@ -349,7 +349,6 @@ async function guardarCurso() {
         cantidadHoras: parseInt(document.getElementById('modalHoras').value) || 0,
         inscriptosMax: parseInt(document.getElementById('modalCupo').value) || 0,
         idCursoEstado: parseInt(document.getElementById('modalEstadoCurso').value),
-        idUsuarioModificacion: 1 
     };
 
     let url = URL_API;
@@ -508,7 +507,7 @@ function mostrarErrorAviso(mensaje) {
 
 
 function obtenerHeadersParaAuth(contentType=false){
-    const token = localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('token_jwt');
 
     const headers = {
         'Authorization' : `Bearer ${token}`

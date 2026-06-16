@@ -53,10 +53,10 @@ export default class CursosService extends BaseService {
         const nuevoCurso = await this.repository.update(id, data);
         return new CursoResponseDTO(nuevoCurso);
     }
-    async borrar(id){
+    async borrar(id,id_usuario){
         await this.getById(id);
  
-        const nuevoCurso = await this.repository.borrar(id);
+        const nuevoCurso = await this.repository.borrar(id,id_usuario);
         return {id: nuevoCurso.id_curso, mensaje: "Curso eliminado correctamente"};
     }
 }

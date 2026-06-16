@@ -251,7 +251,7 @@ export default class InscripcionesRepository{
         }
     }
 
-    async borrar(id){
+    async borrar(id,id_usuario){
         const client = await BdUtils.createConnection();
         try{
             const sql = `
@@ -261,12 +261,14 @@ export default class InscripcionesRepository{
                     FROM public.inscripciones_estados 
                     WHERE es_activo = 0 
                     LIMIT 1
-                )
+                    ),
+                    id_usuario_modificacion = $2,
+                    fecha_hora_modificacion = (NOW() AT TIME ZONE 'America/Argentina/Buenos_Aires')
                 WHERE id_inscripcion = $1
                 RETURNING id_inscripcion
             `;
 
-            const {rows} = await client.query(sql,[id]);
+            const {rows} = await client.query(sql,[id,id_usuario]);
             return rows[0];
         } catch(error){
             console.error("Fallo al borrar",error);

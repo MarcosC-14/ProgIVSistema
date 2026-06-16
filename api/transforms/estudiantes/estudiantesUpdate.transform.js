@@ -3,6 +3,7 @@ import EstudiantesUpdateDTO from "../../dtos/estudiantes/estudiantesUpdate.dto.j
 const estudiantesUpdateTransform = (req, res, next) => {
     req.id = req.params.id;
 
+    req.body.id_usuario_modificacion = Number(req.user.id_usuario);
     req.body = new EstudiantesUpdateDTO(req.body);
     next();
 };
