@@ -10,10 +10,14 @@ async function cargarDatosDashboard() {
     const errorContenedor = document.getElementById('error-dashboard');
     
     try {
+        const headersRe = {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        };
         const [resCursos, resEstudiantes, resInscripciones] = await Promise.allSettled([
-            fetch(`${API_CURSOS}?limit=1`),
-            fetch(`${API_ESTUDIANTES}?limit=1`),
-            fetch(`${API_INSCRIPCIONES}?limit=1`)
+            fetch(`${API_CURSOS}?limit=1`, headersRe),
+            fetch(`${API_ESTUDIANTES}?limit=1`, headersRe),
+            fetch(`${API_INSCRIPCIONES}?limit=1`, headersRe)
         ]);
 
         if (resCursos.status === 'fulfilled' && resCursos.value.ok) {
@@ -80,4 +84,17 @@ async function cargarCursosActivos() {
         console.error('Error cargando la lista de cursos:', error);
         tbody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error al cargar la tabla de cursos.</td></tr>`;
     }
+}
+
+
+function obtenerHeadersParaAuth(contentType=false){
+    const token = localStorage.getItem('jwt_token');
+
+    const headers = {
+        'Authorization' : `Bearer ${token}`
+    }
+
+    if(contentType) headers['Content-Type'] = 'application/json';
+
+    return headers;
 }

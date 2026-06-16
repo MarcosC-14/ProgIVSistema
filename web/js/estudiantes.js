@@ -85,7 +85,10 @@ async function cargarEstudiantes(paginaReq = 1) {
             params.append('documento', buscarDoc);
         }
 
-        const respuesta = await fetch(`${URL_API_ESTUDIANTES}?${params.toString()}`);
+        const respuesta = await fetch(`${URL_API_ESTUDIANTES}?${params.toString()}`, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        });
         if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
 
         const datos = await respuesta.json();
@@ -151,7 +154,10 @@ function asignarEventosBotones() {
 
 async function abrirModalEstudiante(id) {
     try {
-        const respuesta = await fetch(`${URL_API_ESTUDIANTES}/${id}`);
+        const respuesta = await fetch(`${URL_API_ESTUDIANTES}/${id}`, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        });
         if (!respuesta.ok) throw new Error('No se pudo obtener el detalle del estudiante');
 
         const datos = await respuesta.json();
@@ -209,9 +215,7 @@ async function guardarEstudiante(){
     try {
         const respuesta = await fetch(url, {
             method: metodo,
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: obtenerHeadersParaAuth(true),
             body: JSON.stringify(datosEstudiante)
         });
 
@@ -238,7 +242,8 @@ async function eliminarEstudiante(){
 
     try {
         const respuesta = await fetch(`${URL_API_ESTUDIANTES}/${idEstudiante}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: obtenerHeadersParaAuth()
         });
 
         if (!respuesta.ok) throw new Error('No se pudo dar de baja al estudiante');
@@ -320,4 +325,17 @@ function mostrarErrorAviso(mensaje) {
         window.scrollTo(0,0);
         setTimeout(() => {errorDiv.style.display = "none";}, 3500);
     }
+}
+
+
+function obtenerHeadersParaAuth(contentType=false){
+    const token = localStorage.getItem('jwt_token');
+
+    const headers = {
+        'Authorization' : `Bearer ${token}`
+    }
+
+    if(contentType) headers['Content-Type'] = 'application/json';
+
+    return headers;
 }
