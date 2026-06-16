@@ -1,6 +1,8 @@
 import express from "express";
 import passport from "passport";
 
+import { verificarToken } from "../../middlewares/auth.middleware.js";
+
 import CursosController from "../../controllers/cursos.controller.js";
 import cursosFindAllValidation from "../../validators/cursos/cursosFindAll.validation.js";
 import cursosFindAllTransform from "../../transforms/cursos/cursosFindAll.transform.js";
@@ -57,6 +59,8 @@ const authController = new AuthController();
 router.post("/auth/login", authController.login.bind(authController)); 
 const cursosEstadosController = new CursosEstadosController();
 const dashboardController = new DashboardController();
+
+router.post("/auth/login", authController.login.bind(authController));
 
 router.get("/cursos", [cursosFindAllValidation, cursosFindAllTransform], cursosController.getAll.bind(cursosController));
 

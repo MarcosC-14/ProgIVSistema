@@ -7,7 +7,7 @@ loginForm.addEventListener('submit', async function(event) {
     event.preventDefault();
 
     const usuario = document.getElementById('usuario').value.trim();
-    const contrasenia = document.getElementById('contraseña').value;
+    const contrasenia = document.getElementById('contrasenia').value;
 
     const contenedorError = document.getElementById('contenedor-error');
 
