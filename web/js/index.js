@@ -1,3 +1,5 @@
+import * as bootstrap from 'bootstrap';
+
 const API_CURSOS = '/api/cursos';
 const API_ESTUDIANTES = '/api/estudiantes';
 const API_INSCRIPCIONES = '/api/inscripciones';
