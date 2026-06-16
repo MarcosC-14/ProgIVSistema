@@ -1,7 +1,7 @@
-const API_CURSOS = 'http://localhost:3000/api/cursos';
-const API_ESTUDIANTES = 'http://localhost:3000/api/estudiantes';
-const API_INSCRIPCIONES = 'http://localhost:3000/api/inscripciones';
-const API_CURSOS_RECIENTES = 'http://localhost:3000/api/dashboard/cursos-recientes';
+const API_CURSOS = '/api/cursos';
+const API_ESTUDIANTES = '/api/estudiantes';
+const API_INSCRIPCIONES = '/api/inscripciones';
+const API_CURSOS_RECIENTES = '/api/dashboard/cursos-recientes';
 document.addEventListener('DOMContentLoaded', () => {
     cargarDatosDashboard();
 });
