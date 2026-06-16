@@ -249,7 +249,7 @@ function configurarEventos() {
         await guardarInscripcion();
     });
 
-    // Disparador de la advertencia de eliminación
+    // Advertencia de eliminación
     btnEliminar.addEventListener('click', () => {
         const modalConfirm = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalConfirmacion'));
         modalConfirm.show();
@@ -269,7 +269,7 @@ async function cargarCursosSelect() {
     const selectCursoFiltro = document.getElementById('buscarIdCurso');
     
     try {
-        const respuesta = await fetch(`${URL_API_CURSOS}?limit=50`); // NOTA Capaz poner un order por fecha desc? 
+        const respuesta = await fetch(`${URL_API_CURSOS}?limit=50&order=id_curso&asc=false`);
         if (!respuesta.ok) throw new Error('Error obteniendo cursos');
         const datos = await respuesta.json();
         const cursos = datos.respuesta; 
@@ -283,7 +283,6 @@ async function cargarCursosSelect() {
             selectCursoModal.innerHTML = '<option value="" selected disabled>-- Seleccione un curso --</option>' + opcionesHTML;
         }
         
-        // Inyectamos las opciones en el Filtro de búsqueda general
         if (selectCursoFiltro) {
             selectCursoFiltro.innerHTML = '<option value="">Todos los cursos</option>' + opcionesHTML;
         }
@@ -322,48 +321,33 @@ function asignarEventosBotonesDiploma() {
  */
 
 async function generarDiploma(id){
-    /*
-    try{
-        console.log(id);
-        console.log(`${URL_API_INSCRIPCIONES}/${id}/diploma`);
-        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${id}/diploma`);
-    } catch (error){
-        console.error(error);
-        mostrarErrorAviso("Ocurrió un error al intentar generar un diploma.");
-    }
-    */
-    
+
     const boton = document.querySelector(`.btn-diploma[data-id="${id}"]`);
     const textoOriginal = boton.textContent;
     
     try {
-        // Bloquear el botón para evitar concurrencia de peticiones
+        // Bloquear el botón para evitar más de una al mismo.
         boton.disabled = true;
         boton.textContent = 'Generando...';
 
         const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${id}/diploma`);
 
-        // 2. Interceptar errores estructurados del backend
         if (!respuesta.ok) {
             const errorEstructurado = await respuesta.json();
             throw new Error(errorEstructurado.message || 'Error HTTP en la obtención del diploma');
         }
 
-        // 3. Conversión del flujo de bytes a un Binary Large Object (Blob)
         const blob = await respuesta.blob();
 
-        // 4. Creación de una URL local en memoria referenciando al Blob
         const urlBlob = window.URL.createObjectURL(blob);
 
-        // 5. Creación programática de un nodo de anclaje para forzar la escritura en disco
         const a = document.createElement('a');
         a.href = urlBlob;
-        a.download = `Certificado_Inscripcion_${id}.pdf`; // Atributo que fuerza la descarga
+        a.download = `Certificado_Inscripcion_${id}.pdf`; 
         
         document.body.appendChild(a);
         a.click();
         
-        // 6. Limpieza del DOM y liberación de memoria
         a.remove();
         window.URL.revokeObjectURL(urlBlob);
 
@@ -371,7 +355,6 @@ async function generarDiploma(id){
         console.error("Fallo durante la generación del diploma:", error);
         mostrarErrorAviso(error.message);
     } finally {
-        // Restaurar estado original de la UI
         if (boton) {
             boton.disabled = false;
             boton.textContent = textoOriginal;
@@ -493,7 +476,7 @@ async function eliminarInscripcion() {
 }
 
 /**
- * Funciones Utilitarias UI
+ * Funciones extra de la interfaz
  */
 function cerrarModalPorId(idModal) {
     const el = document.getElementById(idModal);
