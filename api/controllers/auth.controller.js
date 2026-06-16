@@ -8,7 +8,7 @@ export default class AuthController {
         passport.authenticate('local', { session: false }, (err, usuario, info) => {
             
             if (err) {
-                console.error("Error crítico en el proceso de autenticación:", err);
+                console.error("Error en el proceso de autenticación:", err);
                 return res.status(500).json({ error: 'Error interno del servidor al procesar el ingreso.' });
             }
 
@@ -35,7 +35,7 @@ export default class AuthController {
                     token: token,
                     usuario: {
                         idUsuario: usuario.idUsuario,
-                        nombreUsuario: usuario.nombre_usuario,
+                        nombreUsuario: usuario.nombreUsuario,
                         nombreCompleto: usuario.nombreCompleto
                     }
                 });
