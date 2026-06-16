@@ -23,7 +23,7 @@ const cursosUpdateValidation = [
     body('fechaInicio')
         .exists().withMessage('La fecha de inicio es obligatoria.')
         .isBefore('2100-01-01').withMessage('El año de la fecha ingresada excede el límite máximo.')
-        .toDate(),
+        .isDate(),
 
     body('cantidadHoras')
         .exists().withMessage('La cantidad de horas es obligatoria.')
@@ -32,19 +32,13 @@ const cursosUpdateValidation = [
 
     body('inscriptosMax')
         .exists().withMessage('El cupo máximo es obligatorio.')
-        .isInt({ min: 1, max: 200 }).withMessage('El cupo máximo debe ser un número entero positivo entre 1 y 10000.')
+        .isInt({ min: 1, max: 10000 }).withMessage('El cupo máximo debe ser un número entero positivo entre 1 y 10000.')
         .toInt(),
 
     body('idCursoEstado')
         .exists().withMessage('El estado del curso es obligatorio.')
         .isInt({ min: 1 }).withMessage('El identificador del estado debe ser un número entero válido.')
         .toInt(),
-
-    body('idUsuarioModificacion')
-        .exists().withMessage('El identificador de usuario es obligatorio.')
-        .isInt({ min: 1 }).withMessage('El identificador del usuario debe ser un número entero válido.')
-        .toInt(),
-
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

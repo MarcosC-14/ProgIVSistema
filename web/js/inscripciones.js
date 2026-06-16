@@ -1,6 +1,8 @@
-const URL_API_INSCRIPCIONES = 'http://localhost:3000/api/inscripciones';
-const URL_API_CURSOS = 'http://localhost:3000/api/cursos';
-const URL_API_ESTUDIANTES = 'http://localhost:3000/api/estudiantes';
+import * as bootstrap from 'bootstrap';
+
+const URL_API_INSCRIPCIONES = '/api/inscripciones';
+const URL_API_CURSOS = '/api/cursos';
+const URL_API_ESTUDIANTES = '/api/estudiantes';
 
 let paginaActual = 1;
 const limitePorPagina = 10;
@@ -41,12 +43,19 @@ async function cargarTablaInscripciones(paginaReq = 1){
             offset: offset
         });
 
-        // Si existen filtros en memoria, se adjuntan a la URL
+        // Si existen filtros en memoria, se suman al url
         if (filtrosAplicados.idInscripcion) queryParams.append('idInscripcion', filtrosAplicados.idInscripcion);
         if (filtrosAplicados.estudianteTermino) queryParams.append('estudianteTermino', filtrosAplicados.estudianteTermino);
         if (filtrosAplicados.idCurso) queryParams.append('idCurso', filtrosAplicados.idCurso);
 
-        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}?${queryParams.toString()}`);
+        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}?${queryParams.toString()}`, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        });
+
+        //Intento 2 de atrapar falta de token...
+        catchErrorToken(respuesta);
+
         if (!respuesta.ok) throw new Error(`Error HTTP: ${respuesta.status}`);
 
         const datos = await respuesta.json();
@@ -68,12 +77,14 @@ async function cargarTablaInscripciones(paginaReq = 1){
                     <td class="text-center">${fechaTabla}</td>
                     <td class="text-center">
                         <button class="btn btn-sm btn-outline-primary btn-ver" title="Ver Detalle" data-id="${inscripcion.idInscripcion}">👁️</button>
+                        <button class="btn btn-sm btn-outline-primary btn-diploma" title="Generar Diploma" data-id="${inscripcion.idInscripcion}">📄</button>
                     </td>
                 `;
                 tabla.appendChild(fila);
             });
 
             asignarEventosBotonesVer();
+            asignarEventosBotonesDiploma();
 
         } else {
             tabla.innerHTML = `<tr><td colspan="8" class="text-center">No hay inscripciones registradas.</td></tr>`;
@@ -202,14 +213,18 @@ function configurarEventos() {
         peticionesTimer = setTimeout(async () => {
             try {
                 //NOTA cambiar una vez haya uno de termino en estudiantes si los hay
-                const response = await fetch(`${URL_API_ESTUDIANTES}?limit=5&apellido=${query}`);
+                const response = await fetch(`${URL_API_ESTUDIANTES}?limit=5&termino=${query}`, {
+                    method: 'GET',
+                    headers: obtenerHeadersParaAuth()
+                });
+
+                catchErrorToken(response);
+
                 if (!response.ok) throw new Error("Error en la red");
                 
                 const data = await response.json();
-                const estudiantes = data.data || data;
-
+                const estudiantes = data.respuesta;
                 listaResultados.innerHTML = '';
-
                 if (estudiantes.length === 0) {
                     listaResultados.innerHTML = '<li class="list-group-item text-muted">Sin resultados</li>';
                 } else {
@@ -229,6 +244,7 @@ function configurarEventos() {
                 }
                 listaResultados.style.display = 'block';
             } catch (error) {
+                cerrarTodosLosModales();
                 console.error("Error en Typeahead:", error);
             }
         }, 300); 
@@ -247,7 +263,7 @@ function configurarEventos() {
         await guardarInscripcion();
     });
 
-    // Disparador de la advertencia de eliminación
+    // Advertencia de eliminación
     btnEliminar.addEventListener('click', () => {
         const modalConfirm = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalConfirmacion'));
         modalConfirm.show();
@@ -267,7 +283,13 @@ async function cargarCursosSelect() {
     const selectCursoFiltro = document.getElementById('buscarIdCurso');
     
     try {
-        const respuesta = await fetch(`${URL_API_CURSOS}?limit=50`); // NOTA Capaz poner un order por fecha desc? 
+        const respuesta = await fetch(`${URL_API_CURSOS}?limit=50&order=id_curso&asc=false`, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        });
+
+        catchErrorToken(respuesta);
+
         if (!respuesta.ok) throw new Error('Error obteniendo cursos');
         const datos = await respuesta.json();
         const cursos = datos.respuesta; 
@@ -281,7 +303,6 @@ async function cargarCursosSelect() {
             selectCursoModal.innerHTML = '<option value="" selected disabled>-- Seleccione un curso --</option>' + opcionesHTML;
         }
         
-        // Inyectamos las opciones en el Filtro de búsqueda general
         if (selectCursoFiltro) {
             selectCursoFiltro.innerHTML = '<option value="">Todos los cursos</option>' + opcionesHTML;
         }
@@ -304,12 +325,80 @@ function asignarEventosBotonesVer() {
     });
 }
 
+function asignarEventosBotonesDiploma() {
+    const botonesDiploma = document.querySelectorAll('.btn-diploma');
+    botonesDiploma.forEach(boton => {
+        boton.addEventListener('click', async () => {
+            const id = boton.getAttribute('data-id');
+            await generarDiploma(id);
+        });
+    });
+    
+}
+
+/**
+ * 5.5 Intento 1 de generar diploma:
+ */
+
+async function generarDiploma(id){
+
+    const boton = document.querySelector(`.btn-diploma[data-id="${id}"]`);
+    const textoOriginal = boton.textContent;
+    
+    try {
+        // Bloquear el botón para evitar más de una al mismo.
+        boton.disabled = true;
+        boton.textContent = 'Generando...';
+
+        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${id}/diploma`, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        });
+
+        catchErrorToken(respuesta);
+
+        if (!respuesta.ok) {
+            const errorEstructurado = await respuesta.json();
+            throw new Error(errorEstructurado.message || 'Error HTTP en la obtención del diploma');
+        }
+
+        const blob = await respuesta.blob();
+
+        const urlBlob = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = urlBlob;
+        a.download = `Certificado_Inscripcion_${id}.pdf`; 
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        a.remove();
+        window.URL.revokeObjectURL(urlBlob);
+
+    } catch (error) {
+        console.error("Fallo durante la generación del diploma:", error);
+        mostrarErrorAviso(error.message);
+    } finally {
+        if (boton) {
+            boton.disabled = false;
+            boton.textContent = textoOriginal;
+        }
+    }
+}
+
 /**
  * 6. Visualización de Registro Existente (Solo Lectura)
  */
 async function abrirModalDetalle(id) {
     try {
-        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${id}`);
+        const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${id}`, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        });
+
+        catchErrorToken(respuesta);
+
         if (!respuesta.ok) throw new Error('No se pudo obtener el detalle de la inscripción');
         const respuestaJson = await respuesta.json(); //NOTA testing
         const inscripcion = respuestaJson.data;
@@ -349,7 +438,8 @@ async function guardarInscripcion() {
     const selectCurso = document.getElementById('modalSelectCurso');
     const inputHiddenId = document.getElementById('modalIdEstudiante');
 
-    if (!inputHiddenId.value) {
+    if (!inputHiddenId.value){
+        cerrarTodosLosModales();
         mostrarErrorAviso("Debe seleccionar un estudiante válido del listado desplegable.");
         return;
     }
@@ -359,19 +449,23 @@ async function guardarInscripcion() {
 
     const payload = {
         idCurso: parseInt(selectCurso.value, 10),
-        idEstudiante: parseInt(inputHiddenId.value, 10),
-        idUsuarioModificacion: 1 
+        idEstudiante: parseInt(inputHiddenId.value, 10)
     };
 
     try {
-        const response = await fetch(URL_API_INSCRIPCIONES, {
+        const respuesta = await fetch(URL_API_INSCRIPCIONES, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: obtenerHeadersParaAuth(true),
             body: JSON.stringify(payload)
         });
 
-        if (!response.ok) {
-            const result = await response.json(); 
+        catchErrorToken(respuesta);
+
+        if (!respuesta.ok) {
+            const result = await respuesta.json(); 
+             if (result.status === 401 || result.status === 403) {
+                throw new Error('Sesión expirada. Vuelva a iniciar sesión.');
+            }
             throw new Error(result.message || 'Error de validación en el servidor.');
         }
 
@@ -381,6 +475,7 @@ async function guardarInscripcion() {
 
     } catch (error) {
         console.error("Fallo durante POST:", error);
+        cerrarTodosLosModales();
         mostrarErrorAviso(error.message);
     } finally {
         btnGuardar.disabled = false;
@@ -397,8 +492,11 @@ async function eliminarInscripcion() {
 
     try {
         const respuesta = await fetch(`${URL_API_INSCRIPCIONES}/${idInscripcion}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: obtenerHeadersParaAuth(false)
         });
+
+        catchErrorToken(respuesta);
 
         if (!respuesta.ok) {
             throw new Error('No se pudo eliminar la inscripción en el servidor');
@@ -416,7 +514,7 @@ async function eliminarInscripcion() {
 }
 
 /**
- * Funciones Utilitarias UI
+ * Funciones extra de la interfaz
  */
 function cerrarModalPorId(idModal) {
     const el = document.getElementById(idModal);
@@ -448,5 +546,27 @@ function mostrarErrorAviso(mensaje) {
         errorDiv.style.display = "block";
         window.scrollTo(0, 0);
         setTimeout(() => { errorDiv.style.display = "none"; }, 3500);
+    }
+}
+
+/**
+ * Funciones del login :/
+ */
+function obtenerHeadersParaAuth(contentType=false){
+    const token = localStorage.getItem('token_jwt');
+
+    const headers = {
+        'Authorization' : `Bearer ${token}`
+    }
+
+    if(contentType) headers['Content-Type'] = 'application/json';
+    return headers;
+}
+
+function catchErrorToken(respuesta){
+    if (respuesta.status === 401 || respuesta.status === 403) {
+        localStorage.removeItem('token_jwt');
+
+        window.location.href = 'login.html';
     }
 }

@@ -48,7 +48,7 @@ export default class InscripcionesController {
         }
     }
 
-    create = async (req, res) => {
+    async create(req, res){
         try {
             const nuevaInscripcion = await this.service.create(req.dto);
 
@@ -61,6 +61,7 @@ export default class InscripcionesController {
             const erroresNegocio = [
                 "El estudiante ya está registrado en el curso.",
                 "El curso no existe.",
+                "El curso no admite inscripciones.",
                 "El curso alcanzó su máximo de inscripciones."
             ];
 
@@ -70,7 +71,6 @@ export default class InscripcionesController {
                     message: error.message
                 });
             }
-
             return res.status(500).json({
                 status: "error",
                 message: "Fallo estructural al procesar la inscripción",
@@ -81,7 +81,7 @@ export default class InscripcionesController {
 
     async borrar(req,res){
         try{
-            const inscripcionBorrada = await this.service.borrar(req.id);
+            const inscripcionBorrada = await this.service.borrar(req.id,req.id_usuario);
             if (!inscripcionBorrada) throw new Error('La inscripción no existe');
             
             return res.status(200).json({
@@ -104,5 +104,31 @@ export default class InscripcionesController {
                 detail: error.message
             });
         }
+    }
+
+    async generarDiploma(req, res){
+        try{
+            const diplomaGenerado = await this.service.generarDiploma(req.id); 
+            if (!diplomaGenerado) throw new Error('La inscripcion no existe.');
+            
+            res.set(diplomaGenerado.headers);
+
+            return res.status(200).send(diplomaGenerado.buffer);
+        }catch(error){
+            console.error(error);
+            if(error.message === 'La inscripción no existe'){
+                return res.status(404).json({
+                    status: "fail",
+                    message: error.message
+                });
+            }
+
+            return res.status(500).json({
+                status: "error",
+                message: "Fallo estructural al procesar la generacion de diploma",
+                detail: error.message
+            });
+        }
+
     }
 }

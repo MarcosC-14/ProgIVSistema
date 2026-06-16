@@ -65,6 +65,7 @@ div.contenedor-principal nav{
 
 div.contenedor-principal nav ul {
     display: flex;
+    flex-wrap: wrap;
     list-style: none;
     width: 100%;
     margin: 0; 
@@ -133,6 +134,10 @@ main div{
     padding: 0.5rem 0rem;
 }
 
+main div div.card-body{
+    padding: 0.2rem 1rem;
+}
+
 /*Botones*/
 div .btn-botonNormal{
     background-color: #003366;
@@ -169,7 +174,7 @@ div .btn.btn-botonNormal:hover, div .btn.btn-botonNormal:active, div .btn.btn-bo
     transition: all 0.3s ease;
 }
 
-div .modal-header .btn-botonCerrar:hover {
+div .btn-botonCerrar:hover {
     background-color: #ff0000 !important;
 }
 

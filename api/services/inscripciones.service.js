@@ -3,6 +3,7 @@ import InscripcionResponseDTO from "../dtos/inscripciones/inscripciones.response
 import CursosRepository from "../repositories/cursos.repository.js";
 import EstudiantesRepository from "../repositories/estudiantes.repository.js";
 import BaseService from "./base.services.js";
+import InformesServices from "./informesServices.js";
 
 export default class InscripcionesService extends BaseService{
 
@@ -35,7 +36,22 @@ export default class InscripcionesService extends BaseService{
         this.repository = new InscripcionesRepository();
         this.CursosRepository = new CursosRepository();
         this.EstudiantesRepository = new EstudiantesRepository();
-    
+        this.informes = new InformesServices();
+    }
+
+    generarDiploma = async (id) =>{
+        const datos = await this.repository.getById(id);
+        if (!datos) throw new Error('La inscripcion no existe.');
+
+        const pdf = await this.informes.certificacionCursoEstudiante(datos);
+
+        return {
+            buffer: pdf,
+            headers: {
+                'Content-Type': 'application/pdf',
+                'Content-Disposition':'inline; filename= "certificado.pdf"'
+            }
+        }
     }
 
     async getAll(data){
@@ -58,11 +74,10 @@ export default class InscripcionesService extends BaseService{
 
         const curso = await this.CursosRepository.getById(idCurso);
         if (!curso) throw new Error('El curso no existe.');
-
-        /*NOTA Comentado hasta que se haya hecho esa parte en el repo :(
+        if ([1,3].includes(curso.id_curso_estado)) throw new Error('El curso no admite inscripciones.');
+        
         const estudiante = await this.EstudiantesRepository.getById(idEstudiante);
         if (!estudiante) throw new Error('El estudiante no existe');
-        */
 
         const inscripto = await this.repository.exists(idEstudiante,idCurso);
         if (inscripto) throw new Error('El estudiante ya está registrado en el curso.');
@@ -85,11 +100,11 @@ export default class InscripcionesService extends BaseService{
         return new InscripcionResponseDTO(inscripcionBD);
     }
 
-    async borrar(id){
+    async borrar(id, id_usuario){
         const inscripcion = await this.repository.getById(id);
         if (!inscripcion) throw new Error('La inscripción no existe');
 
-        const inscripcionBorrada = await this.repository.borrar(id);
+        const inscripcionBorrada = await this.repository.borrar(id,id_usuario);
         return new InscripcionResponseDTO(inscripcionBorrada);
     }
 

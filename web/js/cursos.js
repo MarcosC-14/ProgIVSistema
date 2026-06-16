@@ -1,4 +1,7 @@
-const URL_API = 'http://localhost:3000/api/cursos';
+import * as bootstrap from 'bootstrap';
+
+const URL_API_CURSOS = '/api/cursos';
+const URL_API_CURSOS_ESTADOS = '/api/estados';
 
 let paginaActual = 1;
 const limitePorPagina = 10;
@@ -8,6 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
     configurarEventos();
     cargarEstados();
     cargarEstadosCheckboxes();
+
+
+    //Esto es para lo del link rápido a cursos activos en los requisitos
+    const parametrosUrl = new URLSearchParams(window.location.search);
+    const idCursoRuta = parametrosUrl.get('verCurso');
+    
+    if (idCursoRuta) {
+        abrirModalEdicion(idCursoRuta);
+    }
+
 });
 
 /**
@@ -55,7 +68,10 @@ async function cargarCursos(paginaReq = 1) {
             params.append('idCursoEstado', cb.value);
         })
 
-        const respuesta = await fetch(`${URL_API}?${params.toString()}`);
+        const respuesta = await fetch(`${URL_API_CURSOS}?${params.toString()}`, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        });
 
         if (!respuesta.ok) {
             throw new Error('No se pudo conectar con el servidor');
@@ -199,9 +215,10 @@ function configurarEventos() {
         if(!idCurso) return;
 
         try{
-            const respuesta = await fetch(`${URL_API}/${idCurso}`, {
-                method: 'DELETE'
-            });
+            const respuesta = await fetch(`${URL_API_CURSOS}/${idCurso}`, {
+            method: 'DELETE',
+            headers: obtenerHeadersParaAuth()
+        });
 
             if (!respuesta.ok) {
                 throw new Error('No se pudo eliminar el curso del servidor');
@@ -239,7 +256,10 @@ function asignarEventosBotones() {
  */
 async function abrirModalEdicion(id) {
     try {
-        const respuesta = await fetch(`${URL_API}/${id}`);
+        const respuesta = await fetch(`${URL_API_CURSOS}/${id}`, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        });
         if (!respuesta.ok) throw new Error('No se pudo obtener el detalle del curso');
         
         const curso = await respuesta.json();
@@ -332,24 +352,27 @@ async function guardarCurso() {
         cantidadHoras: parseInt(document.getElementById('modalHoras').value) || 0,
         inscriptosMax: parseInt(document.getElementById('modalCupo').value) || 0,
         idCursoEstado: parseInt(document.getElementById('modalEstadoCurso').value),
-        idUsuarioModificacion: 1 
     };
 
-    let url = URL_API;
+    let url = URL_API_CURSOS;
     let metodo = 'POST';
 
     // Si el idCurso existe, significa que estamos editando, cambiamos url y método
     if (idCurso) {
-        url = `${URL_API}/${idCurso}`;
+        url = `${URL_API_CURSOS}/${idCurso}`;
         metodo = 'PUT';
     }
 
     try {
-        const respuesta = await fetch(url, {
+        console.log("Intento", url,  {
             method: metodo,
             headers: {
                 'Content-Type': 'application/json'
             },
+            body: JSON.stringify(datosCurso)});
+        const respuesta = await fetch(url, {
+            method: metodo,
+            headers: obtenerHeadersParaAuth(true),
             body: JSON.stringify(datosCurso)
         });
 
@@ -390,7 +413,10 @@ async function cargarEstados() {
     
     try {
         // Hacemos el fetch que consulta la tabla cursos_estados
-        const respuesta = await fetch('http://localhost:3000/api/estados'); 
+        const respuesta = await fetch(URL_API_CURSOS_ESTADOS, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        }); 
 
         if (!respuesta.ok) {
             throw new Error('No se pudieron obtener los estados');
@@ -416,7 +442,10 @@ async function cargarEstadosCheckboxes() {
     const contenedor = document.getElementById("contenedor-checkboxes-estados");
 
     try {
-        const respuesta = await fetch('http://localhost:3000/api/estados'); 
+        const respuesta = await fetch(URL_API_CURSOS_ESTADOS, {
+            method: 'GET',
+            headers: obtenerHeadersParaAuth()
+        }); 
 
         if (!respuesta.ok) {
             throw new Error('No se pudieron obtener los estados');
@@ -477,4 +506,17 @@ function mostrarErrorAviso(mensaje) {
             errorGuardar.style.display = "none";
         }, 3000);
     }
+}
+
+
+function obtenerHeadersParaAuth(contentType=false){
+    const token = localStorage.getItem('token_jwt');
+
+    const headers = {
+        'Authorization' : `Bearer ${token}`
+    }
+
+    if(contentType) headers['Content-Type'] = 'application/json';
+
+    return headers;
 }

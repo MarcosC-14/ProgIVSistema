@@ -170,15 +170,17 @@ export default class CursosRepository {
             client.release();
         }
     }
-    async borrar(id){
+    async borrar(id,id_usuario){
         const client = await BdUtils.createConnection();
         try{
             const query = `
                 UPDATE public.cursos 
-                    SET id_curso_estado = 4 
+                    SET id_curso_estado = 4,
+                        id_usuario_modificacion = $2,
+                        fecha_hora_modificacion = (NOW() AT TIME ZONE 'America/Argentina/Buenos_Aires')
                     WHERE id_curso = $1 
                     RETURNING id_curso;`;
-            const { rows } = await client.query(query, [id]);
+            const { rows } = await client.query(query, [id,id_usuario]);
             return rows[0];
         }catch(error){
             console.error("Fallo un borrado", error);

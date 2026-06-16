@@ -4,34 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Cursos FCAD - UNER</title>
+    <script src="js/seguridad.js" type="module"></script>
     <link rel="stylesheet" href="css/estilo.css">
     <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/index.js" type="module" defer></script>
 </head>
 <body>
     <header>
-        <div class = "contenedor">
+        <div class="contenedor">
             <img src="imagen/logo_fcad.png" alt="Logo FCAD">    
-            <h1>Cursos FCAD - UNER</h1>
+            <h1>Inscripciones FCAD - UNER</h1>
         </div> 
-        
     </header>
-
+    
     <div class="contenedor-principal">
         <nav>
             <ul>
                 <li><a href="index.html" class="active">Inicio</a></li>
                 <li><a href="inscripciones.html">Inscripciones</a></li>
-                <li><a href="">Estudiantes</a></li>
+                <li><a href="estudiantes.html">Estudiantes</a></li>
                 <li><a href="cursos.html">Cursos</a></li>
             </ul> 
         </nav>
     </div>
+
     <main>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur rem adipisci blanditiis perferendis reprehenderit atque. Iure reiciendis doloribus, laudantium atque dolorem saepe asperiores voluptatem amet rem perspiciatis incidunt, assumenda quasi.
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Panel de Resumen</h2>
+        </div>
+        
+        <div id="error-dashboard" class="alert alert-danger" style="display: none" role="alert"></div>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-primary text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Cursos</h5>
+                        <h3 class="display-5 fw-bold" id="kpi-cursos">-</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-success text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Estudiantes</h5>
+                        <h3 class="display-5 fw-bold" id="kpi-estudiantes">-</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-info text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Inscripciones Activas</h5>
+                        <h3 class="display-5 fw-bold" id="kpi-inscripciones">-</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm" rounded-3>
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Cursos Activos Recientes</h5>
+            </div>
+            
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">ID</th>
+                                <th class="text-center" scope="col">Nombre del Curso</th>
+                                <th class="text-center" scope="col">Fecha Inicio</th>
+                                <th class="text-center" scope="col">Última Inscripción</th>
+                                <th class="text-center" scope="col">Inscriptos</th>
+                                <th class="text-center" scope="col">Capacidad</th>
+                                <th class="text-center" scope="col">Disponibles</th>
+                                <th class="text-center" scope="col">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-cursos-activos">
+                            <tr>
+                                <td colspan="8" class="text-center py-3">Cargando cursos activos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
+
     <footer>
-        <p>&copy; 2026 Cursos FCAD - UNER. Todos los derechos reservados.</p>
+        <p class="m-0 py-3">&copy; 2026 Inscripciones FCAD - UNER. Todos los derechos reservados.</p>
     </footer>
 </body>
 </html>

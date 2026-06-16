@@ -11,8 +11,9 @@ export default class InscripcionesRepository{
                 FROM inscripciones i
                 INNER JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
                 INNER JOIN cursos c ON i.id_curso = c.id_curso
+                INNER JOIN cursos_estados ce ON c.id_curso_estado = ce.id_curso_estado
                 INNER JOIN inscripciones_estados ie ON i.id_inscripcion_estado = ie.id_inscripcion_estado
-                WHERE ie.es_activo = 1
+                WHERE ie.es_activo = 1 AND ce.es_activo = 1
             `;
 
             const sqlParams = [];
@@ -68,8 +69,9 @@ export default class InscripcionesRepository{
                 FROM inscripciones i
                 INNER JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
                 INNER JOIN cursos c ON i.id_curso = c.id_curso
+                INNER JOIN cursos_estados ce ON c.id_curso_estado = ce.id_curso_estado
                 INNER JOIN inscripciones_estados ie ON i.id_inscripcion_estado = ie.id_inscripcion_estado
-                WHERE ie.es_activo = 1
+                WHERE ie.es_activo = 1 AND ce.es_activo = 1
             `;
 
             const sqlParams = [];
@@ -234,8 +236,9 @@ export default class InscripcionesRepository{
             FROM inscripciones i
             INNER JOIN estudiantes e ON i.id_estudiante = e.id_estudiante
             INNER JOIN cursos c ON i.id_curso = c.id_curso
+            INNER JOIN cursos_estados ce ON c.id_curso_estado = ce.id_curso_estado
             INNER JOIN inscripciones_estados ie ON i.id_inscripcion_estado = ie.id_inscripcion_estado
-            WHERE ie.es_activo = 1 AND i.id_inscripcion = $1
+            WHERE ie.es_activo = 1 AND ce.es_activo = 1 AND i.id_inscripcion = $1
             `;
 
             const {rows} = await client.query(sql,[id]);
@@ -248,7 +251,7 @@ export default class InscripcionesRepository{
         }
     }
 
-    async borrar(id){
+    async borrar(id,id_usuario){
         const client = await BdUtils.createConnection();
         try{
             const sql = `
@@ -258,12 +261,14 @@ export default class InscripcionesRepository{
                     FROM public.inscripciones_estados 
                     WHERE es_activo = 0 
                     LIMIT 1
-                )
+                    ),
+                    id_usuario_modificacion = $2,
+                    fecha_hora_modificacion = (NOW() AT TIME ZONE 'America/Argentina/Buenos_Aires')
                 WHERE id_inscripcion = $1
                 RETURNING id_inscripcion
             `;
 
-            const {rows} = await client.query(sql,[id]);
+            const {rows} = await client.query(sql,[id,id_usuario]);
             return rows[0];
         } catch(error){
             console.error("Fallo al borrar",error);

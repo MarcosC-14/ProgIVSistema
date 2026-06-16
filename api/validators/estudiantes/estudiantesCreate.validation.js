@@ -1,0 +1,42 @@
+import { body, validationResult } from 'express-validator';
+
+const estudiantesCreateValidation = [
+    body('documento')
+        .notEmpty().withMessage('El documento es obligatorio')
+        .isString().withMessage('El documento debe ser texto numerico')
+        .isLength({ min: 7, max: 10 }).withMessage('El documento debe tener entre 7 y 10 caracteres'),
+
+    body('apellido')
+        .notEmpty().withMessage('El apellido es obligatorio')
+        .isString().withMessage('El apellido debe ser una cadena de texto')
+        .trim()
+        .isLength({ min: 1, max: 45 }).withMessage('El apellido debe tener entre 1 y 45 caracteres.')
+        .toUpperCase(),
+
+
+    body('nombres')
+        .notEmpty().withMessage('El nombre es obligatorio')
+        .isString().withMessage('El nombre debe ser una cadena de texto')
+        .trim()
+        .isLength({ min: 1, max: 45 }).withMessage('El nombre debe tener entre 1 y 45 caracteres.')
+        .toUpperCase(),
+
+    body('email')
+        .notEmpty().withMessage('El email es obligatorio')
+        .isEmail().withMessage('El email debe ser una dirección de correo valida'),
+
+    body('fecha_nacimiento')
+        .exists().withMessage('La fecha de nacimiento es obligatoria.')
+        .isBefore('2100-01-01').withMessage('El anio de la fecha ingresada excede el límite máximo.')
+        .toDate(),
+        
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    }
+];
+
+export default estudiantesCreateValidation;

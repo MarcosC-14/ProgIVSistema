@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Cursos FCAD - UNER</title>
+    <script src="js/seguridad.js" type="module"></script>
     <link rel="stylesheet" href="css/estilo.css">
     <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/cursos.js" type= "module" defer></script>
-    <script src="js/bootstrap.bundle.min.js" defer></script>
 </head>
 <body>
     <header>
@@ -24,7 +24,7 @@
             <ul>
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="inscripciones.html">Inscripciones</a></li>
-                <li><a href="">Estudiantes</a></li>
+                <li><a href="estudiantes.html">Estudiantes</a></li>
                 <li><a href="cursos.html" class="active">Cursos</a></li>
         </ul> 
         </nav>
@@ -45,24 +45,22 @@
         
         <div class="card mb-4 shadow-sm">
             <div class="card-body">
-                <form id="formBusquedaCursos" class="row g-3 justify-content-between align-items-end gap-3">
+                <form id="formBusquedaCursos" class="row g-3" autocomplete="off">
                     <div class="col-12 col-sm-3 col-md-1">
                         <label for="buscarId" class="form-label fw-bold">ID Curso</label>
                         <input type="number" id="buscarId" class="form-control" placeholder="Ej: 1" min="1">
                     </div>
 
-                    <div class="col-12 col-sm-9 col-md-4">
+                    <div class="col-12 col-sm-9 col-md-3">
                         <label for="buscarTexto" class="form-label fw-bold">Nombre o descripción</label>
                         <input type="text" id="buscarTexto" class="form-control" placeholder="Buscar...">
                     </div>
 
-                    <div class="col-12 col-sm-6 col-md-4">
-                        <label for="buscarEstado" class="form-label fw-bold">Estado del curso</label>
-                        <div id="contenedor-checkboxes-estados" class="d-flex gap-2 pt-1">
-                            
-                        </div>
+                    <div class="col-12 col-sm-12 col-md-7">
+                        <label for="buscarEstado" class="form-label fw-bold mb-0">Estado del curso</label>
+                        <div id="contenedor-checkboxes-estados" class="d-flex flex-wrap align-items-center gap-3"></div>
                     </div>
-                    <div class="col-12 col-sm-3 col-md-1 ms-auto text-end">
+                    <div class="col-12 col-sm-3 col-md-1 ms-auto text-end d-flex align-items-center">
                         <button type="submit" class="btn btn-outline-primary w-100" id="lupa" title="Buscar">
                             🔍
                         </button>
@@ -73,22 +71,24 @@
         </div>
         <!-- Tabla cursos -->
         <div class="card mb-4 shadow-sm" rounded-3>
-            <table class = "table table-hover">
-                <thead>
-                    <tr>
-                        <th>ID Curso</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Fecha de inicio</th>
-                        <th>Cantidad de horas</th>
-                        <th>Inscriptos máximos</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
+            <div class="table-responsive">
+                <table class = "table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID Curso</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Fecha de inicio</th>
+                            <th>Cantidad de horas</th>
+                            <th>Inscriptos máximos</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
        </div>
        
        <nav aria-label="Navegación de registros" class="mt-4">
@@ -130,7 +130,7 @@
             </div>
 
                 <div class="modal-body">
-                    <form id="formCurso">
+                    <form id="formCurso" autocomplete="off">
                         <input type="hidden" id="modalIdCurso">
 
                         <div class = "mb-3">
