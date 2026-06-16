@@ -1,4 +1,6 @@
-const URL_API_ESTUDIANTES = 'http://localhost:3000/api/estudiantes';
+import * as bootstrap from 'bootstrap';
+
+const URL_API_ESTUDIANTES = '/api/estudiantes';
 let paginaActual = 1;
 const limitePorPagina = 10;
 
