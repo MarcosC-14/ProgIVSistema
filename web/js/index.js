@@ -53,7 +53,7 @@ async function cargarCursosActivos() {
 
         tbody.innerHTML = '';
         if (!cursos || cursos.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="text-center">No hay cursos activos en el sistema.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="8" class="text-center">No hay cursos activos en el sistema.</td></tr>`;
             return;
         }
 
@@ -78,6 +78,6 @@ async function cargarCursosActivos() {
 
     } catch (error) {
         console.error('Error cargando la lista de cursos:', error);
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Error al cargar la tabla de cursos.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error al cargar la tabla de cursos.</td></tr>`;
     }
 }
