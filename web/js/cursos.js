@@ -6,10 +6,10 @@ const URL_API_CURSOS_ESTADOS = '/api/estados';
 let paginaActual = 1;
 const limitePorPagina = 10;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     cargarCursos(1);
     configurarEventos();
-    cargarEstados();
+    await cargarEstados();
     cargarEstadosCheckboxes();
 
 
@@ -364,12 +364,6 @@ async function guardarCurso() {
     }
 
     try {
-        console.log("Intento", url,  {
-            method: metodo,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(datosCurso)});
         const respuesta = await fetch(url, {
             method: metodo,
             headers: obtenerHeadersParaAuth(true),
